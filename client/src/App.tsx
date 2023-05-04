@@ -1,9 +1,9 @@
-import ThreadAvatarList from "./components/ThreadAvatarList";
+import Thread from "./components/Thread";
 
 function App() {
   return (
     <div className="w-screen h-screen bg-primary">
-      <ThreadAvatarList />
+      <Thread />
     </div>
   );
 }
