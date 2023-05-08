@@ -18,9 +18,30 @@ module.exports = {
       },
     },
   },
+  daisyui: {
+    themes: [
+      {
+        mytheme: {
+          "primary": "#313338",
+				  "secondary": "#2b2d31",
+          "tertiary-2": "#1E1F22",
+          "tertiary": "#232428",
+				  "accent": "#7289DA",
+				  "neutral": "#DCDDDE",
+				  "base-100": "#FFFFFF",
+				  "info": "#4E5D94",
+				  "success": "#3AA655",
+				  "warning": "#FAA61A",
+				  "error": "#ED424A"
+        }
+      }
+    ]
+  },
   plugins: [
-    // require('tailwind-scrollbar-hide'),
+    require("daisyui"),
+    require('tailwind-scrollbar-hide'),
     // require('tailwindcss-bg-patterns')
+    
   ],
 }
 

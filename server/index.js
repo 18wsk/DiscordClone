@@ -1,11 +1,14 @@
 const express = require('express');
 const app = express();
 const port = 8000;
+const WebSocketServer = require('ws');
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-})
+const wss = new WebSocketServer.Server(({ port: 8080 }));
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-})
+wss.on('connection', (ws) => {
+  console.log("Client connected");
+
+  ws.on('message', (message) => {
+    console.log("Recieved msg from client: " + message);
+  });
+});

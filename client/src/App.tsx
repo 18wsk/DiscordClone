@@ -1,9 +1,14 @@
-import Thread from "./components/Thread";
+import Thread from "./pages/Thread";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function App() {
   return (
-    <div className="w-screen h-screen bg-primary">
-      <Thread />
+    <div className="App">
+      <BrowserRouter>
+        <Routes>
+            <Route path="/" element={<Thread />}/>
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
