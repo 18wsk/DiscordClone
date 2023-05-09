@@ -1,13 +1,20 @@
 import { useState, useRef, useEffect } from "react";
 import { sendMessage } from "../websocket";
+import ChatStore, { TChatStore } from "../store";
 
 const ThreadInput = () => {
     const [currentMessage, setCurrentMessage] = useState("");
     const enterRepeatFlag = useRef(false);
 
+    const currentUser  = ChatStore((state: TChatStore) => state.currentUser);
+
 
     const handleMessageSend = async () => {
-        sendMessage(currentMessage);
+        sendMessage({
+            user: currentUser,
+            payload: currentMessage,
+            timeStamp: new Date().toLocaleString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true }),
+        });
         setCurrentMessage("");
     } 
 
@@ -18,7 +25,6 @@ const ThreadInput = () => {
     const handleEnter = (event: any) => {
         if (event.key === "Enter" && !enterRepeatFlag.current) {
             enterRepeatFlag.current = true;
-            console.log("Enter pressed");
             event.preventDefault();
             event.stopPropagation();
             handleMessageSend();

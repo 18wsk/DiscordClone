@@ -1,3 +1,5 @@
+import ChatStore, { Message, TChatStore} from "../store";
+
 const Socket = new WebSocket('ws://localhost:8080');
 
 Socket.addEventListener('open', () => {
@@ -5,7 +7,23 @@ Socket.addEventListener('open', () => {
 });
 
 Socket.addEventListener('message', event => {
-    console.log('Received message:', event.data);
+    const blob = event.data;
+    const fileReader = new FileReader();
+    const addMessage = ChatStore.getState().actions.addMessage;
+    fileReader.onloadend = () => {
+        const result = fileReader.result;
+        if (result !== null) {
+            const jsonString = result.toString();
+            const json = JSON.parse(jsonString);
+            console.log("Received message: ", json)
+            addMessage({
+                user: json.user,
+                payload: json.payload,
+                timeStamp: json.timeStamp
+            });
+        }
+    };
+    fileReader.readAsText(blob);
 });
 
 Socket.addEventListener('close', () => {
@@ -16,12 +34,10 @@ Socket.addEventListener('error', error => {
     console.error('WebSocket error:', error);
 });
 
-export function sendMessage(message: string) {
+export const sendMessage = (message: Message) => {
     Socket.send(JSON.stringify(message));
 }
 
 export function closeConnection() {
     Socket.close();
 }
-
-export { Socket };

@@ -12,10 +12,10 @@ const ThreadProfileComponent = () => {
 	    					<div className="rounded-full bg-green-500 h-[14px] w-[14px] absolute bottom-0 right-0 z-3 translate-x-[1.75px] translate-y-[1.75PX] border-2 border-tertiary-2"></div>
 	    				</div>
 	    			</div>
-	    			<div className="col-span-2 pl-[8px] pb-[4pxh-[32px] z-10">
+	    			<div className="col-span-2 pl-[4px] pb-[4pxh-[32px] z-10">
 	    				<div className="w-full">
-	    					<p className="text-[#FFFFFF] text-[14px] leading-tight">NotChillis</p> {/* USERNAME  */}
-	    					<p className="text-[#f2f3f5] text-[12px]"> #4973</p> {/* code tag */} 
+	    					<p className="text-[#FFFFFF] text-profileName leading-tight font-semibold">NotChillis</p> {/* USERNAME  */}
+	    					<p className="text-[#f2f3f5] text-profileId"> #4973</p> {/* code tag */} 
 	    				</div>
 	    			</div>
 	    		</div>
