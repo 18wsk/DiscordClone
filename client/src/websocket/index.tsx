@@ -1,4 +1,4 @@
-import ChatStore, { Message, TChatStore} from "../store";
+import ChatStore, { Message } from "../store";
 
 const Socket = new WebSocket('ws://localhost:8080');
 
@@ -15,7 +15,6 @@ Socket.addEventListener('message', event => {
         if (result !== null) {
             const jsonString = result.toString();
             const json = JSON.parse(jsonString);
-            console.log("Received message: ", json)
             addMessage({
                 user: json.user,
                 payload: json.payload,

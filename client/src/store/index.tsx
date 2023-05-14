@@ -5,7 +5,7 @@ import { immer } from "zustand/middleware/immer";
 export interface Message {
     user: User | null;
     payload: string;
-    timeStamp: string;
+    timeStamp: string | null;
 }
 
 export interface User {
@@ -35,6 +35,7 @@ export interface TChatStore {
         updateThread: (thread: Thread) => void;
         updateUser: (user: User) => void;
         updateMessage: (message: Message) => void;
+        // setAvatar: (avatar: string) => void;
     }
 };
 
@@ -45,7 +46,7 @@ const initialState: Omit<TChatStore, "actions"> = {
     messages: [],
 }
 
-const ChatStore = create(immer<TChatStore>((set) => ({
+const ChatStore = create(immer<TChatStore>((set, get) => ({
     ...initialState,
     actions: {
         addThread: (thread) => set((state: TChatStore) => ({ threads: [...state.threads, thread] })),
@@ -57,6 +58,7 @@ const ChatStore = create(immer<TChatStore>((set) => ({
         updateThread: (thread) => set((state: TChatStore) => ({ threads: state.threads.map((t) => t.roomId === thread.roomId ? thread : t) })),
         updateUser: (user) => set((state: TChatStore) => ({ users: state.users.map((u) => u.id === user.id ? user : u) })),
         updateMessage: (message) => set((state: TChatStore) => ({ messages: state.messages.map((m) => m.timeStamp === message.timeStamp ? message : m) })),
+        // setAvatar: (avatar) => set((state: TChatStore) => ({ currentUser: { ...state.currentUser, avatar } })),
     }
 })));
 

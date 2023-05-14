@@ -4,11 +4,12 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        "primary": "#313338",
-				"secondary": "#2b2d31",
-        "tertiary-2": "#1E1F22",
-        "tertiary": "#232428",
-				"accent": "#7289DA",
+        "primary": "#FFFFFF",
+        "secondary": "#313338",
+        "tertiary-2": "#2b2d31",
+        "tertiary": "#1E1F22",
+				"accent": "#3e47c9",
+        "accent-hover": "#7289DA",
 				"neutral": "#DCDDDE",
 				"base-100": "#FFFFFF",
 				"info": "#4E5D94",
@@ -25,14 +26,30 @@ module.exports = {
         messageTime: ['12px', '22px'],
         profileName: ['14px', '18px'],
         profileId: ['12px', '13px'],
+      },
+      screens: {
+        'xs': '375px',
+        // => @media (min-width: 475px) { ... }
+        
+        'sm': '640px',
+        // => @media (min-width: 640px) { ... }
+  
+        'md': '768px',
+        // => @media (min-width: 768px) { ... }
+  
+        'lg': '1024px',
+        // => @media (min-width: 1024px) { ... }
+  
+        'xl': '1280px',
+        // => @media (min-width: 1280px) { ... }
+  
+        '2xl': '1536px',
+        // => @media (min-width: 1536px) { ... }
       }
     },
   },
   plugins: [
-    require("daisyui"),
     require('tailwind-scrollbar-hide'),
-    // require('tailwindcss-bg-patterns')
-    
   ],
 }
 

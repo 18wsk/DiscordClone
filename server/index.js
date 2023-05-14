@@ -27,7 +27,7 @@ wss.on('connection', (socket) => {
     const welcomeMsg = {
       user: null,
       payload: "Welcome to the chat!",
-      timestamp: new Date().toLocaleString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true })
+      timestamp: null // new Date().toLocaleString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true })
     }
     client.send(Buffer.from(JSON.stringify(welcomeMsg)));
   
@@ -35,10 +35,10 @@ wss.on('connection', (socket) => {
 
   socket.on('message', (message) => {
     clients.forEach((client) => {
-      // if (client !== socket) {
-      //   client.send(message);
-      // }
-      client.send(message);
+      if (client !== socket) {
+        client.send(message);
+      }
+      // client.send(message);
     });
   });
 
