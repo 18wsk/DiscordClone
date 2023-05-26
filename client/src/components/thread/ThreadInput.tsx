@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { sendMessage } from "../../websocket";
+import { sendMessage } from "../../utils/websocket";
 import ChatStore, { TChatStore } from "../../store";
 
 const ThreadInput = () => {

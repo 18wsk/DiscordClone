@@ -1,37 +1,47 @@
-import { useState } from 'react'
 import { Listbox } from '@headlessui/react'
 import { FiChevronDown } from 'react-icons/fi'
+import clsx from 'clsx';
+import { BirthDay } from '../../utils/types';
 
-const DateOfBirth = () => {
-    const [month, setMonth] = useState(null);
-    const [day, setDay] = useState(null);
-    const [year, setYear] = useState(null);
+const DateOfBirth = ({ 
+        dobValid,
+        setDateOfBirth,
+        dob
+    }: {
+        setDateOfBirth: ({name, value}: {name: string, value: string | number | null}) => void,
+        dobValid: boolean,
+        dob: BirthDay
+    }) => {
 
     const MonthSelect = () => {
         const options = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         return (
             <Listbox
-                value={month} 
-                onChange={setMonth}
+                value={dob.month} 
+                onChange={(val) => setDateOfBirth({name: "month", value: val})}
                 name={"month"}
             >
                 {({ open }) => (
                     <>
-                        <div className="relative w-[120px] h-[36px] bg-white rounded-md shadow-md border-2">
-                            <Listbox.Button className="w-full h-full flex text-sm">
+                        <div className="relative sm:w-[100px] h-[36px] xs:w-[80px] bg-white">
+                            <Listbox.Button className={clsx(
+                                "w-full h-full flex sm:text-sm xs:text-xs rounded-md shadow-md border-2", 
+                                open && "rounded-md border-2 border-accent",
+                                !dobValid && "border-red-500"
+                            )}>
                                 <div className="w-full h-full flex items-center justify-center text-center">
-                                    {month ? month : "Month"}
+                                    {dob.month ? dob.month : "Month"}
                                 </div>
                                 <div className="w-[20px] h-full flex justify-center items-center">
                                     <FiChevronDown/>
                                 </div>
                             </Listbox.Button>
-                            <Listbox.Options className={`${open ? 'block' : 'hidden'}  absolute left-0 bg-gray-200 max-h-[180px] overflow-auto scrollbar-hide rounded-md`}>
+                            <Listbox.Options className={`${open ? 'block' : 'hidden'}  absolute right-0 left-0 sm:w-[100px] xs:w-[80px] -translate-y-[218px] bg-white border-2 border-accent max-h-[180px] overflow-auto scrollbar-hide rounded-md scroll-smooth`}>
                                 {options.map((m) => (
                                     <Listbox.Option
                                         key={m}
                                         value={m}
-                                        className={"w-[120px] h-[36px] border hover:border-accent/50 flex items-center justify-center text-sm"}
+                                        className={"sm:w-[100px] h-[36px] xs:w-[80px] border hover:border-accent/50 flex items-center justify-center sm:text-sm xs:text-xs"}
                                     >
                                         {m}
                                     </Listbox.Option>
@@ -45,30 +55,33 @@ const DateOfBirth = () => {
     }
 
     const DaySelect = () => {
-        const dayOptions = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31];
+        const dayOptions = Array.from({length: 31}, (_, i) => (1 + i).toString());
         return (
             <Listbox
-                value={day} 
-                onChange={setDay}
+                value={dob.day} 
+                onChange={(val) => setDateOfBirth({name: "day", value: val})}
                 name={"day"}
             >
                 {({ open }) => (
                     <>
-                        <div className="relative w-[100px] h-[36px] bg-white rounded-md shadow-md border-2">
-                            <Listbox.Button className="w-full h-full flex text-sm">
-                                <div className="w-full h-full flex items-center justify-center text-center">
-                                    {day ? day : "Day"}
+                        <div className="relative sm:w-[100px] h-[36px] xs:w-[80px] bg-white ">
+                            <Listbox.Button className={clsx("w-full h-full flex sm:text-sm xs:text-xs rounded-md shadow-md border-2", 
+                                open && "rounded-md border-2 border-accent", 
+                                !dobValid && "border-red-500"
+                            )}>
+                            <div className="w-full h-full flex items-center justify-center text-center">
+                                    {dob.day ? dob.day : "Day"}
                                 </div>
                                 <div className="w-[20px] h-full flex justify-center items-center">
                                     <FiChevronDown/>
                                 </div>
                             </Listbox.Button>
-                            <Listbox.Options className={`${open ? 'block' : 'hidden'}  absolute left-0 bg-gray-200 max-h-[180px] overflow-auto scrollbar-hide rounded-md`}>
+                            <Listbox.Options className={`${open ? 'block' : 'hidden'} absolute right-0 left-0 sm:w-[100px] xs:w-[80px] -translate-y-[218px] bg-white border-2 border-accent max-h-[180px] overflow-auto scrollbar-hide rounded-md scroll-smooth`}>
                                 {dayOptions.map((d) => (
                                     <Listbox.Option
                                         key={d}
                                         value={d}
-                                        className={"w-[100px] h-[36px] border hover:border-accent/50 flex items-center justify-center text-sm"}
+                                        className={"sm:w-[100px] h-[36px] xs:w-[80px] border hover:border-accent/50 flex items-center justify-center sm:text-sm xs:text-xs"}
                                     >
                                         {d}
                                     </Listbox.Option>
@@ -85,27 +98,30 @@ const DateOfBirth = () => {
         const yearOptions = Array.from({length: 153}, (_, i) => (2023 - i).toString());
         return (
             <Listbox
-                value={year} 
-                onChange={setYear}
+                value={dob.year} 
+                onChange={(val) => setDateOfBirth({name: "year", value: val})}
                 name={"year"}
             >
                 {({ open }) => (
                     <>
-                        <div className="relative w-[100px] h-[36px] bg-white rounded-md shadow-md border-2">
-                            <Listbox.Button className="w-full h-full flex text-sm">
+                        <div className="relative sm:w-[100px] h-[36px] xs:w-[80px] bg-white ">
+                            <Listbox.Button className={clsx("w-full h-full flex sm:text-sm xs:text-xs rounded-md shadow-md border-2", 
+                                open && "rounded-md border-2 border-accent", 
+                                !dobValid && "border-red-500"
+                            )}>
                                 <div className="w-full h-full flex items-center justify-center text-center">
-                                    {year ? year : "Year"}
+                                    {dob.year ? dob.year : "Year"}
                                 </div>
                                 <div className="w-[20px] h-full flex justify-center items-center">
                                     <FiChevronDown/>
                                 </div>
                             </Listbox.Button>
-                            <Listbox.Options className={`${open ? 'block' : 'hidden'} absolute left-0 bg-gray-200 max-h-[180px] overflow-auto scrollbar-hide rounded-md`}>
+                            <Listbox.Options className={`${open ? 'block' : 'hidden'} absolute right-0 left-0 sm:w-[100px] xs:w-[80px] -translate-y-[218px] bg-white border-2 border-accent max-h-[180px] overflow-auto scrollbar-hide rounded-md scroll-smooth`}>
                                 {yearOptions.reverse().map((d) => (
                                     <Listbox.Option
                                         key={d}
                                         value={d}
-                                        className={"w-[100px] h-[36px] border hover:border-accent/50 flex items-center justify-center text-sm"}
+                                        className={"sm:w-[100px] h-[36px] xs:w-[80px] border hover:border-accent/50 flex items-center justify-center sm:text-sm xs:text-xs"}
                                     >
                                         {d}
                                     </Listbox.Option>
@@ -119,7 +135,7 @@ const DateOfBirth = () => {
     }
 
     return (
-        <div className="w-[440px] h-full flex justify-around">
+        <div className="w-max-[440px] xs:max-w-2/3 h-full flex sm:justify-around xs:justify-around xs:px-2">
             <MonthSelect/>
             <DaySelect/>
             <YearSelect/>

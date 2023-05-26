@@ -4,10 +4,12 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 const PasswordInput = ({
     value,
-    onInputChange
+    onInputChange,
+    passwordValid
 }:
 {
-    value: string,
+    passwordValid: boolean,
+    value: string | null,
     onInputChange: (value: string) => void,
 }) => {
     const [inputFocused, setInputFocused] = useState(false);
@@ -26,20 +28,21 @@ const PasswordInput = ({
             className={
                 clsx(
                     "w-full flex items-center bg-white rounded-md shadow-md border-2", 
-                    inputFocused && "border-accent/60 outline-none shadow-accent/60 "
+                    inputFocused && "border-accent/60 outline-none shadow-accent/60 ",
+                    !passwordValid && "border-red-500"
                 )
             }
             onFocus={() => setInputFocused(true)}
             onBlur={() => setInputFocused(false)}
             >
             <input 
-                className="w-full h-full py-2 px-2 bg-white rounded-md outline-none focus:outline-none"
+                className="w-full h-full xs:px-1 xs:py-1 sm:px-2 sm:py-2 bg-white rounded-md outline-none focus:outline-none"
                 type={handlePasswordType()}
-                value={value}
+                value={value || ""}
                 onChange={(e) => onInputChange(e.target.value)}
             />
             <button 
-                className="w-10 h-full py-1 px-2 rounded-md"
+                className="w-10 h-full xs:px-1 py-1 sm:px-2 rounded-md"
                 onClick={() => setButtonPressed(!buttonPressed)}
             >
                 {buttonPressed ? <AiOutlineEye size={20} color="#3e47c9"/> : <AiOutlineEyeInvisible size={20} color="#3e47c9"/>}

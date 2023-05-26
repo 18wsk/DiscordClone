@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
+  content: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
   theme: {
     extend: {
       colors: {
@@ -18,6 +18,8 @@ module.exports = {
 				"error": "#ED424A"
       },
       fontSize: {
+        _2xs: ['8px', '12px'],
+        xs: ['10px', '16px'],
         sm: ['14px', '20px'],
         base: ['16px', '24px'],
         lg: ['20px', '28px'],
@@ -29,8 +31,8 @@ module.exports = {
       },
       screens: {
         'xs': '375px',
-        // => @media (min-width: 475px) { ... }
-        
+        // => @media (min-width: 375px) { ... }
+  
         'sm': '640px',
         // => @media (min-width: 640px) { ... }
   

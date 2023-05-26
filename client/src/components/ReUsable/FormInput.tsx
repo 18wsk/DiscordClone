@@ -4,12 +4,12 @@ import { useState } from "react"
 const FormInput = ({
     value,
     onInputChange,
-    valid = true
+    valid=true
 }:
 {
-    value: string,
+    valid: boolean,
+    value: string | null,
     onInputChange: (value: string) => void,
-    valid?: boolean
 }) => {
     const [inputFocused, setInputFocused] = useState(false);
 
@@ -26,9 +26,9 @@ const FormInput = ({
             onBlur={() => setInputFocused(false)}
             >
             <input 
-                className="w-full h-full py-2 px-2 bg-white rounded-md outline-none focus:outline-none"
+                className="w-full h-full xs:px-1 xs:py-1 sm:px-2 sm:py-2 bg-white rounded-md outline-none focus:outline-none"
                 type={"email"}
-                value={value}
+                value={value || ""}
                 onChange={(e) => onInputChange(e.target.value)}
             />
         </div>

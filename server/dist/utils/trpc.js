@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.publicProcedure = exports.router = exports.middleware = exports.createContext = void 0;
+const server_1 = require("@trpc/server");
+const createContext = ({ req, res }) => ({});
+exports.createContext = createContext;
+const t = server_1.initTRPC.context().create();
+exports.middleware = t.middleware;
+exports.router = t.router;
+exports.publicProcedure = t.procedure;
