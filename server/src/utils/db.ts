@@ -1,5 +1,7 @@
 import { Db, MongoClient } from 'mongodb';
 import dotenv from 'dotenv';
+import { UserModel } from '../models/User';
+import { User } from '../../../common/User';
 
 dotenv.config();
 
@@ -16,4 +18,9 @@ export async function connect() {
 
 export function getDB() {
     return db;
+}
+
+
+export async function getUserById({ id } : { id: string | null }): Promise<User | null> {
+    return UserModel.findOne({ id }).exec();
 }

@@ -9,7 +9,7 @@ const ThreadMessages = () => {
         return (
             <div className="h-min-[48px] bg-primary py-[8.5px] flex flex-row">
                 <div className="w-[72px] flex justify-center">
-                    <img src={msg.user?.avatar ?? discLogo} className="rounded-full h-[42px] w-[42px] z-1" alt={"pfp"}/> {/* msg.user?.avatar ?? */}
+                    {/* <img src={msg.user?.avatar ?? discLogo} className="rounded-full h-[42px] w-[42px] z-1" alt={"pfp"}/> msg.user?.avatar ?? */}
                 </div>
                 <div className="w-full pr-[48px]">
                     <div className="flex flex-cols-2 gap-x-2 items-center ">

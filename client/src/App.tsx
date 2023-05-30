@@ -1,4 +1,4 @@
-import Account from "./pages/Account";
+import Account from "./pages/AccountPage";
 import Homepage from "./pages/HomePage";
 import Login from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
@@ -16,6 +16,12 @@ export function App() {
       links: [
         httpBatchLink({
           url: 'http://localhost:8080/trpc',
+          fetch(url, options) {
+            return fetch(url, {
+              ...options,
+              credentials: 'include',
+            });
+          },
         }),
       ],
     }),

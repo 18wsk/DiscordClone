@@ -1,22 +1,69 @@
+
 import { Link } from 'react-router-dom'
+import ChatStore from '../../store';
+import { useEffect } from 'react';
+import { trpc } from '../../utils/trpc';
 
 const DeskTopView = () => {
+
+    const setActiveUser = ChatStore.getState().actions.setCurrentUser;
+
+    const { refetch: refetchLogout } = trpc.logout.useQuery({}, { 
+        enabled: false, 
+        refetchOnWindowFocus: false,
+        refetchOnMount: false,
+        refetchOnReconnect: false,
+        retry: false,
+        staleTime: 10000,
+    });
+
+    const handleLogout = () => {
+        refetchLogout();
+        setActiveUser(null);
+    }
+
     return (
         <>
-            <Link to="/login" className="w-full h-full flex items-center justify-center">
-                <button 
-                    className="bg-accent rounded-full flex items-center justify-center text-white font-bold text-center w-24 p-1 hover:bg-accent-hover"
-                >
-                    Login
-                </button>
-            </Link>
-            <Link to="/signup" className="w-full h-full flex items-center justify-center">
-                <button 
-                    className="bg-accent rounded-full flex items-center justify-center text-white font-bold text-center w-24 p-1 hover:bg-accent-hover"
-                >
-                    Sign Up
-                </button>
-            </Link>
+            { ChatStore.getState().currentUser !== null
+                ? 
+                    <>
+                        <Link to="/account" className="w-full h-full flex items-center justify-center">
+                            <button 
+                                className="bg-accent rounded-full flex items-center justify-center text-white font-bold text-center w-24 p-1 hover:bg-accent-hover"
+                                onClick={() => handleLogout() }
+                            >
+                                Account
+                            </button>
+                        </Link>
+                        <Link to="/" className="w-full h-full flex items-center justify-center">
+                            <button 
+                                className="bg-accent rounded-full flex items-center justify-center text-white font-bold text-center w-24 p-1 hover:bg-accent-hover"
+                                onClick={() => handleLogout() }
+                            >
+                                
+                            </button>
+                        </Link>
+                    </>
+                    
+                :
+                    <>
+                        <Link to="/login" className="w-full h-full flex items-center justify-center">
+                            <button 
+                                className="bg-accent rounded-full flex items-center justify-center text-white font-bold text-center w-24 p-1 hover:bg-accent-hover"
+                            >
+                                Login
+                            </button>
+                        </Link>
+                        <Link to="/signup" className="w-full h-full flex items-center justify-center">
+                            <button 
+                                className="bg-accent rounded-full flex items-center justify-center text-white font-bold text-center w-24 p-1 hover:bg-accent-hover"
+                            >
+                                Sign Up
+                            </button>
+                        </Link>
+                    </>
+                
+            }
         </>
     )
 };
@@ -32,7 +79,7 @@ const NavBar = () => {
                 </Link>
             </div>
             <div className="xs:hidden md:flex h-full md:w-[300px] items-center justify-end">
-                <DeskTopView/>
+                <DeskTopView />
             </div>
         </div>
     )

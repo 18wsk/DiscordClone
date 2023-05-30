@@ -1,17 +1,12 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
-
+import { persist } from "zustand/middleware/persist";
+import { User } from "../../../common/User";
 
 export interface Message {
     user: User | null;
     payload: string;
     timeStamp: string | null;
-}
-
-export interface User {
-    id: string;
-    userName: string;
-    avatar: string;
 }
 
 export interface Thread {
@@ -21,7 +16,7 @@ export interface Thread {
 }
 
 export interface TChatStore {
-    currentUser: User;
+    currentUser: User | null;
     threads: Thread[];
     users: User[];
     messages: Message[];
@@ -35,31 +30,32 @@ export interface TChatStore {
         updateThread: (thread: Thread) => void;
         updateUser: (user: User) => void;
         updateMessage: (message: Message) => void;
-        // setAvatar: (avatar: string) => void;
+        setCurrentUser: (user: any) => void;
     }
 };
 
 const initialState: Omit<TChatStore, "actions"> = { 
-    currentUser: { id: "#4973", userName: "NotChillis", avatar: "" },
+    currentUser: null,
     threads: [],
     users: [],
     messages: [],
 }
 
-const ChatStore = create(immer<TChatStore>((set, get) => ({
+const ChatStore = create(immer<TChatStore>((set) => ({
     ...initialState,
     actions: {
         addThread: (thread) => set((state: TChatStore) => ({ threads: [...state.threads, thread] })),
         addUser: (user) => set((state: TChatStore) => ({ users: [...state.users, user] })),
         addMessage: (message) => set((state: TChatStore) => ({messages: [...state.messages, message],})),
         removeThread: (thread) => set((state: TChatStore) => ({ threads: state.threads.filter((t) => t.roomId !== thread.roomId) })),
-        removeUser: (user) => set((state: TChatStore) => ({ users: state.users.filter((u) => u.id !== user.id) })),
+        removeUser: (user) => set((state: TChatStore) => ({ users: state.users.filter((u) => u.userId !== user.userId) })),
         removeMessage: (message) => set((state: TChatStore) => ({ messages: state.messages.filter((m) => m.timeStamp !== message.timeStamp) })),
         updateThread: (thread) => set((state: TChatStore) => ({ threads: state.threads.map((t) => t.roomId === thread.roomId ? thread : t) })),
-        updateUser: (user) => set((state: TChatStore) => ({ users: state.users.map((u) => u.id === user.id ? user : u) })),
+        updateUser: (user) => set((state: TChatStore) => ({ users: state.users.map((u) => u.userId === user.userId ? user : u) })),
         updateMessage: (message) => set((state: TChatStore) => ({ messages: state.messages.map((m) => m.timeStamp === message.timeStamp ? message : m) })),
-        // setAvatar: (avatar) => set((state: TChatStore) => ({ currentUser: { ...state.currentUser, avatar } })),
-    }
-})));
+        setCurrentUser: (user) => set(() => ({ currentUser: user })),
+    }}),
+    
+));
 
 export default ChatStore;

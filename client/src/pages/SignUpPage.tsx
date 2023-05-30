@@ -37,9 +37,9 @@ const SignUpPage = () => {
     const isValidEmail = () => {
         const regex =  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
         if (email?.match(regex)) {
-            return true
+            return true;
         }
-        return false
+        return false;
     };
 
     const isValidBirthday = ({ year, month, day}: {year: string | number, month: string, day: string | number}): boolean => {
@@ -92,7 +92,7 @@ const SignUpPage = () => {
         setEmailValid(true);
         setUsernameValid(true);
         setPasswordValid(true);
-        setDobValid(true);
+        setDobValid(true)
         setErrorMsg(null);
         if (email === null || email.length === 0) {
             setEmailValid(false);
@@ -185,13 +185,13 @@ const SignUpPage = () => {
                 }
             }
         }
-    }
+    };
 
     return (
         <div 
             className="w-screen h-screen overflow-auto scrollbar-hide bg-white"
         >
-            <NavBar/>
+            <NavBar />
             <motion.div 
                 className="min-h-full w-full flex flex-col items-center justify-center fixed xs:pb-10 md:pb-0"
                 initial={{ opacity: 0,  y: 200 }}
