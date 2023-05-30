@@ -1,7 +1,6 @@
 import express from 'express';
 import http from 'http';
 import cors from 'cors';
-import { inferAsyncReturnType, initTRPC } from '@trpc/server';
 import * as trpcExpress from '@trpc/server/adapters/express';
 import dotenv from 'dotenv';
 import { connect, getDB } from './utils/db';
@@ -67,7 +66,7 @@ const appRouter = router({
     .input(z.object({ 
       email: z.string(), 
       userName: z.string(), 
-      password: z.string(), 
+      password:z.string(), 
       birthday: z.string() 
     }))
     .mutation(async ({ input:  { email, userName, password, birthday }, ctx }) => {
@@ -100,7 +99,6 @@ const appRouter = router({
       // insert the user into the database
       const encryptedPassword = encryptPassword({ password });
       const user = await db.insertOne({ userId, email, userName, password: encryptedPassword, birthday });
-
       return user;
     }),
 
@@ -108,23 +106,19 @@ const appRouter = router({
     .input(z.object({ email: z.string().nullish(), password: z.string().nullish() }))
     .query(async ({ input: { email, password }, ctx }) => {
       const db = getDB().collection<User>("users");
-      // check if there is a token already in user cookies - for homepage refresh case
-      const userId = ctx.userId;
-      const userById = await db.findOne({ userId }) as User;
-      // if no user is found by id, check if there is a user by email and password - this is for actual login case
-      if (!userById) {
-        if (email && password) {
-          // find a user with the email
-          const user = await db.findOne({ email }) as User;
-          // check if this user exists
-          if (!user) {
-            throw new TRPCError({
-              code: "BAD_REQUEST",
-              message: "Email not registered.",
-              cause: "email",
-            });
-          }
-          const decryptedPassword = decryptPassword(user.password );
+      if (email && password) {
+        // find a user with the email
+        const user = await db.findOne({ email });
+        const typedUser: User = {userId: user.userId, email: user.email, userName: user.userName, password: user.password, birthday: user.birthday}
+        // check if this user exists
+        if (!user) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Email not registered.",
+            cause: "email",
+          });
+        } else {
+          const decryptedPassword = decryptPassword(user.password);
           // make sure both credentials match
           if (decryptedPassword.toString() != password || user.email !== email) {
             throw new TRPCError({
@@ -133,14 +127,16 @@ const appRouter = router({
               cause: "password",
             });
           }
-          const token = jwt.sign({ userId: userId }, secretKey, { expiresIn: '4h' });
-          // Set the JWT as a cookie using
+          // generate their new token from their userID
+          const token = jwt.sign({ userId: user.userId }, secretKey, { expiresIn: '4h' });
+          // Set the JWT as a cookie
           ctx.res.cookie('auth', token, { maxAge: 4 * 60 * 60 * 1000, httpOnly: true});
-          return user;
+          // return the user
+          return typedUser;
         }
+      } else {
         return null;
       }
-      return userById;
     }),
 
   logout: publicProcedure
@@ -149,6 +145,21 @@ const appRouter = router({
       ctx.res.clearCookie('auth');
       return null;
     }),
+
+  getUser: publicProcedure
+    .input(z.object({ userId: z.string().nullish() }))
+    .query(async ({ ctx }) => {
+      const db = getDB().collection<User>("users");
+      const token = ctx.req.cookies.auth;
+      if (token) {
+        const decoded = jwt.verify(token, secretKey) as { userId: string };
+        const user = await db.findOne({ userId: decoded.userId });
+        const typedUser: User = {userId: user.userId, email: user.email, userName: user.userName, password: user.password, birthday: user.birthday}
+        return typedUser;
+      } else {
+        return null;
+      }
+    })
 
 });
 

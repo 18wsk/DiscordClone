@@ -8,6 +8,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import { trpc } from '../utils/trpc';
 import { TailSpin } from 'react-loading-icons';
 import { TRPCClientError } from '@trpc/client';
+import ChatStore from '../store';
 
 const LoginPage = () => {
     const [password, setPassword] = useState("");
@@ -18,7 +19,7 @@ const LoginPage = () => {
 
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-    const { isFetching, isSuccess, error, refetch } = trpc.login.useQuery({email, password}, { 
+    const loginQuery = trpc.login.useQuery({email, password}, { 
         enabled: false, 
         refetchOnWindowFocus: false,
         refetchOnMount: false,
@@ -73,8 +74,10 @@ const LoginPage = () => {
         }
     }, [errorMsg]);
 
+    const setActiveUser = ChatStore(state => state.actions.setCurrentUser)
+
     useEffect(() => {
-        if (isSuccess) {
+        if (loginQuery.isSuccess) {
             toast.success("Login successful!", {
                 position: "bottom-right",
                 autoClose: 10000,
@@ -85,17 +88,18 @@ const LoginPage = () => {
                 progress: undefined,
                 theme: "light",
             });
+            setActiveUser(loginQuery.data);
             setTimeout(() => {
                 window.location.href = "/account";
             }, 1000);
         }
-    }, [isSuccess]);
+    }, [loginQuery.data, loginQuery.isSuccess, setActiveUser]);
 
     useEffect(() => {
-        if (error) {
-            setErrorMsg(error.message);
-            if (error instanceof TRPCClientError) {
-                if (error.message === "Email not registered.") {
+        if (loginQuery.error) {
+            setErrorMsg(loginQuery.error.message);
+            if (loginQuery.error instanceof TRPCClientError) {
+                if (loginQuery.error.message === "Email not registered.") {
                     setEmailValid(false);
                 }
                 else {
@@ -104,13 +108,12 @@ const LoginPage = () => {
                 }
             }
         }
-    }, [error])
-
-
+    }, [loginQuery.error])
+    
     const handleLogin = async (event: any) => {
         event.preventDefault();
         if (validateFields()) {
-            await refetch();
+            await loginQuery.refetch();
         }
     };
 
@@ -130,7 +133,7 @@ const LoginPage = () => {
                         <h1 className="md:text-2xl xs:text-xl text-accent font-bold text-center md:pt-10 xs:pt-4">Welcome back!</h1>
                         <h1 className="md:text-sm xs:text-xs text-black text-center md:pb-4 xs:pb-2">We are happy to see you again.</h1>
                         <div className="w-full h-[20px] flex items-center justify-center">
-                            {isFetching && <TailSpin  stroke="#3e47c9" speed={.75} />}
+                            {loginQuery.isFetching && <TailSpin  stroke="#3e47c9" speed={.75} />}
                         </div>
                     </div>
                     <h2 className="text-black pt-8 pb-2 font-semibold text-sm">EMAIL:</h2>
@@ -138,7 +141,8 @@ const LoginPage = () => {
                     <h2 className="text-black pt-8 pb-2 font-semibold text-sm">PASSWORD:</h2>
                         <PasswordInput value={password} onInputChange={setPassword} passwordValid={passwordValid}/>
                     <div className="w-full h-content flex justify-center pt-12">
-                        <button 
+                        <button
+                            type="submit"
                             className="bg-accent hover:bg-accent-hover rounded-md flex items-center justify-center text-white font-bold text-center w-full h-[36px] p-1 shadow-lg shadow-accent/50 hover:shadow-accent-hover/50"
                             onClick={handleLogin}
                         >

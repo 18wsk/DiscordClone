@@ -14,7 +14,7 @@ const passwordSchema: Schema<Password> = new mongoose.Schema<Password>({
 });
 
 
-const userSchema = new mongoose.Schema<User>({ //<User>
+const userSchema = new mongoose.Schema<User>({ 
     userId: {
         type: String,
         required: true,

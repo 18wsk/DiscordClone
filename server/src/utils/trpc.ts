@@ -12,7 +12,7 @@ type ExpressRequest = Omit<trpcExpress.CreateExpressContextOptions, 'req'> & {
 export const createContext = ({ req, res }: ExpressRequest) => {
     let userId: string | null = null;
     // check if verified user from cookie
-    const authCookie = cookie.parse(req.headers.cookie || '').auth;
+    const authCookie = cookie.parse(req.headers.cookie || " ").auth;
     if (authCookie !== undefined) {
         try {
             const jwt_val = jwt.verify(authCookie, "KOMOS");

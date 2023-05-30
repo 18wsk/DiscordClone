@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
-import { persist } from "zustand/middleware/persist";
 import { User } from "../../../common/User";
 
 export interface Message {
@@ -41,7 +40,7 @@ const initialState: Omit<TChatStore, "actions"> = {
     messages: [],
 }
 
-const ChatStore = create(immer<TChatStore>((set) => ({
+const ChatStore = create(immer<TChatStore>((set, get) => ({
     ...initialState,
     actions: {
         addThread: (thread) => set((state: TChatStore) => ({ threads: [...state.threads, thread] })),

@@ -1,12 +1,13 @@
 
 import { Link } from 'react-router-dom'
 import ChatStore from '../../store';
-import { useEffect } from 'react';
 import { trpc } from '../../utils/trpc';
+import { useEffect } from 'react';
 
 const DeskTopView = () => {
 
-    const setActiveUser = ChatStore.getState().actions.setCurrentUser;
+    const setActiveUser = ChatStore(state => state.actions.setCurrentUser);
+    const currentUser = ChatStore(state => state.currentUser)
 
     const { refetch: refetchLogout } = trpc.logout.useQuery({}, { 
         enabled: false, 
@@ -17,20 +18,20 @@ const DeskTopView = () => {
         staleTime: 10000,
     });
 
+
     const handleLogout = () => {
-        refetchLogout();
         setActiveUser(null);
+        refetchLogout();
     }
 
     return (
         <>
-            { ChatStore.getState().currentUser !== null
+            { currentUser
                 ? 
                     <>
                         <Link to="/account" className="w-full h-full flex items-center justify-center">
                             <button 
                                 className="bg-accent rounded-full flex items-center justify-center text-white font-bold text-center w-24 p-1 hover:bg-accent-hover"
-                                onClick={() => handleLogout() }
                             >
                                 Account
                             </button>
@@ -40,7 +41,7 @@ const DeskTopView = () => {
                                 className="bg-accent rounded-full flex items-center justify-center text-white font-bold text-center w-24 p-1 hover:bg-accent-hover"
                                 onClick={() => handleLogout() }
                             >
-                                
+                                Logout
                             </button>
                         </Link>
                     </>

@@ -1,8 +1,20 @@
 import ChatStore from "../store";
 import NavBar from "../components/ReUsable/NavBar";
+import { trpc } from "../utils/trpc";
+import { useEffect } from "react";
 
 const Account = () => {
-	const user = ChatStore.getState().currentUser;
+	const user = ChatStore(state => state.currentUser);
+	
+	const setCurrentUser = ChatStore(state => state.actions.setCurrentUser);
+	const userQuery = trpc.getUser.useQuery({userId: user?.userId});
+
+
+	useEffect(() => {
+		if (userQuery.data) {
+			setCurrentUser(userQuery.data);
+		}
+	}, [setCurrentUser, userQuery.data]);
 
 	return (
 		<div className="w-screen h-screen overflow-auto scrollbar-hide">
