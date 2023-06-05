@@ -51,10 +51,10 @@ app.use((0, cookie_parser_1.default)());
 app.use((0, cors_1.default)({ origin: 'http://localhost:3000', credentials: true }));
 app.use(express_1.default.json({ limit: '100mb' }));
 app.use(express_1.default.urlencoded({ limit: '100mb', extended: true }));
-function encryptPassword({ password, key }) {
+function encryptPassword({ password }) {
     const algorithm = 'aes-128-cbc';
     const iv = crypto_1.default.randomBytes(16); // Generate a random Initialization Vector (IV)
-    const cipher = crypto_1.default.createCipheriv(algorithm, key, iv);
+    const cipher = crypto_1.default.createCipheriv(algorithm, exports.key, iv);
     let encrypted = cipher.update(password, 'utf8', 'hex');
     encrypted += cipher.final('hex');
     const encryptedData = {
@@ -63,10 +63,10 @@ function encryptPassword({ password, key }) {
     };
     return encryptedData;
 }
-function decryptPassword({ encryptedData, key }) {
+function decryptPassword(encryptedData) {
     const algorithm = 'aes-128-cbc';
     const iv = Buffer.from(encryptedData.iv, 'hex');
-    const decipher = crypto_1.default.createDecipheriv(algorithm, key, iv);
+    const decipher = crypto_1.default.createDecipheriv(algorithm, exports.key, iv);
     let decrypted = decipher.update(encryptedData.password, 'hex', 'utf8');
     decrypted += decipher.final('utf8');
     return decrypted;
@@ -107,7 +107,7 @@ const appRouter = (0, trpc_2.router)({
         // Set the JWT as a cookie using
         ctx.res.cookie('auth', token, { maxAge: 4 * 60 * 60 * 1000, httpOnly: true });
         // insert the user into the database
-        const encryptedPassword = encryptPassword(password, exports.key);
+        const encryptedPassword = encryptPassword({ password });
         const user = await db.insertOne({ userId, email, userName, password: encryptedPassword, birthday });
         return user;
     }),
@@ -115,23 +115,19 @@ const appRouter = (0, trpc_2.router)({
         .input(zod_1.z.object({ email: zod_1.z.string().nullish(), password: zod_1.z.string().nullish() }))
         .query(async ({ input: { email, password }, ctx }) => {
         const db = (0, db_1.getDB)().collection("users");
-        // check if there is a token already in user cookies - for homepage refresh case
-        const userId = ctx.userId;
-        const userById = await db.findOne({ userId });
-        // if no user is found by id, check if there is a user by email and password - this is for actual login case
-        if (!userById) {
-            if (email && password) {
-                // find a user with the email
-                const user = await db.findOne({ email });
-                // check if this user exists
-                if (!user) {
-                    throw new server_1.TRPCError({
-                        code: "BAD_REQUEST",
-                        message: "Email not registered.",
-                        cause: "email",
-                    });
-                }
-                const decryptedPassword = decryptPassword(user.password, exports.key);
+        if (email && password) {
+            // find a user with the email
+            const user = await db.findOne({ email });
+            // check if this user exists
+            if (!user) {
+                throw new server_1.TRPCError({
+                    code: "BAD_REQUEST",
+                    message: "Email not registered.",
+                    cause: "email",
+                });
+            }
+            else {
+                const decryptedPassword = decryptPassword(user.password);
                 // make sure both credentials match
                 if (decryptedPassword.toString() != password || user.email !== email) {
                     throw new server_1.TRPCError({
@@ -140,12 +136,43 @@ const appRouter = (0, trpc_2.router)({
                         cause: "password",
                     });
                 }
-                return user;
+                const typedUser = { userId: user.userId, email: user.email, userName: user.userName, password: user.password, birthday: user.birthday };
+                // generate their new token from their userID
+                const token = jsonwebtoken_1.default.sign({ userId: user.userId }, exports.secretKey, { expiresIn: '4h' });
+                // Set the JWT as a cookie
+                ctx.res.cookie('auth', token, { maxAge: 4 * 60 * 60 * 1000, httpOnly: true });
+                // return the user
+                return typedUser;
             }
-            return null;
         }
         else {
-            return userById;
+            return null;
+        }
+    }),
+    logout: trpc_1.publicProcedure
+        .input(zod_1.z.object({}))
+        .query(async ({ ctx }) => {
+        ctx.res.clearCookie('auth');
+        return null;
+    }),
+    getUser: trpc_1.protectedProcedure
+        .input(zod_1.z.object({ userId: zod_1.z.string().nullish() }))
+        .query(async ({ ctx }) => {
+        const db = (0, db_1.getDB)().collection("users");
+        const token = ctx.req.cookies.auth;
+        if (token) {
+            const decoded = jsonwebtoken_1.default.verify(token, exports.secretKey);
+            const user = await db.findOne({ userId: decoded.userId });
+            if (user) {
+                const typedUser = { userId: user?.userId, email: user.email, userName: user.userName, password: user.password, birthday: user.birthday };
+                return typedUser;
+            }
+            else {
+                return null;
+            }
+        }
+        else {
+            return null;
         }
     })
 });

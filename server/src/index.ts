@@ -4,15 +4,16 @@ import cors from 'cors';
 import * as trpcExpress from '@trpc/server/adapters/express';
 import dotenv from 'dotenv';
 import { connect, getDB } from './utils/db';
-import { publicProcedure } from './utils/trpc';
+import { protectedProcedure, publicProcedure } from './utils/trpc';
 import { z } from 'zod';
 import { router, createContext } from './utils/trpc';
 import { TRPCError } from '@trpc/server';
 import cookieParser  from 'cookie-parser';
 import { v4 as uuidv4 } from 'uuid';
 import jwt from 'jsonwebtoken';
-import { Password, User } from '../../common/User';
+import { Password, PasswordSchema } from './types/Password';
 import crypto from 'crypto';
+import { User } from './types/User';
 
 dotenv.config();
 
@@ -51,13 +52,17 @@ function encryptPassword({ password } : { password: any }) {
 
 function decryptPassword(encryptedData: Password) {
   const algorithm = 'aes-128-cbc';
-  const iv = Buffer.from(encryptedData.iv, 'hex');
-  
-  const decipher = crypto.createDecipheriv(algorithm, key, iv);
-  let decrypted = decipher.update(encryptedData.password, 'hex', 'utf8');
-  decrypted += decipher.final('utf8');
-
-  return decrypted;
+  if ( encryptedData.password && encryptedData.iv ){
+    const iv = Buffer.from(encryptedData?.iv, 'hex');
+    const decipher = crypto.createDecipheriv(algorithm, key, iv);
+    if (decipher) {
+      let decrypted = decipher.update(encryptedData?.password, 'hex', 'utf8');
+      decrypted += decipher.final('utf8');
+      return decrypted;
+    }
+    else return "";
+  };
+  return "";
 }
 
 
@@ -103,14 +108,16 @@ const appRouter = router({
     }),
 
   login: publicProcedure
-    .input(z.object({ email: z.string().nullish(), password: z.string().nullish() }))
+    .input(z.object({ 
+      email: z.string().nullish(),
+      password: PasswordSchema.nullish()
+    }))
     .query(async ({ input: { email, password }, ctx }) => {
       const db = getDB().collection<User>("users");
       if (email && password) {
         // find a user with the email
-        const user = await db.findOne({ email });
-        const typedUser: User = {userId: user.userId, email: user.email, userName: user.userName, password: user.password, birthday: user.birthday}
-        // check if this user exists
+        const user = await db.findOne({ email }) as User;
+        // check if this user exists  
         if (!user) {
           throw new TRPCError({
             code: "BAD_REQUEST",
@@ -120,13 +127,14 @@ const appRouter = router({
         } else {
           const decryptedPassword = decryptPassword(user.password);
           // make sure both credentials match
-          if (decryptedPassword.toString() != password || user.email !== email) {
+          if (decryptedPassword.toString() != password.password || user.email !== email) {
             throw new TRPCError({
               code: "BAD_REQUEST",
               message: "Incorrect email or password.",
               cause: "password",
             });
           }
+          const typedUser: User = {userId: user.userId, email: user.email, userName: user.userName, password: user.password, birthday: user.birthday}
           // generate their new token from their userID
           const token = jwt.sign({ userId: user.userId }, secretKey, { expiresIn: '4h' });
           // Set the JWT as a cookie
@@ -145,8 +153,14 @@ const appRouter = router({
       ctx.res.clearCookie('auth');
       return null;
     }),
+  
+    getUser2: protectedProcedure
+    .input(z.object({}))
+    .query(async ({ ctx }) => {
+      return ctx.userId;
+    }),
 
-  getUser: publicProcedure
+  getAccount: protectedProcedure
     .input(z.object({ userId: z.string().nullish() }))
     .query(async ({ ctx }) => {
       const db = getDB().collection<User>("users");
@@ -154,13 +168,23 @@ const appRouter = router({
       if (token) {
         const decoded = jwt.verify(token, secretKey) as { userId: string };
         const user = await db.findOne({ userId: decoded.userId });
-        const typedUser: User = {userId: user.userId, email: user.email, userName: user.userName, password: user.password, birthday: user.birthday}
-        return typedUser;
+        if (user) {
+          const typedUser: User = {userId: user?.userId, email: user.email, userName: user.userName, password: user.password, birthday: user.birthday}
+          return typedUser;
+        } else {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "ERROR: Could not load User, Please try again.",
+          });
+        }
       } else {
-        return null;
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "ERROR: Session expired, Please try again.",
+        });
       }
-    })
-
+    }),
+  
 });
 
 export type AppRouter = typeof appRouter;

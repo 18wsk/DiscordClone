@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
-import { User } from "../../../common/User";
+import { User } from "../../../server/src/types/User";
 
 export interface Message {
     user: User | null;

@@ -10,8 +10,7 @@ const cookie_1 = __importDefault(require("cookie"));
 const createContext = ({ req, res }) => {
     let userId = null;
     // check if verified user from cookie
-    const authCookie = cookie_1.default.parse(req.headers.cookie || '').auth;
-    console.log("AUTH COOKIE", authCookie);
+    const authCookie = cookie_1.default.parse(req.headers.cookie || " ").auth;
     if (authCookie !== undefined) {
         try {
             const jwt_val = jsonwebtoken_1.default.verify(authCookie, "KOMOS");

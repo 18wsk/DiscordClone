@@ -2,6 +2,10 @@
 module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
   theme: {
+    fontFamily: {
+      Orbitron: ['Orbitron', "sans-serif"],
+      Bebas: ['Bebas Neue', "sans-serif"]
+    },
     extend: {
       colors: {
         "primary": "#FFFFFF",
@@ -52,6 +56,7 @@ module.exports = {
   },
   plugins: [
     require('tailwind-scrollbar-hide'),
+    // require('tailwindcss/plugins/bgOpacity'), 
   ],
 }
 

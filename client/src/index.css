@@ -2,17 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
-/*
-    @layer components {
-      * {
-            border: 1px dashed red;
-        }
-    }
-*/
+
+
+
+/* @layer components {
+    * {
+          border: 1px dashed red;
+      }
+  }  */
 
 @layer base {
     body {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Gordita', sans-serif;
     }
 }
+
+.bg-header {
+    background: url("/src/assets/social-media-5187243_1920.png") center center no-repeat;
+    background-attachment: fixed;
+}
+/*
+.bg-quote {
+    background: url(https://picsum.photos/1600/1600/?random) center center no-repeat;
+    background-attachment: fixed;
+}
+*/
+
 

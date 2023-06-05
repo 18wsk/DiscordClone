@@ -27,7 +27,7 @@ const PasswordInput = ({
         <div 
             className={
                 clsx(
-                    "w-full flex items-center bg-white rounded-md shadow-md border-2", 
+                    "w-full flex items-center bg-white rounded-md shadow-md border-2 xs:h-[32px] sm:h-[38px]", 
                     inputFocused && "border-accent/60 outline-none shadow-accent/60 ",
                     !passwordValid && "border-red-500"
                 )
@@ -36,7 +36,7 @@ const PasswordInput = ({
             onBlur={() => setInputFocused(false)}
             >
             <input 
-                className="w-full h-full xs:px-1 xs:py-1 sm:px-2 sm:py-2 bg-white rounded-md outline-none focus:outline-none"
+                className="w-full h-full xs:px-1 xs:py-1 sm:px-2 sm:py-2 bg-white rounded-md outline-none focus:outline-none my-auto"
                 type={handlePasswordType()}
                 value={value || ""}
                 onChange={(e) => onInputChange(e.target.value)}

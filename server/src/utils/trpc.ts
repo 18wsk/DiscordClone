@@ -36,7 +36,7 @@ export const router = t.router;
 const isAuthed = t.middleware((opts) => {
     const { ctx } = opts;
     if (!ctx.userId) {
-        throw new TRPCError({ code: 'UNAUTHORIZED', message: 'isAuthed'});
+        throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Unauthorized. Please Log in.'});
     }
     return opts.next({
         ctx: {

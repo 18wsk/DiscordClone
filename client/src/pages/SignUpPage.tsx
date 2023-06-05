@@ -11,6 +11,7 @@ import { TailSpin } from 'react-loading-icons';
 import { TRPCClientError } from '@trpc/client';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ChatStore from '../store';
 
 
 
@@ -30,7 +31,7 @@ const SignUpPage = () => {
     }
     const [dobValid, setDobValid] = useState<boolean>(true);
     
-    const [errorMsg, setErrorMsg] = useState<string | null>(null);
+    // const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
     const useCreateUser = trpc.signup.useMutation();
 
@@ -93,118 +94,125 @@ const SignUpPage = () => {
         setUsernameValid(true);
         setPasswordValid(true);
         setDobValid(true)
-        setErrorMsg(null);
         if (email === null || email.length === 0) {
             setEmailValid(false);
-            setErrorMsg("Email is required.");
+            handleValidationErrors("Email is required.");
             return false;
         }
         else if (!isValidEmail()) {
             setEmailValid(false);
-            setErrorMsg("Invalid email format.");
+            handleValidationErrors("Invalid email format.");
         }
         else if (username === null || username.length === 0) {
             setUsernameValid(false);
-            setErrorMsg("Username is required.");
+            handleValidationErrors("Username is required.");
             return false;
         }
         else if (password === null || password.length === 0) {
             setPasswordValid(false);
-            setErrorMsg("Password is required.");
+            handleValidationErrors("Password is required.");
             return false;
         }
         else if (!isValidPassword()) {
             setPasswordValid(false);
-            setErrorMsg("Invalid password format.");
+            handleValidationErrors("Invalid password format.");
         }
         else if (dob.day === (null) || dob.day === ("day") || dob.month === (null) || dob.month === ("month") || dob.year === (null) || dob.year === ("year") ) {
             setDobValid(false);
-            setErrorMsg("Valid Date of Birth is required.");
+            handleValidationErrors("Valid Date of Birth is required.");
             return false;
         }
         else if (!isValidBirthday({year: dob.year, month: dob.month, day: dob.day})) {
             setDobValid(false);
-            setErrorMsg("Please enter a valid date of birth.");
+            handleValidationErrors("Please enter a valid date of birth.");
         }
         else {
-            setErrorMsg(null);
             return true;
         }
     };
 
-    useEffect(() => {
-        if (errorMsg!== null) {
-            toast.error(errorMsg, {
-                position: "bottom-right",
-                autoClose: 10000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-            });
-        }
-    }, [errorMsg]);
+    const handleValidationErrors = (error: string | null) => {
+        toast.error(error, {
+            position: "bottom-right",
+            autoClose: 10000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
+    };
 
-
-    useEffect(() => {
-        if (useCreateUser.isSuccess) {
-            toast.success("You have successfully created an account!", {
-                position: "bottom-right",
-                autoClose: 10000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-            });
-            setTimeout(() => {
-                window.location.href = "/account";
-            }, 1000);
-        }
-    }, [useCreateUser.isSuccess]);
+    
+    const setActiveUser = ChatStore(state => state.actions.setCurrentUser);
+    const [loading, setLoading] = useState<boolean>(false);
 
 
     const handleSignUp = async (event: any) => {
         event.preventDefault();
         if (validateFields() ) {
-            try{
-                await useCreateUser.mutateAsync({
+            setLoading(true);
+            await useCreateUser.mutateAsync(
+                {
                     email: email!, 
                     password: password!, 
                     userName: username!, 
                     birthday: dob.day + "/" + dob.month + "/" + dob.year
-                });
-            } catch(error) {
-                if (error instanceof TRPCClientError) {
-                    setErrorMsg(error.message);
-                    if (error.message === "Email already registered to another account.") setEmailValid(false);
-                    if (error.message === "Username taken.") setUsernameValid(false);
+                },
+                {
+                    onSuccess: (data) => {
+                        setLoading(false);
+                        setActiveUser(data);
+                        toast.success("You have successfully created an account!", {
+                            position: "bottom-right",
+                            autoClose: 10000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "light",
+                        });
+                        setTimeout(() => {
+                            window.location.href = "/account";
+                        }, 1000);
+                    }, 
+                    onError: (error) => {
+                        setLoading(false);
+                        toast.error(error.message, {
+                            position: "bottom-right",
+                            autoClose: 10000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "light",
+                        });
+                        if (error.message === "Email already registered to another account.") setEmailValid(false);
+                        if (error.message === "Username taken.") setUsernameValid(false);
+                    },
                 }
-            }
+            );
         }
     };
 
     return (
         <div 
-            className="w-screen h-screen overflow-auto scrollbar-hide bg-white"
+            className="w-screen h-screen overflow-auto scrollbar-hide bg-white "
         >
             <NavBar />
             <motion.div 
-                className="min-h-full w-full flex flex-col items-center justify-center fixed xs:pb-10 md:pb-0"
+                className="min-h-full w-full flex flex-col items-center justify-center fixed xs:pb-10"
                 initial={{ opacity: 0,  y: 200 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: .8 }}
             >
                 <div className="xs:w-4/5 sm:w-full sm:mx-auto sm:max-w-lg rounded-md border-2 shadow-2xl shadow-accent/60 sm:p-8 xs:px-4 bg-white">
                     <div>
-                        <h1 className="md:text-2xl xs:text-lg text-accent font-bold text-center pt-4">Create an account</h1>
-                        <h1 className="md:text-sm xs:text-xs text-black text-center md:pb-4 xs:pb-2">Welcome to our community.</h1>
-                        <div className="w-full flex justify-center items-center h-[20px]">
-                            { useCreateUser.isLoading && <TailSpin stroke="#3e47c9" speed={.75}/>}
-                        </div>
+                        <h1 className="sm:text-2xl xs:text-lg text-accent font-bold text-center pt-4">Create an account</h1>
+                        <h1 className="sm:text-sm xs:text-xs text-black text-center md:pb-4 xs:pb-2">Welcome to our community.</h1>
                     </div>
                     <h2 className="text-black sm:pt-4 sm:pb-2 xs:py-1 font-semibold sm:text-sm xs:text-xs">EMAIL:</h2>
                         <FormInput value={email} onInputChange={setEmail} valid={emailValid}/>
@@ -219,10 +227,10 @@ const SignUpPage = () => {
                     </div>
                     <div className="w-full h-content flex justify-center md:pt-12 xs:py-4">
                         <button 
-                            className="sm:text-md xs:text-sm w-max-[440px] bg-accent hover:bg-accent-hover rounded-md flex items-center justify-center text-white font-bold text-center w-full h-[36px] sm:p-1 xs:px-1x shadow-md shadow-accent/50 hover:shadow-accent-hover/50"
+                            className="xs:h-[32px] sm:text-md xs:text-sm w-max-[440px] bg-accent hover:bg-accent-hover rounded-md flex items-center justify-center text-white font-bold text-center w-full h-[36px] sm:p-1 xs:px-1x shadow-md shadow-accent/50 hover:shadow-accent-hover/50"
                             onClick={handleSignUp}
                         >
-                            Sign In
+                            {loading ? <TailSpin  stroke="#FFFFFF" speed={.75}  className="text-white flex items-center justify-center p-2"/> : "Sign Up"}
                         </button>
                     </div>
                     <div className="text-black text-center sm:py-4 xs:pb-4 flex-0 w-min-full text-bold">
