@@ -2,11 +2,11 @@ import { z } from "zod";
 import { PasswordSchema } from "./Password";
 
 export const UserSchema = z.object({
-    userId: z.string().nullish(),
-    userName: z.string().nullish(),
-    email: z.string().nullish(),
+    userId: z.string().nullable(),
+    userName: z.string().nullable(),
+    email: z.string().nullable(),
     password: PasswordSchema,
-    birthday: z.string().nullish(),
+    birthday: z.string().nullable(),
 });
 
 export type User = z.infer<typeof UserSchema>;

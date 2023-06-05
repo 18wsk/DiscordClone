@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import FormInput from '../components/ReUsable/FormInput';
 import DateOfBirth from '../components/ReUsable/DateOfBirth';
 import { trpc } from '../utils/trpc';
-import { BirthDay } from '../utils/types';
+import { type Birthday } from '../../../server/src/types/Birthday';
 import { TailSpin } from 'react-loading-icons';
 import { TRPCClientError } from '@trpc/client';
 import { ToastContainer, toast } from 'react-toastify';
@@ -25,14 +25,12 @@ const SignUpPage = () => {
     const [username, setUsername] = useState<string | null>(null);
     const [userNameValid, setUsernameValid] = useState<boolean>(true);
 
-    const [dob, setDob] = useState<BirthDay>({day: null, month: null, year: null});
+    const [dob, setDob] = useState<Birthday>({day: null, month: null, year: null});
     const setDateOfBirth = ({name, value}: {name: string, value: string | number | null}) => { 
         setDob({...dob, [name]: value});
     }
     const [dobValid, setDobValid] = useState<boolean>(true);
     
-    // const [errorMsg, setErrorMsg] = useState<string | null>(null);
-
     const useCreateUser = trpc.signup.useMutation();
 
     const isValidEmail = () => {
@@ -122,7 +120,7 @@ const SignUpPage = () => {
             handleValidationErrors("Valid Date of Birth is required.");
             return false;
         }
-        else if (!isValidBirthday({year: dob.year, month: dob.month, day: dob.day})) {
+        else if (!isValidBirthday({year: dob?.year, month: dob?.month as string, day: dob?.day})) {
             setDobValid(false);
             handleValidationErrors("Please enter a valid date of birth.");
         }

@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 export const PasswordSchema = z.object({
-    password: z.string().nullish(),
-    iv: z.string().nullish(),
+    password: z.string().nullable(),
+    iv: z.string().nullable(),
 });
 
 

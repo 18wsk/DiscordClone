@@ -1,7 +1,7 @@
 import { Listbox } from '@headlessui/react'
 import { FiChevronDown } from 'react-icons/fi'
 import clsx from 'clsx';
-import { BirthDay } from '../../utils/types';
+import { type Birthday } from '../../../../server/src/types/Birthday';
 
 const DateOfBirth = ({ 
         dobValid,
@@ -10,7 +10,7 @@ const DateOfBirth = ({
     }: {
         setDateOfBirth: ({name, value}: {name: string, value: string | number | null}) => void,
         dobValid: boolean,
-        dob: BirthDay
+        dob: Birthday
     }) => {
 
     const MonthSelect = () => {
