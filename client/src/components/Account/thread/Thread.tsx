@@ -1,6 +1,6 @@
-import ThreadMessages from "../../components/thread/ThreadMessages";
-import ThreadInput from "../../components/thread/ThreadInput";
-import ThreadProfileComponent from "../../components/thread/ThreadProfileComponent";
+import ThreadMessages from "./ThreadMessages";
+import ThreadInput from "./ThreadInput";
+import ThreadProfileComponent from "./ThreadProfileComponent";
 
 const Thread = () => {
     return (

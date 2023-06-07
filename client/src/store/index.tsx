@@ -12,6 +12,7 @@ export interface Thread {
     roomId: string;
     users: User[];
     messages: Message[];
+    creator: User;
 }
 
 export interface TChatStore {

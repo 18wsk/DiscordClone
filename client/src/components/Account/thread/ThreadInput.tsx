@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-import { sendMessage } from "../../utils/websocket";
-import ChatStore, { TChatStore } from "../../store";
+import { sendMessage } from "../../../utils/websocket";
+import ChatStore, { TChatStore } from "../../../store";
 
 const ThreadInput = () => {
     const [currentMessage, setCurrentMessage] = useState("");

@@ -2,17 +2,18 @@ import { TailSpin } from "react-loading-icons";
 import ChatStore from "../../store";
 import { trpc } from "../../utils/trpc";
 import { Link } from "react-router-dom";
+import { User } from "../../../../server/src/types/User";
 
 const ProtectedRoute = ({ children }: {children: any}) => {
 	const setActiveUser = ChatStore(state => state.actions.setCurrentUser);
 
-    const getUserQuery = trpc.getAccount.useQuery({}, { 
+    const getUserQuery = trpc.auth.getAccount.useQuery({}, { 
         enabled: true, 
         refetchOnWindowFocus: true,
         refetchOnMount: true,
         refetchOnReconnect: true,
         retry: false,
-        onSuccess: (data) => {
+        onSuccess: (data: User) => {
             setActiveUser(data);
         }
     });

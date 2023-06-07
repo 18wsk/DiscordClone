@@ -1,6 +1,6 @@
 import { TRPCError, inferAsyncReturnType, initTRPC } from '@trpc/server';
 import * as trpcExpress from '@trpc/server/adapters/express';
-import jwt, { type JwtPayload} from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { Request } from 'express';
 import { Session } from 'express-session';
 import cookie from 'cookie';

@@ -1,14 +1,13 @@
-import NavBar from '../components/ReUsable/NavBar'
+import HomePageNavBar from '../components/Home/HomePageNavBar'
 import { Link } from 'react-router-dom'
 import PasswordInput from '../components/ReUsable/PasswordInput'
 import {motion} from "framer-motion";
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import FormInput from '../components/ReUsable/FormInput';
 import DateOfBirth from '../components/ReUsable/DateOfBirth';
 import { trpc } from '../utils/trpc';
 import { type Birthday } from '../../../server/src/types/Birthday';
 import { TailSpin } from 'react-loading-icons';
-import { TRPCClientError } from '@trpc/client';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ChatStore from '../store';
@@ -31,7 +30,7 @@ const SignUpPage = () => {
     }
     const [dobValid, setDobValid] = useState<boolean>(true);
     
-    const useCreateUser = trpc.signup.useMutation();
+    const useCreateUser = trpc.auth.signup.useMutation();
 
     const isValidEmail = () => {
         const regex =  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -200,7 +199,7 @@ const SignUpPage = () => {
         <div 
             className="w-screen h-screen overflow-auto scrollbar-hide bg-white "
         >
-            <NavBar />
+            <HomePageNavBar />
             <motion.div 
                 className="min-h-full w-full flex flex-col items-center justify-center fixed xs:pb-10"
                 initial={{ opacity: 0,  y: 200 }}
@@ -223,7 +222,7 @@ const SignUpPage = () => {
                     <div className='xs:py-1'>
                         <DateOfBirth dobValid={dobValid} setDateOfBirth={setDateOfBirth} dob={dob}/>
                     </div>
-                    <div className="w-full h-content flex justify-center md:pt-12 xs:py-4">
+                    <div className="w-full h-fit flex justify-center md:pt-12 xs:py-4">
                         <button 
                             className="xs:h-[32px] sm:text-md xs:text-sm w-max-[440px] bg-accent hover:bg-accent-hover rounded-md flex items-center justify-center text-white font-bold text-center w-full h-[36px] sm:p-1 xs:px-1x shadow-md shadow-accent/50 hover:shadow-accent-hover/50"
                             onClick={handleSignUp}

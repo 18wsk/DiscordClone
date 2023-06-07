@@ -1,4 +1,4 @@
-import ChatStore, { TChatStore, type Message as TMessage } from "../../store/index"
+import ChatStore, { TChatStore, type Message as TMessage } from "../../../store/index"
 
 const ThreadMessages = () => {
 

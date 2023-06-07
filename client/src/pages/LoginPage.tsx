@@ -1,4 +1,4 @@
-import NavBar from '../components/ReUsable/NavBar'
+import HomePageNavBar from '../components/Home/HomePageNavBar'
 import { Link } from 'react-router-dom'
 import PasswordInput from '../components/ReUsable/PasswordInput'
 import {motion} from "framer-motion";
@@ -26,7 +26,7 @@ const LoginPage = () => {
     
     const setActiveUser = ChatStore(state => state.actions.setCurrentUser);
 
-    const loginQuery = trpc.login.useQuery({email, password}, { 
+    const loginQuery = trpc.auth.login.useQuery({email, password}, { 
         enabled: false, 
         refetchOnWindowFocus: false,
         refetchOnMount: false,
@@ -125,7 +125,7 @@ const LoginPage = () => {
         <div 
             className="w-screen h-screen overflow-hidden scrollbar-hide bg-white"
         >
-            <NavBar/>
+            <HomePageNavBar/>
             <motion.div 
                 className="min-h-full w-full flex flex-col items-center justify-center"
                 initial={{ opacity: 0,  y: 200 }}
@@ -144,7 +144,7 @@ const LoginPage = () => {
                         <FormInput value={email} onInputChange={setEmail} valid={emailValid}/>
                     <h2 className="text-black sm:pt-8 sm:pb-2 xs:py-1 font-semibold sm:text-sm xs:text-xs flex items-center gap-x-2">PASSWORD:</h2>
                         <PasswordInput value={password?.password ?? ""} onInputChange={savePassword} passwordValid={passwordValid}/>
-                    <div className="w-full h-content flex justify-center pt-12">
+                    <div className="w-full h-fit flex justify-center pt-12">
                         <button
                             type="submit"
                             className="xs:h-[32px] bg-accent hover:bg-accent-hover rounded-md flex items-center justify-center text-white font-bold text-center w-full h-[36px] p-1 shadow-lg shadow-accent/50 hover:shadow-accent-hover/50"

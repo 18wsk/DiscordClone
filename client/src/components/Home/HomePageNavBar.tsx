@@ -17,43 +17,42 @@ const DeskTopView = ({
 }) => {
 
     return (
-        <div className='w-full h-full flex'>
-            <div className='absolute top-0 left-2 h-full w-max-[300px] flex items-center justify-between'>
-                <Link to="/" className="h-full flex items-center justify-center">
-                        <img src={logo} alt="logo" className="h-full  aspect-auto" />
-                </Link>
-            </div>
-            <div className='h-full w-full flex items-center justify-center'>
-                <div className='h-full w-content flex items-center justify-center'>
-                    <Link to="/" className="w-full h-full flex items-center justify-center">
-                        <button 
-                            className="flex items-center justify-center text-black text-center w-24 p-1 hover:text-accent rounded-lg  hover:bg-accent-hover/10"
-                        >
-                            Home
-                        </button>
+        <div className='h-full w-full flex items-center'>
+                <div className='h-full w-1/4 max-w-[300px] pl-2 flex items-center justify-start'>
+                    <Link to="/" className="h-full w-full flex items-center justify-start">
+                            <img src={logo} alt="logo" className="h-full aspect-auto" />
                     </Link>
-                    <Link to="/product" className="w-full h-full flex items-center justify-center">
-                        <button 
-                            className="flex items-center justify-center text-black text-center w-24 p-1 hover:text-accent rounded-lg  hover:bg-accent-hover/10"
-                        >
-                            Product
-                        </button>
-                    </Link>
-                    <Link to="/about" className="w-full h-full flex items-center justify-center">
-                        <button 
-                            className="flex items-center justify-center text-black text-center w-24 p-1 hover:text-accent rounded-lg  hover:bg-accent-hover/10"
-                        >
-                            About
-                        </button>
-                    </Link>
-                    <Link to="/contact" className="w-full h-full flex items-center justify-center">
-                        <button 
-                            className="flex items-center justify-center text-black text-center w-24 p-1 hover:text-accent rounded-lg  hover:bg-accent-hover/10"
-                        >
-                            Contact
-                        </button>
-                    </Link>
-                    <div className="w-full h-full flex items-center justify-center">
+                </div>
+                <div className='w-full h-full flex items-center justify-center'>
+                    <div className='w-1/2 h-full flex items-center justify-around'>
+                        <Link to="/" className="w-full h-full flex items-center justify-between">
+                            <button 
+                                className="flex items-center justify-center text-black text-center w-24 p-1 hover:text-accent rounded-lg  hover:bg-accent-hover/10"
+                            >
+                                Home
+                            </button>
+                        </Link>
+                        <Link to="/product" className="w-full h-full flex items-center justify-center">
+                            <button 
+                                className="flex items-center justify-center text-black text-center w-24 p-1 hover:text-accent rounded-lg  hover:bg-accent-hover/10"
+                            >
+                                Product
+                            </button>
+                        </Link>
+                        <Link to="/about" className="w-full h-full flex items-center justify-center">
+                            <button 
+                                className="flex items-center justify-center text-black text-center w-24 p-1 hover:text-accent rounded-lg  hover:bg-accent-hover/10"
+                            >
+                                About
+                            </button>
+                        </Link>
+                        <Link to="/contact" className="w-full h-full flex items-center justify-center">
+                            <button 
+                                className="flex items-center justify-center text-black text-center w-24 p-1 hover:text-accent rounded-lg  hover:bg-accent-hover/10"
+                            >
+                                Contact
+                            </button>
+                        </Link>
                         { currentUser
                             ? 
                                 <>
@@ -78,33 +77,32 @@ const DeskTopView = ({
                                 </>
                         }
                     </div>
-                    <div className="w-content absolute top-0 right-2 h-full flex items-center justify-center">
-                        { currentUser
-                            ? 
-                                <>
-                                    <Link to="/account" className="w-full h-full flex items-center justify-center">
-                                        <button 
-                                            className="flex items-center justify-center text-white bg-accent text-center w-24 p-1 rounded-lg  hover:bg-accent-hover"
-                                        >
-                                            Account
-                                        </button>
-                                    </Link>
-                                </>
-                            :
-                                <>
-                                    <Link to="/signup" className="w-content h-full flex items-center justify-end">
-                                        <button 
-                                            className="flex items-center justify-center text-white bg-accent text-center w-24 p-1 rounded-lg  hover:bg-accent-hover"
-                                        >
-                                            Sign Up
-                                        </button>
-                                    </Link>
-                                </>
-                        }
-                    </div>
                 </div>
+                <div className="w-1/4 h-full flex items-center justify-end pr-2">
+                    { currentUser
+                        ? 
+                            <>
+                                <Link to="/account" className="w-full h-full flex items-center justify-end">
+                                    <button 
+                                        className="flex items-center justify-center text-white bg-accent text-center w-24 p-1 rounded-lg  hover:bg-accent-hover"
+                                    >
+                                        Account
+                                    </button>
+                                </Link>
+                            </>
+                        :
+                            <>
+                                <Link to="/signup" className="w-fit h-full flex items-center justify-end">
+                                    <button 
+                                        className="flex items-center justify-center text-white bg-accent text-center w-24 p-1 rounded-lg  hover:bg-accent-hover"
+                                    >
+                                        Sign Up
+                                    </button>
+                                </Link>
+                            </>
+                    }
+                    </div>
             </div>
-        </div>
     )
 };
 
@@ -230,13 +228,13 @@ const MobileView = ({
 };
 
 
-const NavBar = () => {
+const HomePageNavBar = () => {
     const logo = require('../../assets/Logo.jpg');
     const setActiveUser = ChatStore(state => state.actions.setCurrentUser);
 
     const [ alreadyUser, setAlreadyUser ] = useState(false);
 
-    const { refetch: refetchLogout } = trpc.logout.useQuery({}, { 
+    const { refetch: refetchLogout } = trpc.auth.logout.useQuery({}, { 
         enabled: false, 
         refetchOnWindowFocus: false,
         refetchOnMount: false,
@@ -248,7 +246,7 @@ const NavBar = () => {
         }
     });
 
-    trpc.getUser2.useQuery({}, { 
+    trpc.auth.checkUser.useQuery({}, { 
         enabled: true, 
         refetchOnWindowFocus: true,
         refetchOnMount: true,
@@ -280,4 +278,4 @@ const NavBar = () => {
     )
 }
 
-export default NavBar
+export default HomePageNavBar

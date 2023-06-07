@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom'
-import NavBar from '../components/ReUsable/NavBar'
+import HomePageNavBar from '../components/Home/HomePageNavBar'
 import PageSection from '../components/ReUsable/PageSection'
 import { motion } from 'framer-motion'
 
 const HomePage = () => {
     return (
         <div className="w-screen h-screen overflow-auto scrollbar-hide bg-white">
-            <NavBar />
+            <HomePageNavBar />
             <PageSection>
                 <div className="w-full h-full flex flex-col items-center justify-center">
                     <div className="lg:w-[1100px] xs:w-full h-full flex flex-col items-center justify-center">
