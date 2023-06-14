@@ -1,4 +1,5 @@
 import { Auth } from "./Auth";
+import { Thread } from "./Threads";
 import { router } from "../utils/trpc";
 
 /**
@@ -7,6 +8,7 @@ import { router } from "../utils/trpc";
 
 const mainRouter = router({
     auth: Auth,
+    thread: Thread
 });
 
 export type Router = typeof mainRouter;

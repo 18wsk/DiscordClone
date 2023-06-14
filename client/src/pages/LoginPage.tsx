@@ -123,7 +123,7 @@ const LoginPage = () => {
 
     return (
         <div 
-            className="w-screen h-screen overflow-hidden scrollbar-hide bg-white"
+            className="w-screen h-screen overflow-hidden scrollbar-hide bg-primary"
         >
             <HomePageNavBar/>
             <motion.div 
@@ -132,7 +132,7 @@ const LoginPage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: .8 }}
             >
-                <div className="xs:w-4/5 sm:w-full sm:mx-auto sm:max-w-lg rounded-md border-2 shadow-2xl shadow-accent/60 sm:p-8 xs:px-4 bg-white">
+                <div className="xs:w-4/5 sm:w-full sm:mx-auto sm:max-w-lg rounded-md border-2 shadow-2xl shadow-accent/60 sm:p-8 xs:px-4 bg-primary">
                     <div>
                         <h1 className="md:text-2xl xs:text-xl text-accent font-bold text-center md:pt-10 xs:pt-4">Welcome back!</h1>
                         <h1 className="md:text-sm xs:text-xs text-black text-center md:pb-4 xs:pb-2">We are happy to see you again.</h1>

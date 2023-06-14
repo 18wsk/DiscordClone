@@ -3,19 +3,17 @@ module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
   theme: {
     fontFamily: {
+      Inter: ['Inter', "sans-serif"],
       Orbitron: ['Orbitron', "sans-serif"],
       Bebas: ['Bebas Neue', "sans-serif"]
     },
     extend: {
       colors: {
         "primary": "#FFFFFF",
-        "secondary": "#313338",
-        "tertiary-2": "#2b2d31",
-        "tertiary": "#1E1F22",
+        "secondary": "#CCE0FF",
+        "tertiary": "#e0dede",
 				"accent": "#3e47c9",
         "accent-hover": "#7289DA",
-				"neutral": "#DCDDDE",
-				"base-100": "#FFFFFF",
 				"info": "#4E5D94",
 				"success": "#3AA655",
 				"warning": "#FAA61A",

@@ -4,10 +4,12 @@ import { TRPCError } from '@trpc/server';
 import { countUserByEmail, countUserByUserName, createUser } from '../utils/db';
 import { Password, PasswordSchema } from '../types/Password';
 import { User } from '../types/User';
-import { UserModel } from '../types/models/User';
+import { UserModel } from '../types/models/schemas';
 import { v4 as uuidv4 } from 'uuid';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
+
+import cookie from 'cookie';
 
 const secretKey = process.env.SECRET_KEY || "KOMOS"; // for JWT
 const key = process.env.CIPHER_KEY || '0123456789abcdef'; // 16-byte key in hexadecimal format
@@ -78,7 +80,7 @@ export const Auth = router({
         ctx.res.cookie('auth', token, { maxAge: 4 * 60 * 60 * 1000, httpOnly: true});
         // insert the user into the database
         const encryptedPassword = encryptPassword({ password });
-        const user = await createUser({ user: { userId, email, userName, password: encryptedPassword, birthday }});
+        const user = await createUser({ user: { userId, email, userName, password: encryptedPassword, birthday, threads: [] }});
         return user;
       }),
   
@@ -136,10 +138,7 @@ export const Auth = router({
     getAccount: protectedProcedure
       .input(z.object({ userId: z.string().nullish() }))
       .query(async ({ ctx }) => {
-        const token = ctx.req.cookies.auth;
-        if (token) {
-          const decoded = jwt.verify(token, secretKey) as { userId: string };
-          const user = await UserModel.findOne({ userId: decoded.userId });
+        const user = await UserModel.findOne({ userId: ctx.userId });
           if (!user) {
             throw new TRPCError({
               code: "BAD_REQUEST",
@@ -148,12 +147,6 @@ export const Auth = router({
           } else {
             return user;
           }
-        } else {
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-            message: "ERROR: Session expired, Please try again.",
-          });
-        }
       }),
     
   });

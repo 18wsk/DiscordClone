@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 
 const HomePage = () => {
     return (
-        <div className="w-screen h-screen overflow-auto scrollbar-hide bg-white">
+        <div className="w-screen h-screen overflow-auto scrollbar-hide bg-primary">
             <HomePageNavBar />
             <PageSection>
                 <div className="w-full h-full flex flex-col items-center justify-center">

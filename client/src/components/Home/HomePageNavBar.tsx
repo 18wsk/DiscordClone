@@ -136,7 +136,7 @@ const MobileView = ({
                     leaveFrom="transform scale-100 opacity-100"
                     leaveTo="transform scale-95 opacity-0"
                 >
-                    <Menu.Items className="absolute top-[28px] right-0 bg-white w-screen shadow-lg shadow-accent/20 border-b broder-l border-r border-accent/10 pb-4">
+                    <Menu.Items className="absolute top-[28px] right-0 bg-primary w-screen shadow-lg shadow-accent/20 border-b broder-l border-r border-accent/10 pb-4">
                         <Menu.Item>
                             <Link to="/" className="w-full h-full flex items-center justify-center">
                                 <button 
@@ -267,7 +267,7 @@ const HomePageNavBar = () => {
     }
 
     return (
-        <div className="sticky top-0 flex w-full h-[60px] justify-between z-50 bg-white shadow-lg shadow-accent/20 border border-accent/10">
+        <div className="sticky top-0 flex w-full h-[60px] justify-between z-50 bg-primary shadow-lg shadow-accent/20 border border-accent/10">
             <div className="xs:hidden md:flex w-full h-full">
                 <DeskTopView logo={logo} currentUser={alreadyUser} handleLogout={handleLogout}/>
             </div>

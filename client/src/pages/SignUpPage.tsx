@@ -197,7 +197,7 @@ const SignUpPage = () => {
 
     return (
         <div 
-            className="w-screen h-screen overflow-auto scrollbar-hide bg-white "
+            className="w-screen h-screen overflow-auto scrollbar-hide bg-primary "
         >
             <HomePageNavBar />
             <motion.div 
@@ -206,7 +206,7 @@ const SignUpPage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: .8 }}
             >
-                <div className="xs:w-4/5 sm:w-full sm:mx-auto sm:max-w-lg rounded-md border-2 shadow-2xl shadow-accent/60 sm:p-8 xs:px-4 bg-white">
+                <div className="xs:w-4/5 sm:w-full sm:mx-auto sm:max-w-lg rounded-md border-2 shadow-2xl shadow-accent/60 sm:p-8 xs:px-4 bg-primary">
                     <div>
                         <h1 className="sm:text-2xl xs:text-lg text-accent font-bold text-center pt-4">Create an account</h1>
                         <h1 className="sm:text-sm xs:text-xs text-black text-center md:pb-4 xs:pb-2">Welcome to our community.</h1>
