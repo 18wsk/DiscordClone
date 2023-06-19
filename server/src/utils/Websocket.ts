@@ -26,6 +26,11 @@ const Websocket = (server: http.Server) => {
             const { room, message } = data;
             socket.to(room).emit('receiveMessage', message);
         });
+
+        socket.on('setTyper', (data) => {
+            const { room, typer } = data;
+            socket.to(room).emit('typing', typer);
+        });
     });
     
 };

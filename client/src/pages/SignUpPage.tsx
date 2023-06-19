@@ -1,4 +1,4 @@
-import HomePageNavBar from '../components/Home/HomePageNavBar'
+import HomePageNavBar from '../components/Home/NavBar/HomePageNavBar'
 import { Link } from 'react-router-dom'
 import PasswordInput from '../components/ReUsable/PasswordInput'
 import {motion} from "framer-motion";
@@ -31,6 +31,8 @@ const SignUpPage = () => {
     const [dobValid, setDobValid] = useState<boolean>(true);
     
     const useCreateUser = trpc.auth.signup.useMutation();
+
+    const logo = require('../assets/logo.png');
 
     const isValidEmail = () => {
         const regex =  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -199,7 +201,22 @@ const SignUpPage = () => {
         <div 
             className="w-screen h-screen overflow-auto scrollbar-hide bg-primary "
         >
-            <HomePageNavBar />
+            <div className="sticky top-0 flex w-full h-[60px] justify-between z-50 bg-primary shadow-lg shadow-accent/20 border border-accent/10">
+                <div className='h-full w-full flex items-center justify-start pl-2'>
+                    <Link to="/" className="h-full flex items-center justify-center ">
+                            <img src={logo} alt="logo" className="h-2/3 w-[160px] aspect-video" />
+                    </Link>
+                </div>
+                <div className='h-full w-full flex items-center justify-end pr-2'>
+                    <Link to="/login" className="w-fit h-full flex items-center justify-end">
+                        <button 
+                            className="flex items-center justify-center text-white bg-accent text-center w-24 p-1 rounded-lg  hover:bg-accent-hover"
+                        >
+                            Login
+                        </button>
+                    </Link>
+                </div>
+            </div>
             <motion.div 
                 className="min-h-full w-full flex flex-col items-center justify-center fixed xs:pb-10"
                 initial={{ opacity: 0,  y: 200 }}

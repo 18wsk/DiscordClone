@@ -1,4 +1,3 @@
-import HomePageNavBar from '../components/Home/HomePageNavBar'
 import { Link } from 'react-router-dom'
 import PasswordInput from '../components/ReUsable/PasswordInput'
 import {motion} from "framer-motion";
@@ -13,6 +12,7 @@ import { Password } from '../../../server/src/types/Password';
 const LoginPage = () => {
     const [password, setPassword] = useState<Password | null>({ password: null, iv: null });
     const [email, setEmail] = useState("");
+    const logo = require('../assets/logo.png');
 
     const savePassword = (value: string) => {
         setPassword({
@@ -125,7 +125,22 @@ const LoginPage = () => {
         <div 
             className="w-screen h-screen overflow-hidden scrollbar-hide bg-primary"
         >
-            <HomePageNavBar/>
+            <div className="sticky top-0 flex w-full h-[60px] justify-between z-50 bg-primary shadow-lg shadow-accent/20 border border-accent/10">
+                <div className='h-full w-full flex items-center justify-start pl-2'>
+                    <Link to="/" className="h-full flex items-center justify-center ">
+                            <img src={logo} alt="logo" className="h-2/3 w-[160px] aspect-video" />
+                    </Link>
+                </div>
+                <div className='h-full w-full flex items-center justify-end pr-2'>
+                    <Link to="/signup" className="w-fit h-full flex items-center justify-end">
+                        <button 
+                            className="flex items-center justify-center text-white bg-accent text-center w-24 p-1 rounded-lg  hover:bg-accent-hover"
+                        >
+                            Sign Up
+                        </button>
+                    </Link>
+                </div>
+            </div>
             <motion.div 
                 className="min-h-full w-full flex flex-col items-center justify-center"
                 initial={{ opacity: 0,  y: 200 }}

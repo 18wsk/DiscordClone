@@ -8,18 +8,13 @@ import { ToastContainer, toast } from "react-toastify";
 import ThreadFeed from "../components/Account/thread/ThreadFeed";
 import { trpc } from "../utils/trpc";
 import clsx from 'clsx';
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { RiCalendarEventFill } from "react-icons/ri";
-import { BsFillChatSquareTextFill, BsInfoCircleFill } from "react-icons/bs";
-import { IoIosContact } from "react-icons/io";
+import { useEffect } from "react";
 
 const Account = () => {
 	const threads =  ChatStore(state => state.threads);
 	const setThreads = ChatStore(state => state.actions.setThreads);
 	const setCurrentThread = ChatStore(state => state.actions.setCurrentThread);
 	const currentThread = ChatStore(state => state.currentThread);
-	const [loadThreadNav, setLoadThreadNav] = useState(false);
 
 	trpc.thread.getThreads.useQuery({}, { 
         enabled: true, 
@@ -78,38 +73,11 @@ const Account = () => {
 	};
 
 
-	const ThreadDetails = () => {
-		return(
-			<motion.div 
-				className="w-[300px] h-screen bg-secondary flex flex-col px-2 py-1 z-[10] pt-2"
-				initial={{ opacity: 0, y: 600  }}
-				animate={{ opacity: 1, y: 0 }}
-				transition={{ duration: 0.7, delay: 0.7 }}
-			>
-				<div className="w-full h-fit bg-white p-1 shadow-md shadow-accent flex items-center justify-center">
-					<h1 className=
-						"text-3xl w-full text-white font-extrabold text-center underline decoration-accent bg-secondary/70 p-2 shadow-inner"
-					>	
-						{currentThread?.name}
-					</h1>
-				</div>
-				<div className="w-full h-fit flex flex-col items-start justify-start pl-2 pt-8 gap-y-4">
-					<button className="text-white text-md font-bold w-full text-start flex items-center gap-x-2">{<BsFillChatSquareTextFill/>} Chat</button>
-					<button className="text-white text-md font-bold w-full text-start flex items-center gap-x-2">{<RiCalendarEventFill/>} Events</button>
-					<button className="text-white text-md font-bold w-full text-start flex items-center gap-x-2"> {<BsInfoCircleFill/>} Information</button>
-					<button className="text-white text-md font-bold w-full text-start flex items-center gap-x-2">{<IoIosContact/>} Contact</button>
-				</div>
-			</motion.div>
-		);
-	};
-
 	return (
 		<div className="w-screen h-screen relative overflow-hidden">
 			<ProtectedRoute>
 				<div className={clsx(
-					"w-full h-screen flex",
-					currentThread && "flex-cols-3",
-					!currentThread && "flex-cols-2"
+					"w-screen h-screen flex flex-cols-2",
 				)}>
 					<div className=" w-[300px] h-screen bg-slate-100 z-[500]">
 						<div className="w-[300px] h-[100px]">
@@ -122,7 +90,7 @@ const Account = () => {
 							<div className="w-full h-full overflow-y-scroll scrollbar-hide relative bg-slate-100 scroll-smooth">
 								{threads.map((thread: Thread) => {
 									return (
-										<div className="w-full h-fit py-1 px-2 ">
+										<div className="w-full h-fit py-1 px-2">
 											<ThreadListComponent thread={thread} key={thread.roomId}/>
 										</div>
 									)
@@ -136,10 +104,9 @@ const Account = () => {
 						</div>
 					</div>
 					{ currentThread !== null ? 
-						<>
-							<ThreadDetails />
-							<ThreadFeed />
-						</>
+						<div className="w-full h-full">
+							<ThreadFeed/>
+						</div>
 						: 
 						<>
 							<p>DISCOVER</p>
