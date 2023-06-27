@@ -1,45 +1,38 @@
-import WebSocket from 'ws';
 
-const wss = new WebSocket.Server({ noServer: true });
+import http from 'http';
+import { Server } from 'socket.io';
 
-const clients = new Set<WebSocket>();
-const server = {} as any; // REMOVE
-
-{ /* server handles incoming requests and upgrades them to a socket connection */ }
-server.on('upgrade', (request, socket, head) => {
-    wss.handleUpgrade(request, socket, head, (ws) => {
-        wss.emit('connection', ws, request);
+const Websocket = (server: http.Server) => {
+    const io = new Server(server, {
+        cors: {
+            origin: 'http://localhost:3000'
+        }
     });
-});
 
-wss.on('connection', (socket) => {
-    console.log("Client connected");
-    clients.add(socket);
 
-    wss.clients.forEach((client) => {
-
-    const welcomeMsg = {
-        user: null,
-        payload: "Welcome to the chat!",
-        timestamp: null // new Date().toLocaleString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true })
-    }
-    client.send(Buffer.from(JSON.stringify(welcomeMsg)));
-    
-});
-
-    socket.on('message', (message: string) => {
-    if (message) {
-        clients.forEach((client) => {
-            if (client !== socket) {
-                client.send(message);
-            }
+    io.on('connection', (socket) => {
+        socket.on('joinRoom', (room) => {
+            socket.join(room);
+            // console.log(`User joined room: ${room}`);
+            // io.to(room).emit('receiveMessage', `User joined room: ${room}`);
         });
-    }
-    });
 
-    socket.on('close', () => {
-        console.log("Client disconnected");
-        clients.delete(socket);
-    });
+        socket.on('leaveRoom', (room) => {
+            socket.leave(room);
+            console.log(`User left room: ${room}`);
+        });
 
-});
+        socket.on('sendMessage', (data) => {
+            const { room, message } = data;
+            socket.to(room).emit('receiveMessage', message);
+        });
+
+        socket.on('setTyper', (data) => {
+            const { room, typer } = data;
+            socket.to(room).emit('typing', typer);
+        });
+    });
+    
+};
+
+export default Websocket;

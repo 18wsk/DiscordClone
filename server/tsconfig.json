@@ -6,6 +6,6 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
   },
-  "include": ["src/**/*", "src/types/models/User.ts"],
+  "include": ["src/**/*", "src/types/models/schemas.ts"],
   "exclude": ["node_modules"]
 }

@@ -3,13 +3,72 @@
 @tailwind utilities;
 
 
-
-
 /* @layer components {
-    * {
-          border: 1px dashed red;
-      }
-  }  */
+        * {
+            border: 1px dashed red;
+        }
+*/
+
+@layer components {
+    .discord-input {
+        display: none;
+    }
+
+    .discord-input-label {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-radius: 9999px;
+        border: 2px dashed #3e47c9;
+        cursor: pointer;
+        height: 8rem;
+        width: 8rem;
+    }
+    .discord-input-icon {
+        height: 3rem;
+        width: 3rem;
+    }
+
+    .discord-input-label:hover .discord-input-icon {
+        color: #3e47c9;
+    }
+
+    .discord-input-text {
+        font-size: 1rem;
+        width: 100%;
+        text-align: center;
+        font-weight: bold;
+        resize: none;
+    }
+
+    .discord-input-label:hover .discord-input-text  {
+        color: #3e47c9;
+    }
+
+    .threadInput::-webkit-scrollbar {
+        width: 10px; /* Width of the scrollbar */
+        border-radius: 5px; /* Rounded corners */
+    }
+
+    .threadInput::-webkit-scrollbar-track {
+        background: #ffff; /* Background color of the scrollbar track with opacity */
+        border-radius: 5px; /* Rounded corners */
+        resize: vertical; /* Allow vertical resizing */
+        overflow: hidden; /* Hide any overflowing content */
+    }
+
+    .threadInput::-webkit-scrollbar-thumb {
+        background: rgba(62, 71, 201, 0.5); /* Color of the scrollbar thumb with opacity */
+        border-radius: 5px; /* Rounded corners */
+    }
+
+    .threadInput::-webkit-scrollbar-thumb:hover {
+        background: rgba(85, 85, 85, 0.5); /* Color of the scrollbar thumb on hover with opacity */
+    }
+}
+
+
 
 @layer base {
     body {

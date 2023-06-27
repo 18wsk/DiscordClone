@@ -10,8 +10,8 @@ const cookie_1 = __importDefault(require("cookie"));
 const createContext = ({ req, res }) => {
     let userId = null;
     // check if verified user from cookie
-    const authCookie = cookie_1.default.parse(req.headers.cookie || '').auth;
-    if (authCookie) {
+    const authCookie = cookie_1.default.parse(req.headers.cookie || " ").auth;
+    if (authCookie !== undefined) {
         try {
             const jwt_val = jsonwebtoken_1.default.verify(authCookie, "KOMOS");
             if (jwt_val) {
@@ -31,7 +31,7 @@ exports.router = t.router;
 const isAuthed = t.middleware((opts) => {
     const { ctx } = opts;
     if (!ctx.userId) {
-        throw new server_1.TRPCError({ code: 'UNAUTHORIZED', message: 'isAuthed' });
+        throw new server_1.TRPCError({ code: 'UNAUTHORIZED', message: 'Unauthorized. Please Log in.' });
     }
     return opts.next({
         ctx: {

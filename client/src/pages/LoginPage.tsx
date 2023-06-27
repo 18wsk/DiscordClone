@@ -1,4 +1,3 @@
-import NavBar from '../components/ReUsable/NavBar'
 import { Link } from 'react-router-dom'
 import PasswordInput from '../components/ReUsable/PasswordInput'
 import {motion} from "framer-motion";
@@ -13,6 +12,7 @@ import { Password } from '../../../server/src/types/Password';
 const LoginPage = () => {
     const [password, setPassword] = useState<Password | null>({ password: null, iv: null });
     const [email, setEmail] = useState("");
+    const logo = require('../assets/logo.png');
 
     const savePassword = (value: string) => {
         setPassword({
@@ -26,7 +26,7 @@ const LoginPage = () => {
     
     const setActiveUser = ChatStore(state => state.actions.setCurrentUser);
 
-    const loginQuery = trpc.login.useQuery({email, password}, { 
+    const loginQuery = trpc.auth.login.useQuery({email, password}, { 
         enabled: false, 
         refetchOnWindowFocus: false,
         refetchOnMount: false,
@@ -123,16 +123,31 @@ const LoginPage = () => {
 
     return (
         <div 
-            className="w-screen h-screen overflow-hidden scrollbar-hide bg-white"
+            className="w-screen h-screen overflow-hidden scrollbar-hide bg-primary"
         >
-            <NavBar/>
+            <div className="sticky top-0 flex w-full h-[60px] justify-between z-50 bg-primary shadow-lg shadow-accent/20 border border-accent/10">
+                <div className='h-full w-full flex items-center justify-start pl-2'>
+                    <Link to="/" className="h-full flex items-center justify-center ">
+                            <img src={logo} alt="logo" className="h-2/3 w-[160px] aspect-video" />
+                    </Link>
+                </div>
+                <div className='h-full w-full flex items-center justify-end pr-2'>
+                    <Link to="/signup" className="w-fit h-full flex items-center justify-end">
+                        <button 
+                            className="flex items-center justify-center text-white bg-accent text-center w-24 p-1 rounded-lg  hover:bg-accent-hover"
+                        >
+                            Sign Up
+                        </button>
+                    </Link>
+                </div>
+            </div>
             <motion.div 
                 className="min-h-full w-full flex flex-col items-center justify-center"
                 initial={{ opacity: 0,  y: 200 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: .8 }}
             >
-                <div className="xs:w-4/5 sm:w-full sm:mx-auto sm:max-w-lg rounded-md border-2 shadow-2xl shadow-accent/60 sm:p-8 xs:px-4 bg-white">
+                <div className="xs:w-4/5 sm:w-full sm:mx-auto sm:max-w-lg rounded-md border-2 shadow-2xl shadow-accent/60 sm:p-8 xs:px-4 bg-primary">
                     <div>
                         <h1 className="md:text-2xl xs:text-xl text-accent font-bold text-center md:pt-10 xs:pt-4">Welcome back!</h1>
                         <h1 className="md:text-sm xs:text-xs text-black text-center md:pb-4 xs:pb-2">We are happy to see you again.</h1>
@@ -144,7 +159,7 @@ const LoginPage = () => {
                         <FormInput value={email} onInputChange={setEmail} valid={emailValid}/>
                     <h2 className="text-black sm:pt-8 sm:pb-2 xs:py-1 font-semibold sm:text-sm xs:text-xs flex items-center gap-x-2">PASSWORD:</h2>
                         <PasswordInput value={password?.password ?? ""} onInputChange={savePassword} passwordValid={passwordValid}/>
-                    <div className="w-full h-content flex justify-center pt-12">
+                    <div className="w-full h-fit flex justify-center pt-12">
                         <button
                             type="submit"
                             className="xs:h-[32px] bg-accent hover:bg-accent-hover rounded-md flex items-center justify-center text-white font-bold text-center w-full h-[36px] p-1 shadow-lg shadow-accent/50 hover:shadow-accent-hover/50"

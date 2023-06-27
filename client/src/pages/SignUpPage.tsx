@@ -1,14 +1,13 @@
-import NavBar from '../components/ReUsable/NavBar'
+import HomePageNavBar from '../components/Home/NavBar/HomePageNavBar'
 import { Link } from 'react-router-dom'
 import PasswordInput from '../components/ReUsable/PasswordInput'
 import {motion} from "framer-motion";
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import FormInput from '../components/ReUsable/FormInput';
 import DateOfBirth from '../components/ReUsable/DateOfBirth';
 import { trpc } from '../utils/trpc';
 import { type Birthday } from '../../../server/src/types/Birthday';
 import { TailSpin } from 'react-loading-icons';
-import { TRPCClientError } from '@trpc/client';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ChatStore from '../store';
@@ -31,7 +30,9 @@ const SignUpPage = () => {
     }
     const [dobValid, setDobValid] = useState<boolean>(true);
     
-    const useCreateUser = trpc.signup.useMutation();
+    const useCreateUser = trpc.auth.signup.useMutation();
+
+    const logo = require('../assets/logo.png');
 
     const isValidEmail = () => {
         const regex =  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -198,16 +199,31 @@ const SignUpPage = () => {
 
     return (
         <div 
-            className="w-screen h-screen overflow-auto scrollbar-hide bg-white "
+            className="w-screen h-screen overflow-auto scrollbar-hide bg-primary "
         >
-            <NavBar />
+            <div className="sticky top-0 flex w-full h-[60px] justify-between z-50 bg-primary shadow-lg shadow-accent/20 border border-accent/10">
+                <div className='h-full w-full flex items-center justify-start pl-2'>
+                    <Link to="/" className="h-full flex items-center justify-center ">
+                            <img src={logo} alt="logo" className="h-2/3 w-[160px] aspect-video" />
+                    </Link>
+                </div>
+                <div className='h-full w-full flex items-center justify-end pr-2'>
+                    <Link to="/login" className="w-fit h-full flex items-center justify-end">
+                        <button 
+                            className="flex items-center justify-center text-white bg-accent text-center w-24 p-1 rounded-lg  hover:bg-accent-hover"
+                        >
+                            Login
+                        </button>
+                    </Link>
+                </div>
+            </div>
             <motion.div 
                 className="min-h-full w-full flex flex-col items-center justify-center fixed xs:pb-10"
                 initial={{ opacity: 0,  y: 200 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: .8 }}
             >
-                <div className="xs:w-4/5 sm:w-full sm:mx-auto sm:max-w-lg rounded-md border-2 shadow-2xl shadow-accent/60 sm:p-8 xs:px-4 bg-white">
+                <div className="xs:w-4/5 sm:w-full sm:mx-auto sm:max-w-lg rounded-md border-2 shadow-2xl shadow-accent/60 sm:p-8 xs:px-4 bg-primary">
                     <div>
                         <h1 className="sm:text-2xl xs:text-lg text-accent font-bold text-center pt-4">Create an account</h1>
                         <h1 className="sm:text-sm xs:text-xs text-black text-center md:pb-4 xs:pb-2">Welcome to our community.</h1>
@@ -223,7 +239,7 @@ const SignUpPage = () => {
                     <div className='xs:py-1'>
                         <DateOfBirth dobValid={dobValid} setDateOfBirth={setDateOfBirth} dob={dob}/>
                     </div>
-                    <div className="w-full h-content flex justify-center md:pt-12 xs:py-4">
+                    <div className="w-full h-fit flex justify-center md:pt-12 xs:py-4">
                         <button 
                             className="xs:h-[32px] sm:text-md xs:text-sm w-max-[440px] bg-accent hover:bg-accent-hover rounded-md flex items-center justify-center text-white font-bold text-center w-full h-[36px] sm:p-1 xs:px-1x shadow-md shadow-accent/50 hover:shadow-accent-hover/50"
                             onClick={handleSignUp}

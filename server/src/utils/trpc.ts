@@ -1,15 +1,15 @@
 import { TRPCError, inferAsyncReturnType, initTRPC } from '@trpc/server';
 import * as trpcExpress from '@trpc/server/adapters/express';
-import jwt, { type JwtPayload} from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { Request } from 'express';
 import { Session } from 'express-session';
 import cookie from 'cookie';
 
-type ExpressRequest = Omit<trpcExpress.CreateExpressContextOptions, 'req'> & {
+export type ExpressRequest = Omit<trpcExpress.CreateExpressContextOptions, 'req'> & {
     req: Request & { session: Session }
 }
 
-export const createContext = ({ req, res }: ExpressRequest) => {
+export const createContext = ({ req, res }: ExpressRequest ) => {
     let userId: string | null = null;
     // check if verified user from cookie
     const authCookie = cookie.parse(req.headers.cookie || " ").auth;
@@ -23,11 +23,10 @@ export const createContext = ({ req, res }: ExpressRequest) => {
             throw new TRPCError({ code: 'UNAUTHORIZED', message: 'verify' }); 
         }
     }
-
     return { req, res, userId };
 };
 
-type Context = inferAsyncReturnType<typeof createContext>;
+export type Context = inferAsyncReturnType<typeof createContext>;
 
 const t = initTRPC.context<Context>().create();
 export const middleware = t.middleware;

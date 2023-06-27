@@ -23,7 +23,7 @@ const DateOfBirth = ({
             >
                 {({ open }) => (
                     <>
-                        <div className="relative sm:w-[100px] h-[36px] xs:w-[80px] bg-white">
+                        <div className="relative sm:w-[100px] h-[36px] xs:w-[80px] bg-primary">
                             <Listbox.Button className={clsx(
                                 "w-full h-full flex sm:text-sm xs:text-xs rounded-md shadow-md border-2", 
                                 open && "rounded-md border-2 border-accent",
@@ -36,7 +36,7 @@ const DateOfBirth = ({
                                     <FiChevronDown/>
                                 </div>
                             </Listbox.Button>
-                            <Listbox.Options className={`${open ? 'block' : 'hidden'}  absolute right-0 left-0 sm:w-[100px] xs:w-[80px] -translate-y-[218px] bg-white border-2 border-accent max-h-[180px] overflow-auto scrollbar-hide rounded-md scroll-smooth`}>
+                            <Listbox.Options className={`${open ? 'block' : 'hidden'}  absolute right-0 left-0 sm:w-[100px] xs:w-[80px] -translate-y-[218px] bg-primary border-2 border-accent max-h-[180px] overflow-auto scrollbar-hide rounded-md scroll-smooth`}>
                                 {options.map((m) => (
                                     <Listbox.Option
                                         key={m}
@@ -64,7 +64,7 @@ const DateOfBirth = ({
             >
                 {({ open }) => (
                     <>
-                        <div className="relative sm:w-[100px] h-[36px] xs:w-[80px] bg-white ">
+                        <div className="relative sm:w-[100px] h-[36px] xs:w-[80px] bg-primary ">
                             <Listbox.Button className={clsx("w-full h-full flex sm:text-sm xs:text-xs rounded-md shadow-md border-2", 
                                 open && "rounded-md border-2 border-accent", 
                                 !dobValid && "border-red-500"
@@ -76,7 +76,7 @@ const DateOfBirth = ({
                                     <FiChevronDown/>
                                 </div>
                             </Listbox.Button>
-                            <Listbox.Options className={`${open ? 'block' : 'hidden'} absolute right-0 left-0 sm:w-[100px] xs:w-[80px] -translate-y-[218px] bg-white border-2 border-accent max-h-[180px] overflow-auto scrollbar-hide rounded-md scroll-smooth`}>
+                            <Listbox.Options className={`${open ? 'block' : 'hidden'} absolute right-0 left-0 sm:w-[100px] xs:w-[80px] -translate-y-[218px] bg-primary border-2 border-accent max-h-[180px] overflow-auto scrollbar-hide rounded-md scroll-smooth`}>
                                 {dayOptions.map((d) => (
                                     <Listbox.Option
                                         key={d}
@@ -104,7 +104,7 @@ const DateOfBirth = ({
             >
                 {({ open }) => (
                     <>
-                        <div className="relative sm:w-[100px] h-[36px] xs:w-[80px] bg-white ">
+                        <div className="relative sm:w-[100px] h-[36px] xs:w-[80px] bg-primary ">
                             <Listbox.Button className={clsx("w-full h-full flex sm:text-sm xs:text-xs rounded-md shadow-md border-2", 
                                 open && "rounded-md border-2 border-accent", 
                                 !dobValid && "border-red-500"
@@ -116,7 +116,7 @@ const DateOfBirth = ({
                                     <FiChevronDown/>
                                 </div>
                             </Listbox.Button>
-                            <Listbox.Options className={`${open ? 'block' : 'hidden'} absolute right-0 left-0 sm:w-[100px] xs:w-[80px] -translate-y-[218px] bg-white border-2 border-accent max-h-[180px] overflow-auto scrollbar-hide rounded-md scroll-smooth`}>
+                            <Listbox.Options className={`${open ? 'block' : 'hidden'} absolute right-0 left-0 sm:w-[100px] xs:w-[80px] -translate-y-[218px] bg-primary border-2 border-accent max-h-[180px] overflow-auto scrollbar-hide rounded-md scroll-smooth`}>
                                 {yearOptions.reverse().map((d) => (
                                     <Listbox.Option
                                         key={d}

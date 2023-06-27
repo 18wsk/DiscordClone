@@ -1,109 +1,120 @@
-import ChatStore from "../store";
-import NavBar from "../components/ReUsable/NavBar";
-import PageSection from "../components/ReUsable/PageSection";
 import ProtectedRoute from "../components/ReUsable/ProtectedRoute";
-import { User } from "../../../server/src/types/User";
+import ProfileLink from "../components/Account/ProfileLink";
+import ChatStore from "../store";
+import { Thread } from "../../../server/src/types/Thread";
+
+import { AddThreadModal } from "../components/Account/thread/AddThreadModal";
+import { ToastContainer, toast } from "react-toastify";
+import ThreadFeed from "../components/Account/thread/ThreadFeed";
+import { trpc } from "../utils/trpc";
+import clsx from 'clsx';
+import { useEffect } from "react";
 
 const Account = () => {
-	const user = ChatStore(state => state.currentUser);
-	const discLogo = require("./../assets/discord_logo.png");
+	const threads =  ChatStore(state => state.threads);
+	const setThreads = ChatStore(state => state.actions.setThreads);
+	const setCurrentThread = ChatStore(state => state.actions.setCurrentThread);
+	const currentThread = ChatStore(state => state.currentThread);
 
-	const ThreadListComponent = () => {
+	trpc.thread.getThreads.useQuery({}, { 
+        enabled: true, 
+        refetchOnMount: true,
+
+        onSuccess: (data: Thread[]) => {
+			console.log(data)
+            setThreads([...data]);
+        },
+        onError: (error) => {
+            setThreads([]);
+			toast.error(error.message, {
+				position: "top-right",
+				autoClose: 10000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: "light",
+			});
+        }
+    });
+
+	useEffect(() => {
+		console.log(currentThread)
+	}, [currentThread]);
+	
+	const ThreadListComponent = ({ thread } : {thread: Thread}) => {
 		return (
-			<div className="w-full h-[60px] border border-accent-hover/20 p-1 flex flex-cols-2 hover:bg-accent-hover/20">
-				<button className="h-full w-[64px] flex items-center justify-center ">
-					<img src={discLogo} className="rounded-full h-[48px] w-[48px] z-1 " alt={"pfp"}/>
+			<div className={
+				clsx(
+					"w-full h-[60px] flex flex-cols-2 hover:bg-secondary cursor-pointer rounded-md", 
+					currentThread?.roomId === thread?.roomId && "bg-secondary"
+				)} 
+				onClick={() => setCurrentThread(thread)}
+			>
+				<button className="h-full w-[64px] flex items-center justify-center " >
+					<img src={""} className="rounded-full h-[48px] w-[48px] z-1 bg-black" alt={"pfp"}/>
 				</button>
 				<button className="w-full h-full flex flex-cols items-center justify-center">
 					<div className="w-full h-full flex flex-col justify-start ">
-						<div className="w-full h-full flex items-top justify-start pl-2">
-							<h1 className="text-md font-bold underline underline-offset-2 decoration-accent">Thread Name</h1>
+						<div className="w-full h-full flex items-center justify-start pl-2">
+							<h1 className="text-md font-bold text-black">{ thread.name }</h1>
 						</div>
 						<div className="w-full h-full flex items-top justify-start pl-2">
-							<h2 className="text-xs">4+ new messages</h2>
+							<h2 className="text-xs text-black">4+ new messages</h2>
 						</div>
 					</div>
-					<div className="w-[12px] h-full flex items-center justify-center ">
+					<div className="w-[12px] h-full flex items-center justify-center mr-2">
 						{true && <div className="bg-success rounded-full h-[10px] w-[10px]"/>}
 					</div>
 				</button>
 			</div>
 		)
-	}
-
-	const ProfileListComponent = () => {
-		return (
-			<div>
-				
-			</div>
-		)
-	}
-
-	const ProfileComponent = () => {
-		return (
-			<div className="w-full h-full flex flex-cols-2 items-center justify-center bg-accent-hover/30 rounded-md p-1">
-				<div className="w-1/3 h-full flex items-top justify-center pt-2">
-					<div className="relative rounded-full bg-tertiary-2 h-[64px] w-[64px] z-1">
-						<img src={discLogo} className="rounded-full h-[64px] w-[64px] z-1 p-1" alt={"pfp"}/>  {/* PFP  */}
-						<div className="rounded-full bg-tertiary-2 h-[12px] w-[12px] absolute bottom-0 right-0 z-2 border-2 border-tertiary-2 -translate-x-[13px] -translate-y-[2.75px]">
-							<div className="rounded-full bg-green-500 h-[9px] w-[9px] absolute bottom-0 right-0 z-3 translate-x-[1px] "></div>
-						</div>
-						<div className="w-full h-content pt-2">
-							<h1 className="text-center">{user?.userName}</h1>
-						</div>
-					</div>
-				</div>
-				<div className="w-full h-full flex flex-col items-top justify-center pt-2">
-					<div className="w-full h-content flex flex-cols-2 items-center justify-center gap-x-4">
-						<h2>200 friends</h2>
-						<h2>1K communities</h2>
-					</div>
-					<div className="w-full h-full pt-2">
-							<h1 className="text-center">BIO...</h1>
-					</div>
-				</div>
-			</div>
-		);
-	}
+	};
 
 
 	return (
-		<div className="w-screen h-screen overflow-hidden scrollbar-hide bg-white">
-			<NavBar />
-			<div className="h-full w-full ">
+		<div className="w-screen h-screen relative overflow-hidden">
 			<ProtectedRoute>
-				<PageSection>
-						<div className="w-full h-full flex flex-cols-2 items-center justify-center gap-x-2 ">
-							{/*Column 01*/}
-							<div className="w-1/3 h-full flex items-center justify-center overflow-hidden">
-								<div className="w-full h-full flex flex-col items-center justify-center">
-									<div className="w-full h-[200px] flex flex-col items-center justify-center px-2">
-										<ProfileComponent/>
-									</div>
-									<div className="w-full h-[calc(100vh-200px)] pt-4">
-										<div className="w-full h-conent flex items-center justify-center py-2">
-											<div className="w-full h-full flex justify-around items-center gap-x-2 px-2">
-												<button className="w-full rounded-md bg-accent text-white">Friends</button>
-												<button className="w-full rounded-md bg-accent text-white">Communities</button>
-											</div>
+				<div className={clsx(
+					"w-screen h-screen flex flex-cols-2",
+				)}>
+					<div className=" w-[300px] h-screen bg-slate-100 z-[500]">
+						<div className="w-[300px] h-[100px]">
+							<ProfileLink/>
+						</div>
+						<div className="w-full flex flex-col pt-4 bg-slate-100" style={{ height: 'calc(100vh - 100px)' }}>
+							<div className="w-full bg-slate-100">
+								<h1 className="px-2 py-2 font-bold text-gray-600">Your Communities:</h1>
+							</div>
+							<div className="w-full h-full overflow-y-scroll scrollbar-hide relative bg-slate-100 scroll-smooth">
+								{threads.map((thread: Thread) => {
+									return (
+										<div className="w-full h-fit py-1 px-2">
+											<ThreadListComponent thread={thread} key={thread.roomId}/>
 										</div>
-										<div className="w-full h-[calc(100vh-260px)] flex flex-col items-center justify-center overflow-y-scroll scrollbar-hide"> {/*overflow-y-scroll scrollbar-hide rounded-md*/}
-											<div className="border border-slate-200 h-full w-full ">
-												<ThreadListComponent/>
-												<ProfileListComponent/>
-											</div>
-										</div>
-									</div>
+									)
+								})}
+							</div>
+							<div className="w-full h-full flex items-end justify-center bg-slate-100">
+								<div className="w-full h-[112px] flex items-center justify-center">
+									<AddThreadModal/>
 								</div>
 							</div>
-							{/*Column 02*/}
-							<div className="w-2/3 h-full flex flex-col items-center justify-center rounded-md border border-slate-200 relative">
-								<p>Active thread and accounts when selected</p>
-							</div>
 						</div>
-				</PageSection>
+					</div>
+					{ currentThread !== null ? 
+						<div className="w-full h-full">
+							<ThreadFeed/>
+						</div>
+						: 
+						<>
+							<p>DISCOVER</p>
+						</>
+					}
+				</div>
 			</ProtectedRoute>
-			</div>
+			<ToastContainer/>
 		</div>
 	)
 }
