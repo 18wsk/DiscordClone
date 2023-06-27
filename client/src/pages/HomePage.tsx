@@ -43,8 +43,25 @@ const HomePage = () => {
             </PageSection>
             <div className="bg-header flex items-center justify-center w-full xs:h-[200px] md:h-[300px]"/>
             <PageSection>
-                <div className="w-full h-full flex flex-col items-center justify-center" id="Product">
-                    
+                <div className="w-full h-full pt-[70px] flex items-center justify-center" id="Product">
+                    <div className="w-3/4 h-full grid grid-cols-2 items-center justify-center px-8 gap-x-8">
+                    <div className="w-full h-full flex items-center justify-center">
+                            <div className="w-full h-2/3">
+                                <h1 className="text-4xl font-bold">Effortless communication: secure live-chat made easy.</h1>
+                                <p className='w-full h-fit text-2xl text-black p-8'>
+                                    Experience the future of real-time communication with our cutting-edge chat application. 
+                                    With instant messaging powered by Socket.IO, professional-level security using cookies and 
+                                    JWT tokens, type-safe API calls with TRPC, and a lightning-fast, responsive design optimized 
+                                    by React Query, our app ensures seamless and secure conversations. Join us for a revolutionary 
+                                    chat experience like no other.
+                                </p>
+                            </div>
+                        </div>
+                        <div className="w-full h-full flex items-center justify-center">
+                            <div className="w-full h-2/3 bg-accent rounded-lg flex items-center justify-center shadow-2xl shadow-accent-hover">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </PageSection>
             <div className="bg-header flex items-center justify-center w-full xs:h-[200px] md:h-[300px]" />

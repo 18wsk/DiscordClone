@@ -32,7 +32,7 @@ module.exports = {
         profileId: ['12px', '13px'],
       },
       screens: {
-        'xs': '375px',
+        'xs': '0px',
         // => @media (min-width: 375px) { ... }
   
         'sm': '640px',
