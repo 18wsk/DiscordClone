@@ -1,4 +1,3 @@
-import HomePageNavBar from '../components/Home/NavBar/HomePageNavBar'
 import { Link } from 'react-router-dom'
 import PasswordInput from '../components/ReUsable/PasswordInput'
 import {motion} from "framer-motion";
