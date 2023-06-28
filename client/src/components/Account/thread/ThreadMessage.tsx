@@ -14,11 +14,11 @@ const ThreadMessage = ({ msg, currentUser } : { msg: Message, currentUser: User 
                 </div>
                 <div className="w-full pr-[48px]">
                     <div className="flex flex-cols-2 gap-x-2 items-center ">
-                        <p className="text-black font-semibold text-messgeName">{msg.user.userName}</p>
-                        <p className="text-black/40 text-messageTime">{msg.timeStamp ?? new Date().toLocaleString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true })}</p>
+                        <p className="text-white font-semibold text-messgeName">{msg.user.userName}</p>
+                        <p className="text-[#949ba4] text-messageTime">{msg.timeStamp ?? new Date().toLocaleString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true })}</p>
                     </div>
                     <div>
-                        <div className="text-gray-500 font-Inter text-sm break-all w-full whitespace-normal break-words">
+                        <div className="text-[#dbdee1] font-Inter text-sm break-all w-full whitespace-normal break-words">
                             {msg.payload}
                         </div>
                     </div>

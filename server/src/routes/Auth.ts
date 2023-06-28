@@ -80,7 +80,18 @@ export const Auth = router({
         ctx.res.cookie('auth', token, { maxAge: 4 * 60 * 60 * 1000, httpOnly: true});
         // insert the user into the database
         const encryptedPassword = encryptPassword({ password });
-        const user = await createUser({ user: { userId, email, userName, password: encryptedPassword, birthday, threads: [] }});
+        const user = await createUser({ 
+          user: { 
+            userId, 
+            email, 
+            userName, 
+            password: encryptedPassword, 
+            birthday, 
+            threads: [], 
+            friends: [], 
+            pfp: null 
+          }
+        });
         return user;
       }),
   

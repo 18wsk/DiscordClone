@@ -47,6 +47,14 @@ const userSchema = new mongoose.Schema<User>(
             type: [String],
             required: true,
         },
+        friends: {
+            type: [String],
+            required: true,
+        },
+        pfp: {
+            type: String,
+            required: false,
+        },
     },
     {
         collection: 'users' 

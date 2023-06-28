@@ -21,7 +21,7 @@ const ProtectedRoute = ({ children }: {children: any}) => {
         if (getUserQuery.isSuccess) return children
         if (getUserQuery.isLoading) {
             return (
-                <div className="w-screen h-screen bg-primary flex items-center justify-center">
+                <div className="w-screen h-screen bg-[#313338] flex items-center justify-center">
                     <TailSpin className="w-1/4 h-1/4"  stroke="#3e47c9" speed={.75} />
                 </div>
                 );
@@ -29,7 +29,7 @@ const ProtectedRoute = ({ children }: {children: any}) => {
 
         if (getUserQuery.isError) return (
             <div className="w-screen h-screen overflow-hidden scrollbar-hide">
-                <div className="w-screen h-screen bg-primary flex flex-col items-center justify-center">
+                <div className="w-screen h-screen bg-[#313338] flex flex-col items-center justify-center">
                     <div className="w-full h-1/3">
                         <h1 className="text-black font-bold text-4xl text-center"> 
                             <span className="text-5xl text-accent">ERROR: </span>{ getUserQuery.error.message }

@@ -7,9 +7,7 @@ import { trpc } from "../../../utils/trpc";
 import { motion } from "framer-motion";
 import { useRef } from "react";
 import { ThreeDots } from "react-loading-icons";
-import { RiCalendarEventFill } from "react-icons/ri";
-import { BsFillChatSquareTextFill, BsInfoCircleFill } from "react-icons/bs";
-import { IoIosContact } from "react-icons/io";
+
 
 const ThreadFeed = () => {
     const currentThread = ChatStore(state => state.currentThread);
@@ -29,7 +27,6 @@ const ThreadFeed = () => {
         refetchOnReconnect: true,
         retry: true,
         onSuccess: (data: Message[]) => {
-            console.log("MESSAGES SET")
             setMessages(data);
         },
         onError: (error) => {
@@ -66,7 +63,16 @@ const ThreadFeed = () => {
     }, [addMessage, currentThread?.roomId, setCurrentTyper, socket]);
 
 
-    const sendMessage = async (message: Message) => {
+    const sendMessage = async ({ 
+        message,
+    }: { 
+        message: Message
+    }) => {
+        const textarea = document.getElementById("threadTextArea") as HTMLTextAreaElement;
+        if (textarea) {
+          textarea.style.height = "38px"; // Reset the height to the initial value
+          textarea.value = ''; // Reset the value to an empty string
+        }
         await useAddMessage.mutateAsync({ message }, {
             onSuccess: (data) => {
                 socket?.emit('sendMessage', { room: currentThread?.roomId, message });
@@ -107,7 +113,7 @@ const ThreadFeed = () => {
 
     return (
         <motion.div 
-            className="h-full w-full bg-primary flex flex-cols-2" 
+            className="h-full w-full flex flex-cols-2" 
             style={{ width: 'calc(100vw - 300px)' }}
             initial={{ opacity: 0, x: -600  }}
             animate={{ opacity: 1, x: 0 }}
@@ -119,8 +125,8 @@ const ThreadFeed = () => {
                 <div className="w-full h-full flex flex-col">
                     <div
                         ref={messagesEndRef}
-                        className="overflow-y-scroll scrollbar-hide scroll-smooth bg-primary"
-                        style={{ height: 'calc(100vh - 120px)', width: 'calc(100vw - 300px)' }}
+                        className="overflow-y-scroll scrollbar-hide scroll-smooth bg-[#313338]"
+                        style={{ width: 'calc(100vw - 300px)', height: 'calc(100vh - 90px)'}}
                     >
                         {currentMessages.map((message: Message, index) => (
                             <div className="w-full h-fit flex pb-2" key={index}>
@@ -128,10 +134,12 @@ const ThreadFeed = () => {
                             </div>
                         ))}
                     </div>
-                    <div className="h-[120px] absolute bottom-0 bg-white shadow-2xl shadow-accent" style={{ width: 'calc(100vw - 300px)' }}>
+                    <div className="h-[90px] absolute bottom-0 bg-[#313338] shadow-lg shadow-accent" style={{ width: 'calc(100vw - 300px)'}}>
                         {currentTyper && 
                             <div className="mt-2 w-fit h-fit flex items-center justify-center gap-x-4 rounded-r-md ml-2">
-                                <p className="w-full flex gap-x-4 pr-2 text-accent font-extrabold">{currentTyper} is typing <ThreeDots height={"24px"} width={"24px"} fill={"#3e47c9"} /></p>
+                                <p className="w-full flex gap-x-4 pr-2 text-accent font-extrabold">
+                                    {currentTyper} is typing <ThreeDots height={"24px"} width={"24px"} fill={"#3e47c9"} />
+                                </p>
                             </div>
                         }
                         <div className="w-full h-full flex items-center justify-center absolute bottom-0">
@@ -145,24 +153,32 @@ const ThreadFeed = () => {
                                         minHeight: "38px"
                                     }}
                                     onBlur={() => socket?.emit('setTyper', { room: currentThread?.roomId, typer: null })}
-                                    className="bg-slate-100 w-1/2 h-[38px] rounded-l-md outline-none focus:outline-none p-2 threadInput text-sm absolute bottom-10 border border-accent shadow-2xl shadow-accent"
+                                    className="
+                                        bg-[#383a40] w-1/2 h-[38px] rounded-l-md outline-none focus:outline-none p-2 
+                                        threadInput text-sm absolute bottom-10 
+                                        shadow-2xl shadow-accent
+                                        text-[#dbdee1]
+                                        "
                                 />
-                            <div className="w-1/4 h-full absolute right-0 top-[42px]">
+                            <div className="w-1/4 h-[38px] absolute right-0 bottom-10">
                                 <button
-                                        className="w-fit h-[38px] rounded-r-md outline-none focus:outline-none threadInput text-sm text-white bg-accent text-center border border-accent px-2 shadow-2xl shadow-accent"
+                                        className="w-fit h-[38px] rounded-r-md outline-none focus:outline-none threadInput text-sm text-white 
+                                            bg-accent text-center border border-accent px-2 shadow-2xl shadow-accent"
                                         onClick={() =>
                                             currentUser &&
                                             currentUser.userId &&
                                             message &&
                                             sendMessage({
-                                                user: {
-                                                    userId: currentUser?.userId ?? "",
-                                                    userName: currentUser?.userName ?? "",
-                                                    // avatar: currentUser?.avatar ?? "",
-                                                },
-                                                payload: message,
-                                                roomId: currentThread?.roomId ?? "",
-                                                timeStamp: handleMessageDate(new Date()),
+                                                message: {
+                                                    user: {
+                                                        userId: currentUser?.userId ?? "",
+                                                        userName: currentUser?.userName ?? "",
+                                                        // avatar: currentUser?.avatar ?? "",
+                                                    },
+                                                    payload: message,
+                                                    roomId: currentThread?.roomId ?? "",
+                                                    timeStamp: handleMessageDate(new Date()),
+                                                }
                                             })
                                         }
                                         >

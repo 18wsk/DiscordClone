@@ -7,7 +7,9 @@ export const UserSchema = z.object({
     email: z.string().nullable(),
     password: PasswordSchema,
     birthday: z.string().nullable(),
-    threads: z.array(z.string())
+    threads: z.array(z.string()),
+    friends: z.array(z.string()),
+    pfp: z.string().nullable(),
 });
 
 export type User = z.infer<typeof UserSchema>;

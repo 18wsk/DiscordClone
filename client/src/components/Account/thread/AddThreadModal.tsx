@@ -86,7 +86,10 @@ export const AddThreadModal = () => {
 	};
 
     const AddImgButton = () => {
-        const handleFileInputChange = (e: any) => {
+
+        const handleFileInputChange = (event: any) => {
+            console.log("GG")
+            console.log(event.target);
         };
 
         return (
@@ -95,7 +98,7 @@ export const AddThreadModal = () => {
                     id="file-input"
                     type="file"
                     className="discord-input"
-                    onChange={handleFileInputChange}
+                    onChange={(e) => handleFileInputChange(e)}
                 />
                 <label htmlFor="file-input" className="discord-input-label">
                     <MdAddAPhoto className="discord-input-icon" />
@@ -120,7 +123,6 @@ export const AddThreadModal = () => {
                 Create Community
             </button>
         </div>
-
         <Transition appear show={isOpen} as={Fragment}>
             <Dialog as="div" className="relative z-10" onClose={closeModal}>
                 <Transition.Child
