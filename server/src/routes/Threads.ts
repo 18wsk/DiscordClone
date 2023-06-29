@@ -21,6 +21,7 @@ export const Thread = router({
             users: z.array(z.string()),
             messages: z.array(z.string()),
             creator: z.string(),
+            img: z.string().nullable(),
         }))
         .mutation(async({input:  { 
             roomId,
@@ -28,6 +29,7 @@ export const Thread = router({
             users,
             messages,
             creator,
+            img,
         }}) => {
             const checkThreadName = await countThreadByName({ threadName: name });
             if (checkThreadName !== 0)  throw new TRPCError({ code: 'NOT_FOUND', message: 'Community alrady exists.' });
@@ -37,6 +39,7 @@ export const Thread = router({
                 users,
                 messages,
                 creator,
+                img,
             }});
             if (!thread) {
                 throw new TRPCError({ code: 'NOT_FOUND', message: 'Thread not found' });

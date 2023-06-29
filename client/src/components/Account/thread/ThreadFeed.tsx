@@ -70,8 +70,9 @@ const ThreadFeed = () => {
     }) => {
         const textarea = document.getElementById("threadTextArea") as HTMLTextAreaElement;
         if (textarea) {
-          textarea.style.height = "38px"; // Reset the height to the initial value
-          textarea.value = ''; // Reset the value to an empty string
+            textarea.style.height = "38px"; // Reset the height to the initial value
+            textarea.value = ''; // Reset the value to an empty string
+            setDivHeight(`120px`);
         }
         await useAddMessage.mutateAsync({ message }, {
             onSuccess: (data) => {
@@ -90,6 +91,8 @@ const ThreadFeed = () => {
         return `${day}/${month}/${year}`;
     };
 
+    const [divHeight, setDivHeight] = useState("120px");
+
     const handleMessageChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         const { value } = event.target;
         setMessage(value);
@@ -101,6 +104,7 @@ const ThreadFeed = () => {
         const height = Math.max(scrollHeight, clientHeight);
         textarea.style.height = (height > 38) ? height + "px" : "38px";
         textarea.scrollTop = scrollHeight - clientHeight;
+        setDivHeight((height > 120) ? `${scrollHeight + 60}px`: "120px" );
         socket?.emit('setTyper', { room: currentThread?.roomId, typer: currentUser?.userName });
     };
 
@@ -126,18 +130,18 @@ const ThreadFeed = () => {
                     <div
                         ref={messagesEndRef}
                         className="overflow-y-scroll scrollbar-hide scroll-smooth bg-[#313338]"
-                        style={{ width: 'calc(100vw - 300px)', height: 'calc(100vh - 90px)'}}
+                        style={{ width: 'calc(100vw - 300px)', height: `calc(100vh - ${divHeight})`}}
                     >
                         {currentMessages.map((message: Message, index) => (
                             <div className="w-full h-fit flex pb-2" key={index}>
-                                <ThreadMessage msg={message} key={index} currentUser={currentUser} />
+                                <ThreadMessage msg={message} key={index} />
                             </div>
                         ))}
                     </div>
-                    <div className="h-[90px] absolute bottom-0 bg-[#313338] shadow-lg shadow-accent" style={{ width: 'calc(100vw - 300px)'}}>
+                    <div className={`h-[${divHeight}] absolute bottom-0 bg-[113338] shadow-lg shadow-accent`} style={{ width: 'calc(100vw - 300px)'}}>
                         {currentTyper && 
                             <div className="mt-2 w-fit h-fit flex items-center justify-center gap-x-4 rounded-r-md ml-2">
-                                <p className="w-full flex gap-x-4 pr-2 text-accent font-extrabold">
+                                <p className="w-full flex gap-x-4 pr-2 text-white font-bold text-sm">
                                     {currentTyper} is typing <ThreeDots height={"24px"} width={"24px"} fill={"#3e47c9"} />
                                 </p>
                             </div>
@@ -173,7 +177,7 @@ const ThreadFeed = () => {
                                                     user: {
                                                         userId: currentUser?.userId ?? "",
                                                         userName: currentUser?.userName ?? "",
-                                                        // avatar: currentUser?.avatar ?? "",
+                                                        pfp: currentUser?.pfp ?? "",
                                                     },
                                                     payload: message,
                                                     roomId: currentThread?.roomId ?? "",

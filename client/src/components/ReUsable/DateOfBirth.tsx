@@ -23,25 +23,28 @@ const DateOfBirth = ({
             >
                 {({ open }) => (
                     <>
-                        <div className="relative sm:w-[100px] h-[36px] xs:w-[80px] bg-primary">
+                        <div className="relative sm:w-[100px] h-[36px] xs:w-[80px] bg-secondary rounded-md shadow-md">
                             <Listbox.Button className={clsx(
-                                "w-full h-full flex sm:text-sm xs:text-xs rounded-md shadow-md border-2", 
-                                open && "rounded-md border-2 border-accent",
+                                "w-full h-full flex sm:text-sm xs:text-xs bg-secondary rounded-md", 
+                                open && "rounded-md ",
                                 !dobValid && "border-red-500"
                             )}>
-                                <div className="w-full h-full flex items-center justify-center text-center">
+                                <div className="w-full h-full flex items-center justify-center text-center text-white">
                                     {dob.month ? dob.month : "Month"}
                                 </div>
                                 <div className="w-[20px] h-full flex justify-center items-center">
-                                    <FiChevronDown/>
+                                    <FiChevronDown fill={"white"}/>
                                 </div>
                             </Listbox.Button>
-                            <Listbox.Options className={`${open ? 'block' : 'hidden'}  absolute right-0 left-0 sm:w-[100px] xs:w-[80px] -translate-y-[218px] bg-primary border-2 border-accent max-h-[180px] overflow-auto scrollbar-hide rounded-md scroll-smooth`}>
+                            <Listbox.Options 
+                                className={`${open ? 'block' : 'hidden'} text-white absolute right-0 left-0 sm:w-[100px] xs:w-[80px] -translate-y-[218px] 
+                                        bg-secondary max-h-[180px] overflow-auto scrollbar-hide rounded-md scroll-smooth`
+                                }>
                                 {options.map((m) => (
                                     <Listbox.Option
                                         key={m}
                                         value={m}
-                                        className={"sm:w-[100px] h-[36px] xs:w-[80px] border hover:border-accent/50 flex items-center justify-center sm:text-sm xs:text-xs"}
+                                        className={"sm:w-[100px] h-[36px] xs:w-[80px] flex items-center justify-center sm:text-sm xs:text-xs"}
                                     >
                                         {m}
                                     </Listbox.Option>
@@ -64,24 +67,28 @@ const DateOfBirth = ({
             >
                 {({ open }) => (
                     <>
-                        <div className="relative sm:w-[100px] h-[36px] xs:w-[80px] bg-primary ">
-                            <Listbox.Button className={clsx("w-full h-full flex sm:text-sm xs:text-xs rounded-md shadow-md border-2", 
-                                open && "rounded-md border-2 border-accent", 
+                        <div className="relative sm:w-[100px] h-[36px] xs:w-[80px] bg-secondary rounded-md shadow-md">
+                            <Listbox.Button className={clsx(
+                                "w-full h-full flex sm:text-sm xs:text-xs bg-secondary rounded-md", 
+                                open && "rounded-md ", 
                                 !dobValid && "border-red-500"
                             )}>
-                            <div className="w-full h-full flex items-center justify-center text-center">
+                            <div className="w-full h-full flex items-center justify-center text-center text-white">
                                     {dob.day ? dob.day : "Day"}
                                 </div>
                                 <div className="w-[20px] h-full flex justify-center items-center">
-                                    <FiChevronDown/>
+                                    <FiChevronDown  fill={"#FFFFFF"}/>
                                 </div>
                             </Listbox.Button>
-                            <Listbox.Options className={`${open ? 'block' : 'hidden'} absolute right-0 left-0 sm:w-[100px] xs:w-[80px] -translate-y-[218px] bg-primary border-2 border-accent max-h-[180px] overflow-auto scrollbar-hide rounded-md scroll-smooth`}>
+                            <Listbox.Options
+                                className={`${open ? 'block' : 'hidden'} text-white absolute right-0 left-0 sm:w-[100px] xs:w-[80px] -translate-y-[218px] 
+                                        bg-secondary  max-h-[180px] overflow-auto scrollbar-hide rounded-md scroll-smooth`
+                                }>
                                 {dayOptions.map((d) => (
                                     <Listbox.Option
                                         key={d}
                                         value={d}
-                                        className={"sm:w-[100px] h-[36px] xs:w-[80px] border hover:border-accent/50 flex items-center justify-center sm:text-sm xs:text-xs"}
+                                        className={"sm:w-[100px] h-[36px] xs:w-[80px] flex items-center justify-center sm:text-sm xs:text-xs"}
                                     >
                                         {d}
                                     </Listbox.Option>
@@ -104,24 +111,28 @@ const DateOfBirth = ({
             >
                 {({ open }) => (
                     <>
-                        <div className="relative sm:w-[100px] h-[36px] xs:w-[80px] bg-primary ">
-                            <Listbox.Button className={clsx("w-full h-full flex sm:text-sm xs:text-xs rounded-md shadow-md border-2", 
-                                open && "rounded-md border-2 border-accent", 
+                        <div className="relative sm:w-[100px] h-[36px] xs:w-[80px] bg-secondary rounded-md shadow-md">
+                            <Listbox.Button className={clsx(
+                                "w-full h-full flex sm:text-sm xs:text-xs bg-secondary rounded-md", 
+                                open && "rounded-md ", 
                                 !dobValid && "border-red-500"
                             )}>
-                                <div className="w-full h-full flex items-center justify-center text-center">
+                                <div className="w-full h-full flex items-center justify-center text-center text-white">
                                     {dob.year ? dob.year : "Year"}
                                 </div>
                                 <div className="w-[20px] h-full flex justify-center items-center">
-                                    <FiChevronDown/>
+                                    <FiChevronDown fill={"#FFFFFF"}/>
                                 </div>
                             </Listbox.Button>
-                            <Listbox.Options className={`${open ? 'block' : 'hidden'} absolute right-0 left-0 sm:w-[100px] xs:w-[80px] -translate-y-[218px] bg-primary border-2 border-accent max-h-[180px] overflow-auto scrollbar-hide rounded-md scroll-smooth`}>
+                            <Listbox.Options 
+                                className={`${open ? 'block' : 'hidden'} text-white absolute right-0 left-0 sm:w-[100px] xs:w-[80px] -translate-y-[218px] 
+                                        bg-secondary max-h-[180px] overflow-auto scrollbar-hide rounded-md scroll-smooth`
+                                }>
                                 {yearOptions.reverse().map((d) => (
                                     <Listbox.Option
                                         key={d}
                                         value={d}
-                                        className={"sm:w-[100px] h-[36px] xs:w-[80px] border hover:border-accent/50 flex items-center justify-center sm:text-sm xs:text-xs"}
+                                        className={"sm:w-[100px] h-[36px] xs:w-[80px]  flex items-center justify-center sm:text-sm xs:text-xs"}
                                     >
                                         {d}
                                     </Listbox.Option>

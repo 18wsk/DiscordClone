@@ -24,14 +24,11 @@
         cursor: pointer;
         height: 8rem;
         width: 8rem;
+        background-color: #3e47c9;
     }
     .discord-input-icon {
         height: 3rem;
         width: 3rem;
-    }
-
-    .discord-input-label:hover .discord-input-icon {
-        color: #3e47c9;
     }
 
     .discord-input-text {
@@ -40,11 +37,9 @@
         text-align: center;
         font-weight: bold;
         resize: none;
+        color: #ffff;
     }
 
-    .discord-input-label:hover .discord-input-text  {
-        color: #3e47c9;
-    }
 
     .threadInput::-webkit-scrollbar {
         width: 10px; /* Width of the scrollbar */

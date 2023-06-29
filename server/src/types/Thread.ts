@@ -7,6 +7,7 @@ export const ThreadSchema = z.object({
     users: z.array(z.string()),
     messages: z.array(z.string()),
     creator: z.string(),
+    img: z.string().nullable(),
 });
 
 

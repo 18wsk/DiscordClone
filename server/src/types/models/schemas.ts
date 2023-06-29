@@ -83,6 +83,10 @@ const threadSchema = new mongoose.Schema<Thread>(
             type: String,
             required: true,
         },
+        img: {
+            type: String,
+            required: false,
+        },
     },
     {
         collection: 'threads' 
@@ -100,6 +104,10 @@ const messageSchema = new mongoose.Schema<Message>(
                 type: String,
                 required: true,
             },
+            pfp: {
+                type: String,
+                required: false,
+            }
         },
         payload: {
             type: String,

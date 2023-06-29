@@ -42,12 +42,12 @@ const Account = () => {
 			<div className={
 				clsx(
 					"w-full h-[60px] flex flex-cols-2 hover:bg-[#4e5058]/40 cursor-pointer rounded-md", 
-					currentThread?.roomId === thread?.roomId && "bg-[#2b2d31]"
+					currentThread?.roomId === thread?.roomId && "bg-[#4e5058]/40"
 				)} 
 				onClick={() => setCurrentThread(thread)}
 			>
 				<button className="h-full w-[64px] flex items-center justify-center " >
-					<img src={""} className="rounded-full h-[48px] w-[48px] z-1 bg-black" alt={"pfp"}/>
+					<img src={thread.img ?? ""} className="object-cover aspect-auto rounded-full h-[48px] w-[48px] z-1 bg-black" alt={"pfp"}/>
 				</button>
 				<button className="w-full h-full flex flex-cols items-center justify-center">
 					<div className="w-full h-full flex flex-col justify-start ">

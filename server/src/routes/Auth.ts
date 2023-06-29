@@ -51,9 +51,10 @@ export const Auth = router({
         email: z.string(), 
         userName: z.string(), 
         password:z.string(), 
-        birthday: z.string() 
+        birthday: z.string(),
+        pfp: z.string().nullable()
       }))
-      .mutation(async ({ input:  { email, userName, password, birthday }, ctx }) => {
+      .mutation(async ({ input:  { email, userName, password, birthday, pfp}, ctx }) => {
         // Verify this is a new user
         const doesEmailExist = await countUserByEmail({ email });
         if (doesEmailExist !== 0) {
@@ -89,7 +90,7 @@ export const Auth = router({
             birthday, 
             threads: [], 
             friends: [], 
-            pfp: null 
+            pfp: pfp 
           }
         });
         return user;

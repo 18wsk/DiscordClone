@@ -10,20 +10,19 @@ import { TailSpin } from 'react-loading-icons';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ChatStore from '../store';
+import { MdAddAPhoto } from 'react-icons/md';
 
 
 
 const SignUpPage = () => {
     const [password, setPassword] = useState<string | null>(null);
     const [passwordValid, setPasswordValid] = useState<boolean>(true);
-
     const [email, setEmail] = useState<string | null>(null);
     const [emailValid, setEmailValid] = useState<boolean>(true);
-
     const [username, setUsername] = useState<string | null>(null);
     const [userNameValid, setUsernameValid] = useState<boolean>(true);
-
     const [dob, setDob] = useState<Birthday>({day: null, month: null, year: null});
+    const [userPfp, setUserPfp] = useState<string | null>(null);
     const setDateOfBirth = ({name, value}: {name: string, value: string | number | null}) => { 
         setDob({...dob, [name]: value});
     }
@@ -156,7 +155,8 @@ const SignUpPage = () => {
                     email: email!, 
                     password: password!, 
                     userName: username!, 
-                    birthday: dob.day + "/" + dob.month + "/" + dob.year
+                    birthday: dob.day + "/" + dob.month + "/" + dob.year,
+                    pfp: userPfp
                 },
                 {
                     onSuccess: (data) => {
@@ -196,11 +196,35 @@ const SignUpPage = () => {
         }
     };
 
+    const handleFileInputChange = (event: any) => {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        if (file && file.type.startsWith("image/")) {
+            reader.readAsDataURL(file);
+            reader.onload = async () => {
+                if (reader.result) {
+                    setUserPfp(reader.result as string);
+                }
+            };
+        } else {
+            toast.error("Please select an image file.", {
+                position: "top-right",
+                autoClose: 10000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        }
+    };
+
     return (
         <div 
-            className="w-screen h-screen overflow-auto scrollbar-hide bg-primary "
+            className="w-screen h-screen overflow-auto scrollbar-hide bg-secondary "
         >
-            <div className="sticky top-0 flex w-full h-[60px] justify-between z-50 bg-primary shadow-lg shadow-accent/20 border border-accent/10">
+            <div className="sticky top-0 flex w-full h-[60px] justify-between z-50 bg-tertiary shadow-lg shadow-accent/20 border border-accent/10">
                 <div className='h-full w-full flex items-center justify-start pl-2'>
                     <Link to="/" className="h-full flex items-center justify-center ">
                             <img src={logo} alt="logo" className="h-2/3 w-[160px] aspect-video" />
@@ -222,19 +246,45 @@ const SignUpPage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: .8 }}
             >
-                <div className="xs:w-4/5 sm:w-full sm:mx-auto sm:max-w-lg rounded-md border-2 shadow-2xl shadow-accent/60 sm:p-8 xs:px-4 bg-primary">
+                <div className="xs:w-4/5 sm:w-full sm:mx-auto sm:max-w-lg rounded-md  shadow-2xl shadow-accent/60 sm:p-8 xs:px-4 bg-tertiary">
                     <div>
                         <h1 className="sm:text-2xl xs:text-lg text-accent font-bold text-center pt-4">Create an account</h1>
-                        <h1 className="sm:text-sm xs:text-xs text-black text-center md:pb-4 xs:pb-2">Welcome to our community.</h1>
+                        <h1 className="sm:text-sm xs:text-xs text-white text-center md:pb-4 xs:pb-2">Welcome to our community.</h1>
                     </div>
-                    <h2 className="text-black sm:pt-4 sm:pb-2 xs:py-1 font-semibold sm:text-sm xs:text-xs">EMAIL:</h2>
+                    <div className="w-full h-fit flex items-center justify-center">
+                        {
+                            userPfp === null ? (
+                                <>
+                                    <input
+                                        id="file-input"
+                                        type="file"
+                                        accept="image/*"
+                                        className="discord-input"
+                                        onChange={(e) => handleFileInputChange(e)}
+                                    />
+                                    <label htmlFor="file-input" className="discord-input-label">
+                                        <MdAddAPhoto className="discord-input-icon" fill={"#ffffff"} />
+                                        <span className="discord-input-text text-white">Upload Photo</span>
+                                    </label>
+                                </>
+                                ) : (
+                                    <img
+                                        src={userPfp ?? ""}
+                                        alt="GG"
+                                        className='w-[128px] h-[128px] rounded-full object-cover'
+                                        onClick={() => {setUserPfp('')}}
+                                    />
+                            )
+                        }
+                    </div>
+                    <h2 className="text-white sm:pt-4 sm:pb-2 xs:py-1 font-semibold sm:text-sm xs:text-xs">EMAIL:</h2>
                         <FormInput value={email} onInputChange={setEmail} valid={emailValid}/>
-                    <h2 className="text-black sm:pt-8 sm:pb-2 xs:py-1 font-semibold sm:text-sm xs:text-xs">USERNAME:</h2>
+                    <h2 className="text-white sm:pt-8 sm:pb-2 xs:py-1 font-semibold sm:text-sm xs:text-xs">USERNAME:</h2>
                         <FormInput value={username} onInputChange={setUsername} valid={userNameValid}/>
-                    <h2 className="text-black sm:pt-8 sm:pb-2 xs:py-1 font-semibold sm:text-sm xs:text-xs flex items-center gap-x-2">PASSWORD:</h2>
+                    <h2 className="text-white sm:pt-8 sm:pb-2 xs:py-1 font-semibold sm:text-sm xs:text-xs flex items-center gap-x-2">PASSWORD:</h2>
                         <PasswordInput value={password} onInputChange={setPassword} passwordValid={passwordValid}/>
-                        <p className="text-black font-light sm:text-xs xs:text-_2xs py-1">Use 8 or more characters with a mix of letters, numbers & symbols</p>
-                    <h2 className="text-black sm:pt-8 sm:pb-2 xs:py-1 font-semibold sm:text-sm xs:text-xs">DATE OF BIRTH:</h2>
+                        <p className="text-white font-light sm:text-xs xs:text-_2xs py-1">Use 8 or more characters with a mix of letters, numbers & symbols</p>
+                    <h2 className="text-white sm:pt-8 sm:pb-2 xs:py-1 font-semibold sm:text-sm xs:text-xs">DATE OF BIRTH:</h2>
                     <div className='xs:py-1'>
                         <DateOfBirth dobValid={dobValid} setDateOfBirth={setDateOfBirth} dob={dob}/>
                     </div>
