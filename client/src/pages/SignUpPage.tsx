@@ -277,20 +277,22 @@ const SignUpPage = () => {
                             )
                         }
                     </div>
-                    <h2 className="text-white sm:pt-4 sm:pb-2 xs:py-1 font-semibold sm:text-sm xs:text-xs">EMAIL:</h2>
+                    <h2 className="text-white xs:py-1 font-semibold sm:text-sm xs:text-xs">EMAIL:</h2>
                         <FormInput value={email} onInputChange={setEmail} valid={emailValid}/>
-                    <h2 className="text-white sm:pt-8 sm:pb-2 xs:py-1 font-semibold sm:text-sm xs:text-xs">USERNAME:</h2>
+                    <h2 className="text-white xs:py-1 font-semibold sm:text-sm xs:text-xs ">USERNAME:</h2>
                         <FormInput value={username} onInputChange={setUsername} valid={userNameValid}/>
-                    <h2 className="text-white sm:pt-8 sm:pb-2 xs:py-1 font-semibold sm:text-sm xs:text-xs flex items-center gap-x-2">PASSWORD:</h2>
+                    <h2 className="text-white xs:py-1 font-semibold sm:text-sm xs:text-xs flex items-center gap-x-2">PASSWORD:</h2>
                         <PasswordInput value={password} onInputChange={setPassword} passwordValid={passwordValid}/>
                         <p className="text-white font-light sm:text-xs xs:text-_2xs py-1">Use 8 or more characters with a mix of letters, numbers & symbols</p>
-                    <h2 className="text-white sm:pt-8 sm:pb-2 xs:py-1 font-semibold sm:text-sm xs:text-xs">DATE OF BIRTH:</h2>
+                    <h2 className="text-white xs:py-1 font-semibold sm:text-sm xs:text-xs">DATE OF BIRTH:</h2>
                     <div className='xs:py-1'>
                         <DateOfBirth dobValid={dobValid} setDateOfBirth={setDateOfBirth} dob={dob}/>
                     </div>
                     <div className="w-full h-fit flex justify-center md:pt-12 xs:py-4">
                         <button 
-                            className="xs:h-[32px] sm:text-md xs:text-sm w-max-[440px] bg-accent hover:bg-accent-hover rounded-md flex items-center justify-center text-white font-bold text-center w-full h-[36px] sm:p-1 xs:px-1x shadow-md shadow-accent/50 hover:shadow-accent-hover/50"
+                            className="xs:h-[32px] sm:text-md xs:text-sm w-max-[440px] bg-accent hover:bg-accent-hover rounded-md flex items-center 
+                            justify-center text-white font-bold text-center w-full h-[36px] sm:p-1 xs:px-1x shadow-md shadow-accent/50 
+                            hover:shadow-accent-hover/50"
                             onClick={handleSignUp}
                         >
                             {loading ? <TailSpin  stroke="#FFFFFF" speed={.75}  className="text-white flex items-center justify-center p-2"/> : "Sign Up"}
