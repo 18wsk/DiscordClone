@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { PasswordSchema } from "./Password";
+import { FriendSchema } from "./Friend";
 
 export const UserSchema = z.object({
     userId: z.string().nullable(),
@@ -8,7 +9,7 @@ export const UserSchema = z.object({
     password: PasswordSchema,
     birthday: z.string().nullable(),
     threads: z.array(z.string()),
-    friends: z.array(z.string()),
+    friends: z.array(FriendSchema),
     pfp: z.string().nullable(),
 });
 

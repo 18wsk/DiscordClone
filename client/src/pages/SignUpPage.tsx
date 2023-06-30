@@ -131,7 +131,7 @@ const SignUpPage = () => {
     const handleValidationErrors = (error: string | null) => {
         toast.error(error, {
             position: "bottom-right",
-            autoClose: 10000,
+            autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
@@ -164,7 +164,7 @@ const SignUpPage = () => {
                         setActiveUser(data);
                         toast.success("You have successfully created an account!", {
                             position: "bottom-right",
-                            autoClose: 10000,
+                            autoClose: 5000,
                             hideProgressBar: false,
                             closeOnClick: true,
                             pauseOnHover: true,
@@ -180,7 +180,7 @@ const SignUpPage = () => {
                         setLoading(false);
                         toast.error(error.message, {
                             position: "bottom-right",
-                            autoClose: 10000,
+                            autoClose: 5000,
                             hideProgressBar: false,
                             closeOnClick: true,
                             pauseOnHover: true,
@@ -209,7 +209,7 @@ const SignUpPage = () => {
         } else {
             toast.error("Please select an image file.", {
                 position: "top-right",
-                autoClose: 10000,
+                autoClose: 5000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -222,7 +222,7 @@ const SignUpPage = () => {
 
     return (
         <div 
-            className="w-screen h-screen overflow-auto scrollbar-hide bg-secondary "
+            className="w-screen h-screen overflow-auto scrollbar-hide bg-secondary"
         >
             <div className="sticky top-0 flex w-full h-[60px] justify-between z-50 bg-tertiary shadow-lg shadow-accent/20 border border-accent/10">
                 <div className='h-full w-full flex items-center justify-start pl-2'>
@@ -241,12 +241,12 @@ const SignUpPage = () => {
                 </div>
             </div>
             <motion.div 
-                className="min-h-full w-full flex flex-col items-center justify-center fixed xs:pb-10"
+                className="min-h-full w-full flex flex-col items-center justify-center fixed xs:pb-10 "
                 initial={{ opacity: 0,  y: 200 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: .8 }}
             >
-                <div className="xs:w-4/5 sm:w-full sm:mx-auto sm:max-w-lg rounded-md  shadow-2xl shadow-accent/60 sm:p-8 xs:px-4 bg-tertiary">
+                <div className="xs:w-4/5 sm:w-full sm:mx-auto sm:max-w-lg rounded-md shadow-2xl shadow-accent/60 sm:p-8 xs:px-4 bg-tertiary">
                     <div>
                         <h1 className="sm:text-2xl xs:text-lg text-accent font-bold text-center pt-4">Create an account</h1>
                         <h1 className="sm:text-sm xs:text-xs text-white text-center md:pb-4 xs:pb-2">Welcome to our community.</h1>
@@ -271,7 +271,7 @@ const SignUpPage = () => {
                                     <img
                                         src={userPfp ?? ""}
                                         alt="GG"
-                                        className='w-[128px] h-[128px] rounded-full object-cover'
+                                        className='xl:w-[128px] xl:h-[128px] rounded-full object-cover'
                                         onClick={() => {setUserPfp('')}}
                                     />
                             )
@@ -302,7 +302,7 @@ const SignUpPage = () => {
                 </div>
             </motion.div>
             <div>
-                <ToastContainer/>
+                <ToastContainer limit={1}/>
             </div>
         </div>
     )

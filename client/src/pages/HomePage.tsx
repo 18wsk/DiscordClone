@@ -5,14 +5,14 @@ import { motion } from 'framer-motion'
 
 const HomePage = () => {
     return (
-        <div className="w-screen h-screen overflow-auto scrollbar-hide bg-primary">
+        <div className="w-screen h-screen overflow-auto scrollbar-hide bg-secondary">
             <HomePageNavBar />
             <PageSection>
                 <div className="w-full h-full flex flex-col items-center justify-center" id="Home">
                     <div className="lg:w-[1100px] xs:w-full h-full flex flex-col items-center justify-center">
                             <div className="relative">
                                 <motion.div 
-                                    className="xs:text-4xl md:text-8xl font-bold text-black w-full text-center"
+                                    className="xs:text-4xl md:text-8xl font-bold text-white w-full text-center"
                                 > Where Communities
                                 </motion.div>
                                 <div className="w-full h-fit flex flex-cols-2 items-center justify-center gap-x-2">
@@ -20,22 +20,29 @@ const HomePage = () => {
                                         initial={{ x: -100, opacity: 0 }}
                                         animate={{ x: 0, opacity: 1 }}
                                         transition={{ type: "spring", delay: 0.5 }}
-                                        className="w-fit xs:text-4xl md:text-8xl font-bold text-black text-end h-full"
+                                        className="w-fit xs:text-4xl md:text-8xl font-bold text-white text-end h-full"
                                     > Come
                                     </motion.div> 
                                     <motion.div 
                                         initial={{ x: 100, opacity: 0 }}
                                         animate={{ x: 0, opacity: 1 }}
                                         transition={{ type: "spring", delay: 0.5 }}
-                                        className="w-fit xs:text-4xl md:text-8xl font-bold text-accent text-start"
+                                        className="w-fit xs:text-4xl md:text-8xl font-bold text-white text-start"
                                     > Together.
                                     </motion.div> 
                                 </div>
                             </div>
-                            <h2 className="w-full sm:text-lg xs:text-sm text-center pt-10 pb-4 text-black/50">Join our platform and Connect and Collaborate in Real-Time!</h2>
+                            <h2 className="w-full sm:text-lg xs:text-sm text-center pt-10 pb-4 text-white/50">
+                                Join our platform and Connect and Collaborate in Real-Time!
+                            </h2>
                             <div className='pt-4'>
                                 <Link to="/signup" className="w-full h-full flex items-center justify-center">
-                                    <button className="rounded-lg bg-accent text-white font-bold p-2 hover:bg-accent-hover shadow-2xl shadow-accent/100">Get Started</button>
+                                    <button 
+                                        className="rounded-lg bg-accent text-white font-bold p-2 hover:bg-accent-hover shadow-2xl 
+                                        shadow-accent/100"
+                                    >
+                                        Get Started
+                                    </button>
                                 </Link>
                             </div>                       
                     </div>
@@ -47,8 +54,8 @@ const HomePage = () => {
                     <div className="w-3/4 h-full grid grid-cols-2 items-center justify-center px-8 gap-x-8">
                     <div className="w-full h-full flex items-center justify-center">
                             <div className="w-full h-2/3">
-                                <h1 className="text-4xl font-bold">Effortless communication: secure live-chat made easy.</h1>
-                                <p className='w-full h-fit text-2xl text-black p-8'>
+                                <h1 className="text-4xl font-bold text-white">Effortless communication: secure live-chat made easy.</h1>
+                                <p className='w-full h-fit text-2xl text-white p-8'>
                                     Experience the future of real-time communication with our cutting-edge chat application. 
                                     With instant messaging powered by Socket.IO, professional-level security using cookies and 
                                     JWT tokens, type-safe API calls with TRPC, and a lightning-fast, responsive design optimized 

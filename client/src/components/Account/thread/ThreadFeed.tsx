@@ -7,6 +7,7 @@ import { trpc } from "../../../utils/trpc";
 import { motion } from "framer-motion";
 import { useRef } from "react";
 import { ThreeDots } from "react-loading-icons";
+import { AiOutlineSend } from "react-icons/ai";
 
 
 const ThreadFeed = () => {
@@ -106,6 +107,9 @@ const ThreadFeed = () => {
         textarea.scrollTop = scrollHeight - clientHeight;
         setDivHeight((height > 120) ? `${scrollHeight + 60}px`: "120px" );
         socket?.emit('setTyper', { room: currentThread?.roomId, typer: currentUser?.userName });
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
+        }
     };
 
     useEffect(() => {
@@ -125,11 +129,11 @@ const ThreadFeed = () => {
         >
             <div className="w-fit h-full z-[30]">
             </div>
-            <div className="w-screen h-screen overflow-hidden flex flex-col shadow-2xl shadow-accent">
+            <div className="w-screen h-screen overflow-hidden">
                 <div className="w-full h-full flex flex-col">
                     <div
                         ref={messagesEndRef}
-                        className="overflow-y-scroll scrollbar-hide scroll-smooth bg-[#313338]"
+                        className="overflow-y-scroll scrollbar-hide scroll-smooth bg-primary"
                         style={{ width: 'calc(100vw - 300px)', height: `calc(100vh - ${divHeight})`}}
                     >
                         {currentMessages.map((message: Message, index) => (
@@ -138,7 +142,7 @@ const ThreadFeed = () => {
                             </div>
                         ))}
                     </div>
-                    <div className={`h-[${divHeight}] absolute bottom-0 bg-[113338] shadow-lg shadow-accent`} style={{ width: 'calc(100vw - 300px)'}}>
+                    <div className={`h-[${divHeight}] absolute bottom-10 shadow-lg shadow-accent`} style={{ width: 'calc(100vw - 300px)'}}>
                         {currentTyper && 
                             <div className="mt-2 w-fit h-fit flex items-center justify-center gap-x-4 rounded-r-md ml-2">
                                 <p className="w-full flex gap-x-4 pr-2 text-white font-bold text-sm">
@@ -146,7 +150,7 @@ const ThreadFeed = () => {
                                 </p>
                             </div>
                         }
-                        <div className="w-full h-full flex items-center justify-center absolute bottom-0">
+                        <div className="w-full h-full flex items-center justify-center">
                             <textarea
                                     id="threadTextArea"
                                     maxLength={1000}
@@ -158,16 +162,16 @@ const ThreadFeed = () => {
                                     }}
                                     onBlur={() => socket?.emit('setTyper', { room: currentThread?.roomId, typer: null })}
                                     className="
-                                        bg-[#383a40] w-1/2 h-[38px] rounded-l-md outline-none focus:outline-none p-2 
+                                        bg-[#383a40] w-1/2 h-[38px] rounded-md outline-none focus:outline-none p-2 pr-[54px]
                                         threadInput text-sm absolute bottom-10 
                                         shadow-2xl shadow-accent
                                         text-[#dbdee1]
                                         "
                                 />
-                            <div className="w-1/4 h-[38px] absolute right-0 bottom-10">
+                            <div className="w-1/4 h-[44px] absolute right-[34px] bottom-[30px]">
                                 <button
-                                        className="w-fit h-[38px] rounded-r-md outline-none focus:outline-none threadInput text-sm text-white 
-                                            bg-accent text-center border border-accent px-2 shadow-2xl shadow-accent"
+                                        className="w-[30px] h-[30px] rounded-md outline-none focus:outline-none threadInput text-sm text-white 
+                                            bg-accent text-center border border-accent shadow-2xl shadow-accent px-2 flex items-center justify-center"
                                         onClick={() =>
                                             currentUser &&
                                             currentUser.userId &&
@@ -186,7 +190,7 @@ const ThreadFeed = () => {
                                             })
                                         }
                                         >
-                                        SEND
+                                        <AiOutlineSend fill={"#FFFFFF"} className="w-[24px] h-[24px]"/>
                                 </button>
                             </div>
                         </div>

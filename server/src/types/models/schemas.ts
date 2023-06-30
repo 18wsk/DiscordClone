@@ -3,6 +3,7 @@ import { Password } from "../Password";
 import { User } from "../User";
 import { Thread } from "../Thread";
 import { Message } from "../Message";
+import { Friend } from "../Friend";
 
 const passwordSchema: Schema<Password> = new mongoose.Schema<Password>(
     {
@@ -18,6 +19,19 @@ const passwordSchema: Schema<Password> = new mongoose.Schema<Password>(
     {
         collection: 'users' 
     },
+);
+
+const friendSchema = new mongoose.Schema<Friend>(
+    {
+        id: {
+            type: String,
+            required: true,
+        },
+        userName: {
+            type: String,
+            required: true,
+        },
+    }
 );
 
 
@@ -48,7 +62,7 @@ const userSchema = new mongoose.Schema<User>(
             required: true,
         },
         friends: {
-            type: [String],
+            type: [friendSchema],
             required: true,
         },
         pfp: {

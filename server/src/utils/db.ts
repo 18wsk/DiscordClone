@@ -4,6 +4,7 @@ import { User } from '../types/User';
 import mongoose from "mongoose";
 import { Thread } from '../types/Thread';
 import { Message } from '../types/Message';
+import { Friend } from '../types/Friend';
 
 dotenv.config();
 
@@ -40,10 +41,24 @@ export async function createUser({ user }: { user: User }): Promise<User | null>
     return UserModel.create(user);
 }
 
-// THREAD QUERIES
-export async function getThreadById({ id } : { id: string | null }): Promise<Thread | null> {
-    return ThreadModel.findOne({ id }).exec();
+export async function addFriend({ currentId, friend}: {currentId: string, friend: Friend}): Promise<User | null> {
+    const updatedUser = await UserModel.findOne({ userId: currentId }).exec();
+    const updatedFriend = await UserModel.findOne({ userId: friend.id }).exec();
+
+    if (!updatedUser || !updatedFriend || !updatedUser.userName) return null;
+    
+    updatedUser.friends = [...updatedUser.friends, friend];
+    if (updatedUser.userName) {
+        updatedFriend.friends = [...updatedFriend.friends, { id: currentId, userName: updatedUser.userName }];
+    }
+
+    await updatedUser.updateOne(updatedUser).exec();
+    await updatedFriend.updateOne(updatedFriend).exec();
+
+    return updatedUser;
 }
+
+// THREAD QUERIES
 
 export async function getThreadByRoomId({ roomId } : { roomId: string | null }): Promise<Thread | null> {
     return ThreadModel.findOne({ roomId }).exec();
@@ -68,7 +83,18 @@ export async function addThread({ thread }: { thread: Thread }): Promise<Thread 
 }
 
 export async function countThreadByName({ threadName } : { threadName: string | null }): Promise<number> {
-    return UserModel.countDocuments({ threadName }).exec();
+    return ThreadModel.countDocuments({ threadName }).exec();
+}
+
+export async function addUserToThread({ userId, threadId } : { userId: string, threadId: string}) { 
+    const updatedThread = await ThreadModel.findOne({ roomId: threadId }).exec();
+    if (!updatedThread) return null;
+
+    updatedThread.users = [...updatedThread.users, userId];
+
+    await updatedThread.updateOne(updatedThread).exec();
+    console.log('updatedThread', updatedThread.users)
+    return updatedThread;
 }
 
 // MESSAGE QUERIES

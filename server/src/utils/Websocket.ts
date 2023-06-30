@@ -14,6 +14,7 @@ const Websocket = (server: http.Server) => {
         socket.on('joinRoom', (room) => {
             socket.join(room);
             console.log(`User joined room: ${room}`);
+            
         });
 
         socket.on('leaveRoom', (room) => {

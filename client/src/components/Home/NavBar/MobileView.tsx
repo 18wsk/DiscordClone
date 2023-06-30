@@ -43,8 +43,8 @@ export const MobileView = ({
                                 <button 
                                     className={clsx(
                                         "flex items-center justify-center text-center w-24 p-1 rounded-lg", 
-                                        activeSection === "Home" && 'text-accent bg-accent-hover/10',
-                                        activeSection !== "Home" && 'text-black hover:text-accent hover:bg-accent-hover/10'
+                                        activeSection === "Home" && 'text-white bg-accent-hover/10',
+                                        activeSection !== "Home" && 'text-white hover:text-white hover:bg-accent-hover/10'
                                     )}
                                     onClick={() => {
                                         handleSectionClick("Home");
@@ -59,8 +59,8 @@ export const MobileView = ({
                                     <button 
                                         className={clsx(
                                             "flex items-center justify-center text-center w-24 p-1 rounded-lg", 
-                                            activeSection === "Product" && 'text-accent bg-accent-hover/10',
-                                            activeSection !== "Product" && 'text-black hover:text-accent hover:bg-accent-hover/10'
+                                            activeSection === "Product" && 'text-white bg-accent-hover/10',
+                                            activeSection !== "Product" && 'text-white hover:text-white hover:bg-accent-hover/10'
                                         )}
                                         onClick={() => {
                                             handleSectionClick("Product");
@@ -75,8 +75,8 @@ export const MobileView = ({
                                     <button 
                                         className={clsx(
                                             "flex items-center justify-center text-center w-24 p-1 rounded-lg", 
-                                            activeSection === "About" && 'text-accent bg-accent-hover/10',
-                                            activeSection !== "About" && 'text-black hover:text-accent hover:bg-accent-hover/10'
+                                            activeSection === "About" && 'text-white bg-accent-hover/10',
+                                            activeSection !== "About" && 'text-white hover:text-white hover:bg-accent-hover/10'
                                         )}
                                         onClick={() => {
                                             handleSectionClick("About");
@@ -91,8 +91,8 @@ export const MobileView = ({
                                     <button 
                                         className={clsx(
                                             "flex items-center justify-center text-center w-24 p-1 rounded-lg", 
-                                            activeSection === "Contact" && 'text-accent bg-accent-hover/10',
-                                            activeSection !== "Contact" && 'text-black hover:text-accent hover:bg-accent-hover/10'
+                                            activeSection === "Contact" && 'text-white bg-accent-hover/10',
+                                            activeSection !== "Contact" && 'text-white hover:text-white hover:bg-accent-hover/10'
                                         )}
                                         onClick={() => {
                                             handleSectionClick("Contact");
@@ -108,7 +108,7 @@ export const MobileView = ({
                                         <Menu.Item>
                                             <Link to="/" className="w-full h-full flex items-center justify-center">
                                                 <button 
-                                                    className="flex items-center justify-center text-black text-center w-24 p-1 hover:text-accent rounded-lg  hover:bg-accent-hover/10"
+                                                    className="flex items-center justify-center text-white text-center w-24 p-1 hover:text-white rounded-lg  hover:bg-accent-hover/10"
                                                     onClick={() => handleLogout() }
                                                 >
                                                     Logout
@@ -130,7 +130,7 @@ export const MobileView = ({
                                         <Menu.Item>
                                             <Link to="/login" className="w-full h-full flex items-center justify-center">
                                                 <button 
-                                                    className="flex items-center justify-center text-black text-center w-24 p-1 hover:text-accent rounded-lg  hover:bg-accent-hover/10"
+                                                    className="flex items-center justify-center text-white text-center w-24 p-1 hover:text-white rounded-lg  hover:bg-accent-hover/10"
                                                 >
                                                     Login
                                                 </button>

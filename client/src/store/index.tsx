@@ -3,6 +3,7 @@ import { immer } from "zustand/middleware/immer";
 import { User } from "../../../server/src/types/User";
 import { Thread } from "../../../server/src/types/Thread";
 import { Message } from "../../../server/src/types/Message";
+import { Friend } from "../../../server/src/types/Friend";
 
 export interface TChatStore {
     currentUser: User | null;
@@ -26,6 +27,7 @@ export interface TChatStore {
         addUser: (user: User) => void;
         removeUser: (user: User) => void;
         updateUser: (user: User | null) => void;
+        addFriend: (friend: Friend) => void;
     }
 };
 
@@ -56,6 +58,11 @@ const ChatStore = create(immer<TChatStore>((set) => ({
         addUser: (user) => set((state: TChatStore) => ({ users: [...state.users, user] })),
         removeUser: (user) => set((state: TChatStore) => ({ users: state.users.filter((u) => u.userId !== user.userId) })),
         updateUser: (user) => set((state: TChatStore) => ({ users: state.users.map((u) => u.userId === user?.userId ? user : u) })),
+        addFriend: (friend) => set((state: TChatStore) => ({ 
+            currentUser: {...state.currentUser, friends: state.currentUser 
+                ? [...state.currentUser?.friends, friend] 
+                : []}
+        })),
     }}),
     
 ));

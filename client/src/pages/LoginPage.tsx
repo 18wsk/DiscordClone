@@ -37,7 +37,7 @@ const LoginPage = () => {
             setActiveUser(data);
             toast.success("Login successful!", {
                 position: "bottom-right",
-                autoClose: 10000,
+                autoClose: 5000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -52,7 +52,7 @@ const LoginPage = () => {
         onError: (error) => {
             toast.error(error.message, {
                 position: "bottom-right",
-                autoClose: 10000,
+                autoClose: 5000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -104,7 +104,7 @@ const LoginPage = () => {
     const handleValidationErrors = (error: string | null) => {
         toast.error(error, {
             position: "bottom-right",
-            autoClose: 10000,
+            autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
@@ -147,17 +147,14 @@ const LoginPage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: .8 }}
             >
-                <div className="xs:w-4/5 sm:w-full sm:mx-auto sm:max-w-lg rounded-md border-2 shadow-2xl shadow-accent/60 sm:p-8 xs:px-4 bg-primary">
+                <div className="xs:w-4/5 sm:w-full sm:mx-auto sm:max-w-lg rounded-md shadow-2xl shadow-accent sm:p-8 xs:px-4 bg-tertiary">
                     <div>
                         <h1 className="md:text-2xl xs:text-xl text-accent font-bold text-center md:pt-10 xs:pt-4">Welcome back!</h1>
-                        <h1 className="md:text-sm xs:text-xs text-black text-center md:pb-4 xs:pb-2">We are happy to see you again.</h1>
-                        {/* <div className="w-full h-[20px] flex items-center justify-center">
-                            {loginQuery.isFetching && <TailSpin  stroke="#3e47c9" speed={.75} />}
-                        </div> */}
+                        <h1 className="md:text-sm xs:text-xs text-white text-center md:pb-4 xs:pb-2">We are happy to see you again.</h1>
                     </div>
-                    <h2 className="text-black sm:pt-8 sm:pb-2 xs:py-1 font-semibold sm:text-sm xs:text-xs flex items-center gap-x-2">EMAIL:</h2>
+                    <h2 className="text-white sm:pt-8 sm:pb-2 xs:py-1 font-semibold sm:text-sm xs:text-xs flex items-center gap-x-2">EMAIL:</h2>
                         <FormInput value={email} onInputChange={setEmail} valid={emailValid}/>
-                    <h2 className="text-black sm:pt-8 sm:pb-2 xs:py-1 font-semibold sm:text-sm xs:text-xs flex items-center gap-x-2">PASSWORD:</h2>
+                    <h2 className="text-white sm:pt-8 sm:pb-2 xs:py-1 font-semibold sm:text-sm xs:text-xs flex items-center gap-x-2">PASSWORD:</h2>
                         <PasswordInput value={password?.password ?? ""} onInputChange={savePassword} passwordValid={passwordValid}/>
                     <div className="w-full h-fit flex justify-center pt-12">
                         <button
@@ -169,14 +166,14 @@ const LoginPage = () => {
                         </button>
                     </div>
                     <div>
-                    <div className="text-black text-center py-10 flex-0 w-min-full text-bold sm:text-sm xs:text-xs ">
+                    <div className="text-white text-center py-10 flex-0 w-min-full text-bold sm:text-sm xs:text-xs ">
                         Don't have an account? <Link to="/signup" className="text-accent hover:underline sm:text-sm xs:text-xs">Sign Up</Link>
                     </div>
                 </div>
                 </div>
             </motion.div>
             <div>
-                <ToastContainer/>
+                <ToastContainer limit={1}/>
             </div>
         </div>
     )

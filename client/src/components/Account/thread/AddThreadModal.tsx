@@ -45,7 +45,7 @@ export const AddThreadModal = () => {
                         addThread( data );
                         toast.success("You have successfully created a new SwiftChat community!", {
                             position: "top-right",
-                            autoClose: 10000,
+                            autoClose: 5000,
                             hideProgressBar: false,
                             closeOnClick: true,
                             pauseOnHover: true,
@@ -58,7 +58,7 @@ export const AddThreadModal = () => {
                     onError: (error) => {
                         toast.error(error.message, {
                             position: "top-right",
-                            autoClose: 10000,
+                            autoClose: 5000,
                             hideProgressBar: false,
                             closeOnClick: true,
                             pauseOnHover: true,
@@ -74,7 +74,7 @@ export const AddThreadModal = () => {
             setThreadNameValid(false);
             toast.error("Please provide a community name!", {
                 position: "top-right",
-                autoClose: 10000,
+                autoClose: 5000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -98,7 +98,7 @@ export const AddThreadModal = () => {
         } else {
             toast.error("Please select an image file.", {
                 position: "top-right",
-                autoClose: 10000,
+                autoClose: 5000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -207,7 +207,7 @@ export const AddThreadModal = () => {
             </div>
             </Dialog>
         </Transition>
-        <ToastContainer/>
+        <ToastContainer limit={1}/>
     </>
     )
 }
