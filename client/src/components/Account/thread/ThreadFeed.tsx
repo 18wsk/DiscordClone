@@ -121,11 +121,10 @@ const ThreadFeed = () => {
 
     return (
         <motion.div 
-            className="h-full w-full flex flex-cols-2" 
-            style={{ width: 'calc(100vw - 300px)' }}
-            initial={{ opacity: 0, x: -600  }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7 }}
+            className="h-full w-full flex flex-cols-2 xs:w-100vw md:w-[100vw - 300px]" 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1.0 }}
         >
             <div className="w-fit h-full z-[30]">
             </div>
@@ -133,11 +132,11 @@ const ThreadFeed = () => {
                 <div className="w-full h-full flex flex-col">
                     <div
                         ref={messagesEndRef}
-                        className="overflow-y-scroll scrollbar-hide scroll-smooth bg-primary"
-                        style={{ width: 'calc(100vw - 300px)', height: `calc(100vh - ${divHeight})`}}
+                        className="overflow-y-scroll scrollbar-hide scroll-smooth bg-primary xs:w-100vw md:w-[100vw - 300px]"
+                        style={{height: `calc(100vh - ${divHeight})`}}
                     >
                         {currentMessages.map((message: Message, index) => (
-                            <div className="w-full h-fit flex pb-2" key={index}>
+                            <div className="xs:w-full xs:px-2 md:w-3/4 h-fit flex pb-2" key={index}>
                                 <ThreadMessage msg={message} key={index} />
                             </div>
                         ))}
@@ -162,11 +161,8 @@ const ThreadFeed = () => {
                                     }}
                                     onBlur={() => socket?.emit('setTyper', { room: currentThread?.roomId, typer: null })}
                                     className="
-                                        bg-[#383a40] w-1/2 h-[38px] rounded-md outline-none focus:outline-none p-2 pr-[54px]
-                                        threadInput text-sm absolute bottom-10 
-                                        shadow-2xl shadow-accent
-                                        text-[#dbdee1]
-                                        "
+                                        bg-[#383a40] md:w-1/2 xs:w-full h-[38px] rounded-md outline-none focus:outline-none p-2 pr-[54px] threadInput text-sm 
+                                        absolute bottom-10 shadow-2xl shadow-accent text-[#dbdee1]"
                                 />
                             <div className="w-1/4 h-[44px] absolute right-[34px] bottom-[30px]">
                                 <button

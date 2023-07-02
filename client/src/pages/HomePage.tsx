@@ -56,35 +56,33 @@ const HomePage = () => {
             </PageSection>
             <div className="bg-header flex items-center justify-center w-full xs:h-[200px] md:h-[300px]"/>
             <PageSection>
-                <div className="w-full pt-[70px] bg-primary relative" id="Product">
-                    <h1 className="xs:text-lg xs:text-center sm:text-start md:text-3xl lg:text-5xl font-extrabold text-white px-8 text-start xs:pb-4 lg:pb-0">
+                <div className="w-full h-full flex flex-col items-center bg-primary relative pt-[70px]" id="Product">
+                    <h1 className="xs:text-lg xs:text-center sm:text-start md:text-3xl lg:text-5xl font-extrabold text-white px-8 text-start py-4">
                         Effortless communication: secure live-chat made easy.
                     </h1>
                     <div 
-                        className="w-full xs:h-2/3 grid grid-auto-rows-2 lg:grid-rows-1 lg:grid-cols-2 items-center justify-center px-8 
-                                    lg:gap-x-12 xs:gap-y-8 sm:gapy-y-8 xs:pb-12 xs:pt-4"
+                        className="w-full h-fit grid grid-auto-rows-2 lg:grid-rows-1 lg:grid-cols-2 items-center justify-center px-8 
+                                    lg:gap-x-12 sm:gapy-y-8 xs:pb-12 md:pt-4"
                     >
-                        <div className="w-full h-full flex items-center justify-center xs:row-start-2 lg:col-start-1 lg:row-span-2 lg:pt-8">
-                            <div className="w-full h-full ">
-                                <div className='w-full  h-full flex items-start justify-center'>
-                                    <div className="w-full h-fit border-l-2 border-accent">
-                                        <p className='w-full h-fit sm:text-sm md:text-lg lg:text-xl text-white px-4 whitespace-pre-line'>
-                                            Experience the future of real-time communication with our cutting-edge chat application.
-                                        </p>
-                                        <p className='w-full h-full sm:text-sm md:text-lg lg:text-xl text-white xs:pt-4 sm:pt-8 px-4 whitespace-pre-line'>
-                                            With instant messaging powered by Socket.IO, professional-level security using cookies and 
-                                            JWT tokens, type-safe API calls with TRPC, and a lightning-fast, responsive design optimized 
-                                            by React Query, our app ensures seamless and secure conversations.
-                                        </p>
-                                        <p className='w-full h-full sm:text-sm md:text-lg lg:text-xl text-white xs:pt-4 sm:pt-8 px-4 whitespace-pre-line'>
-                                            Join us for a revolutionary chat experience like no other.
-                                        </p>
-                                    </div>
+                        <div className="w-full h-full xs:row-start-2 lg:col-start-1 lg:row-span-2 xs:pt-8 lg:pt-0 ">
+                            <div className='w-full h-full flex flex-col items-start justify-center'>
+                                <div className="w-full h-fit border-l-2 border-accent">
+                                    <p className='w-full h-fit xs:text-sm  lg:text-xl text-white px-4 whitespace-pre-line'>
+                                        Experience the future of real-time communication with our cutting-edge chat application.
+                                    </p>
+                                    <p className='w-full h-fit xs:text-sm lg:text-xl text-white xs:pt-4 px-4 whitespace-pre-line'>
+                                        With instant messaging powered by Socket.IO, professional-level security using cookies and 
+                                        JWT tokens, type-safe API calls with TRPC, and a lightning-fast, responsive design optimized 
+                                        by React Query, our app ensures seamless and secure conversations.
+                                    </p>
+                                    <p className='w-full h-fit xs:text-sm lg:text-xl text-white xs:pt-4 px-4 whitespace-pre-line'>
+                                        Join us for a revolutionary chat experience like no other.
+                                    </p>
                                 </div>
                             </div>
                         </div>
-                        <div className="w-full flex flex-col items-center justify-center xs:row-start-1 lg:col-start-2 lg:row-span-2 lg:pt-8">
-                            <div className="w-full rounded-lg flex items-center justify-center">
+                        <div className="w-full flex flex-col items-center justify-center xs:row-start-1 lg:col-start-2 lg:row-span-2 ">
+                            <div className="w-full h-max-lg rounded-lg flex items-center justify-center">
                                 <img src={productImg} alt="Product" className="rounded-lg shadow-2xl shadow-accent-hover"></img>
                             </div>
                         </div>
@@ -94,7 +92,7 @@ const HomePage = () => {
             <div className="bg-header flex items-center justify-center w-full xs:h-[200px] md:h-[300px]" />
             <PageSection>
                 <div className="w-full h-full flex flex-col items-center justify-center" id="About">
-                <div className='w-full h-full relative z-0 flex items-center justify-center' id="home" >
+                <div className='w-full h-full relative z-0 flex items-center justify-center'>
                     <div className='w-full h-full flex items-center justify-center'>
                         <motion.div
                             whileInView={{ y: 0, opacity: 1 }}

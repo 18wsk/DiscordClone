@@ -15,6 +15,7 @@ const Account = () => {
 	const setThreads = ChatStore(state => state.actions.setThreads);
 	const setCurrentThread = ChatStore(state => state.actions.setCurrentThread);
 	const currentThread = ChatStore(state => state.currentThread);
+	const logo = require("../assets/logo.png");
 
 	trpc.thread.getThreads.useQuery({}, { 
         enabled: true, 
@@ -80,8 +81,12 @@ const Account = () => {
 				<div className={clsx(
 					"w-screen h-screen flex flex-cols-2",
 				)}>
-					<div className=" w-[300px] h-screen bg-slate-100 z-[500]">
-						<div className="w-[300px] h-[100px] cursor-pointer" onClick={() => setCurrentThread(null)}>
+					<div className={
+						clsx(
+							currentThread === null && `xs:w-screen md:w-[300px] h-screen bg-slate-100 z-[500] `,
+							currentThread !== null && "xs:hidden md:block",
+						)}>
+						<div className="xs:w-screen md:w-[300px] h-[100px] cursor-pointer" onClick={() => setCurrentThread(null)}>
 							<ProfileLink/>
 						</div>
 						<div className="w-full flex flex-col pt-4 bg-[#2b2d31]" style={{ height: 'calc(100vh - 100px)' }}>
@@ -106,14 +111,18 @@ const Account = () => {
 						</div>
 					</div>
 					<div className="w-full h-full bg-primary">
-					{ currentThread !== null ? 
-						<ThreadFeed/>
-						: 
-						<div className="w-full h-full">
-							{/* <h1 className="text-white font-bold underline decoration-accent">Online</h1>
-							<h1 className="text-white font-bold underline decoration-accent">Discover New Communities</h1> */}
-						</div>
-					}
+						{ currentThread !== null ? 
+							<ThreadFeed/>
+							: 
+							<div className="w-full h-full flex flex-col items-center justify-center">
+								<div className="w-fit h-fit flex flex-col items-center justify-center">
+									<img src={logo} alt="logo" className="object-contain h-[200px] w-[400px]"/>
+									<p className="text-white text-lg font-extrabold text-center">
+										Join or create a community and start connecting today.
+									</p>
+								</div>
+							</div>
+						}
 					</div>
 				</div>
 			</ProtectedRoute>

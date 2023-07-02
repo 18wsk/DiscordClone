@@ -23,7 +23,7 @@ const Contact = () => {
 
     return (
         <div className="w-full h-full flex items-start justify-center md:py-10">
-            <div className="bg-tertiary md:w-3/4 xs:w-full rounded-xl shadow-2xl md:p-10 xs:px-4 shadow-accent">
+            <div className="bg-tertiary md:w-1/2 xs:w-full rounded-xl shadow-2xl md:p-10 xs:px-4 shadow-accent">
                 <h1 className="text-xl text-white font-bold text-left p-1">Name:</h1>
                 <div className='w-full pb-2 flex justify-center'>
                     <input 
@@ -50,7 +50,7 @@ const Contact = () => {
                         required onChange={(e) => setFormData({...formData, contact: e.target.value})}
                     />
                 </div>
-                <div className="w-full flex justify-center py-10">
+                <div className="w-full flex justify-center pt-10">
                     <button className="p-2 rounded-xl bg-my-blue text-white bg-accent hover:bg-blue-500 w-1/3" onClick={sendEmail}>Send</button>
                 </div>
                 
