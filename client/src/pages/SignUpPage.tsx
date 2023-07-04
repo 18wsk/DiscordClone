@@ -10,7 +10,7 @@ import { TailSpin } from 'react-loading-icons';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ChatStore from '../store';
-import { MdAddAPhoto } from 'react-icons/md';
+import { FaUserAstronaut } from 'react-icons/fa';
 
 
 
@@ -248,8 +248,8 @@ const SignUpPage = () => {
             >
                 <div className="xs:w-4/5 sm:w-full sm:mx-auto sm:max-w-lg rounded-md shadow-2xl shadow-accent/60 sm:p-8 xs:px-4 bg-tertiary">
                     <div>
-                        <h1 className="sm:text-2xl xs:text-lg text-accent font-bold text-center pt-4">Create an account</h1>
-                        <h1 className="sm:text-sm xs:text-xs text-white text-center md:pb-4 xs:pb-2">Welcome to our community.</h1>
+                        <h1 className="md:text-_2xl xs:text-_2xl text-accent font-bold text-center pt-4">Create an account</h1>
+                        <h1 className="md:text-sm xs:text-xs text-white text-center md:pb-4 xs:pb-2">Welcome to our community.</h1>
                     </div>
                     <div className="w-full h-fit flex items-center justify-center">
                         {
@@ -259,12 +259,11 @@ const SignUpPage = () => {
                                         id="file-input"
                                         type="file"
                                         accept="image/*"
-                                        className="discord-input"
+                                        className="pfp-input"
                                         onChange={(e) => handleFileInputChange(e)}
                                     />
-                                    <label htmlFor="file-input" className="discord-input-label">
-                                        <MdAddAPhoto className="discord-input-icon" fill={"#ffffff"} />
-                                        <span className="discord-input-text text-white">Upload Photo</span>
+                                    <label htmlFor="file-input" className="pfp-input-label">
+                                        <FaUserAstronaut className="pfp-input-icon" fill={"#ffffff"} />
                                     </label>
                                 </>
                                 ) : (

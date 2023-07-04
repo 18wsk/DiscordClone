@@ -77,10 +77,10 @@ export const AddFriendToThreadModal = () => {
         <>
         <div className="flex items-center justify-center">
             <button 
-                className="rounded-full h-[24px] w-[24px] bg-tertiary hover:bg-white" 
+                className="rounded-full h-[28px] w-[28px] bg-accent hover:bg-white flex items-center justify-center" 
                 onClick={() => openModal()}
             >
-                <BsPersonAdd fill={"#3e47c9"} className="w-[20px] h-[20px]" />
+                <BsPersonAdd fill={"#ffff"} className="w-[25px] h-[25px] p-[4px] hover:fill-accent" />
             </button>
         </div>
         <Transition appear show={isOpen} as={Fragment}>

@@ -167,12 +167,11 @@ export const AddThreadModal = () => {
                                                 id="file-input"
                                                 type="file"
                                                 accept="image/*"
-                                                className="discord-input"
+                                                className="pfp-input"
                                                 onChange={(e) => handleFileInputChange(e)}
                                             />
-                                            <label htmlFor="file-input" className="discord-input-label">
-                                                <MdAddAPhoto className="discord-input-icon" fill={"#ffffff"} />
-                                                <span className="discord-input-text text-white">Upload Photo</span>
+                                            <label htmlFor="file-input" className="pfp-input-label">
+                                                <MdAddAPhoto className="pfp-input-icon" fill={"#ffffff"} />
                                             </label>
                                         </>
                                         ) : (

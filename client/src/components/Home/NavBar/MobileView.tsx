@@ -18,7 +18,7 @@ export const MobileView = ({
 }) => {
 
     return(
-        <div className='w-full h-full flex jusitfy-between relative'>
+        <div className='w-full h-full flex jusitfy-between relative bg-tertiary'>
             <div className='h-full w-full flex items-center justify-start'>
                 <Link to="/" className="h-full flex items-center justify-center pl-2">
                     <img src={logo} alt="logo" className="h-2/3 w-[160px] aspect-video" />

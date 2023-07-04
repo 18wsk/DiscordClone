@@ -8,6 +8,8 @@ import ThreadFeed from "../components/Account/thread/ThreadFeed";
 import { trpc } from "../utils/trpc";
 import clsx from 'clsx';
 import { AddFriendToThreadModal } from "../components/Account/thread/AddFriendToThreadModal";
+import ThreadNavMobile from "../components/Account/thread/ThreadNavMobile";
+import { ThreadListComponent } from "../components/Account/thread/ThreadListItem";
 
 
 const Account = () => {
@@ -38,41 +40,6 @@ const Account = () => {
 			});
         }
     });
-	
-	const ThreadListComponent = ({ thread } : {thread: Thread}) => {
-		return (
-			<div className={
-				clsx(
-					"w-full h-[60px] flex flex-cols-2 hover:bg-[#4e5058]/40 cursor-pointer rounded-md", 
-					currentThread?.roomId === thread?.roomId && "bg-[#4e5058]/40"
-				)} 
-				onClick={() => setCurrentThread(thread)}
-			>
-				<div className="h-full w-[64px] flex items-center justify-center " >
-					<img src={thread.img ?? ""} className="object-cover aspect-auto rounded-full h-[48px] w-[48px] z-1 bg-black" alt={"pfp"}/>
-				</div>
-				<div className="w-full h-full flex flex-cols items-center justify-center">
-					<div className="w-full h-full flex flex-col justify-start ">
-						<div className="w-full h-full flex items-center justify-start pl-2">
-							<h1 className="text-md font-bold text-white">{ thread.name }</h1>
-						</div>
-						{/* <div className="w-full h-full flex items-top justify-start pl-2">
-							<h2 className="text-xs text-white">4+ new messages</h2>
-						</div> */}
-					</div>
-					{
-						currentThread?.roomId === thread?.roomId && 
-						<div className="w-[24px] h-full flex items-center justify-center mr-2 ">
-							<AddFriendToThreadModal/>
-						</div>
-					}
-					{/* <div className="w-[12px] h-full flex items-center justify-center mr-2">
-						{true && <div className="bg-success rounded-full h-[10px] w-[10px]"/>}
-					</div> */}
-				</div>
-			</div>
-		)
-	};
 
 
 	return (
@@ -83,10 +50,10 @@ const Account = () => {
 				)}>
 					<div className={
 						clsx(
-							currentThread === null && `xs:w-screen md:w-[300px] h-screen bg-slate-100 z-[500] `,
-							currentThread !== null && "xs:hidden md:block",
+							currentThread === null && `xs:w-screen sm:w-[300px] h-screen bg-slate-100 z-[500] `,
+							currentThread !== null && "xs:hidden lg:block w-[300px]",
 						)}>
-						<div className="xs:w-screen md:w-[300px] h-[100px] cursor-pointer" onClick={() => setCurrentThread(null)}>
+						<div className="xs:w-screen sm:w-[300px] h-[100px] cursor-pointer" onClick={() => setCurrentThread(null)}>
 							<ProfileLink/>
 						</div>
 						<div className="w-full flex flex-col pt-4 bg-[#2b2d31]" style={{ height: 'calc(100vh - 100px)' }}>
@@ -96,9 +63,8 @@ const Account = () => {
 							<div className="w-full h-full overflow-y-scroll scrollbar-hide relative bg-[#2b2d31] scroll-smooth">
 								{threads.map((thread: Thread) => {
 									return (
-										<div className="w-full h-fit py-1 px-2">
-											<ThreadListComponent thread={thread} key={thread.roomId}/>
-											
+										<div className="w-full h-fit py-1 px-2" key={thread.roomId}>
+											<ThreadListComponent currentThread={currentThread} setCurrentThread={setCurrentThread} thread={thread} key={thread.roomId}/>
 										</div>
 									)
 								})}
@@ -110,6 +76,7 @@ const Account = () => {
 							</div>
 						</div>
 					</div>
+					<ThreadNavMobile threads={threads} currentThread={currentThread} setCurrentThread={setCurrentThread}/>
 					<div className="w-full h-full bg-primary">
 						{ currentThread !== null ? 
 							<ThreadFeed/>

@@ -18,8 +18,8 @@ export const DeskTopView = ({
     return (
         <div className='h-full w-full flex items-center bg-tertiary'>
                 <div className='h-full w-1/4 max-w-[300px] pl-2 flex items-center justify-start '>
-                    <Link to="/" className="h-full flex items-center justify-center rounded-md p-2">
-                            <img src={logo} alt="logo" className="h-2/3 w-[160px] aspect-auto" />
+                    <Link to="/" className="h-full flex items-center justify-center w-[160px]">
+                        <img src={logo} alt="logo" className="h-2/3 w-[160px] aspect-video" />
                     </Link>
                 </div>
                 <div className='w-full h-full flex items-center justify-center'>

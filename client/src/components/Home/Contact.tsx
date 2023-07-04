@@ -50,7 +50,7 @@ const Contact = () => {
                         required onChange={(e) => setFormData({...formData, contact: e.target.value})}
                     />
                 </div>
-                <div className="w-full flex justify-center pt-10">
+                <div className="w-full flex justify-center pt-10 xs:pb-4">
                     <button className="p-2 rounded-xl bg-my-blue text-white bg-accent hover:bg-blue-500 w-1/3" onClick={sendEmail}>Send</button>
                 </div>
                 

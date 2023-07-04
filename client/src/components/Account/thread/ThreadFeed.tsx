@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { useRef } from "react";
 import { ThreeDots } from "react-loading-icons";
 import { AiOutlineSend } from "react-icons/ai";
+import clsx from "clsx";
 
 
 const ThreadFeed = () => {
@@ -71,7 +72,7 @@ const ThreadFeed = () => {
     }) => {
         const textarea = document.getElementById("threadTextArea") as HTMLTextAreaElement;
         if (textarea) {
-            textarea.style.height = "38px"; // Reset the height to the initial value
+            textarea.style.height = "42px"; // Reset the height to the initial value
             textarea.value = ''; // Reset the value to an empty string
             setDivHeight(`120px`);
         }
@@ -98,12 +99,12 @@ const ThreadFeed = () => {
         const { value } = event.target;
         setMessage(value);
         const textarea = event.target;
-        textarea.style.height = "38px"; // Set the minimum height
+        textarea.style.height = "42px"; // Set the minimum height
         // Calculate the required height based on the content
         const scrollHeight = textarea.scrollHeight;
         const clientHeight = textarea.clientHeight;
         const height = Math.max(scrollHeight, clientHeight);
-        textarea.style.height = (height > 38) ? height + "px" : "38px";
+        textarea.style.height = (height > 42) ? height + "px" : "42";
         textarea.scrollTop = scrollHeight - clientHeight;
         setDivHeight((height > 120) ? `${scrollHeight + 60}px`: "120px" );
         socket?.emit('setTyper', { room: currentThread?.roomId, typer: currentUser?.userName });
@@ -121,72 +122,89 @@ const ThreadFeed = () => {
 
     return (
         <motion.div 
-            className="h-full w-full flex flex-cols-2 xs:w-100vw md:w-[100vw - 300px]" 
+            className="h-full w-full flex flex-cols-2 xs:w-100vw md:w-[calc(100vw - 300px)]" 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1.0 }}
         >
-            <div className="w-fit h-full z-[30]">
+            <div className="w-fit h-full">
             </div>
             <div className="w-screen h-screen overflow-hidden">
                 <div className="w-full h-full flex flex-col">
                     <div
                         ref={messagesEndRef}
-                        className="overflow-y-scroll scrollbar-hide scroll-smooth bg-primary xs:w-100vw md:w-[100vw - 300px]"
+                        className="overflow-y-scroll scrollbar-hide scroll-smooth bg-primary w-[calc(100vw - 300px)]"
                         style={{height: `calc(100vh - ${divHeight})`}}
                     >
                         {currentMessages.map((message: Message, index) => (
-                            <div className="xs:w-full xs:px-2 md:w-3/4 h-fit flex pb-2" key={index}>
+                            <div className="xs:w-full xs:px-2 h-fit flex pb-2 justify-center " key={index}>
                                 <ThreadMessage msg={message} key={index} />
                             </div>
                         ))}
                     </div>
-                    <div className={`h-[${divHeight}] absolute bottom-10 shadow-lg shadow-accent`} style={{ width: 'calc(100vw - 300px)'}}>
+                    <div 
+                        className={`shadow-lg shadow-accent`} 
+                        style={{height: divHeight}}
+                    >
                         {currentTyper && 
-                            <div className="mt-2 w-fit h-fit flex items-center justify-center gap-x-4 rounded-r-md ml-2">
+                            <div className="mt-2 w-1/3 h-fit flex items-center justify-center gap-x-4 rounded-r-md ml-2">
                                 <p className="w-full flex gap-x-4 pr-2 text-white font-bold text-sm">
                                     {currentTyper} is typing <ThreeDots height={"24px"} width={"24px"} fill={"#3e47c9"} />
                                 </p>
                             </div>
                         }
-                        <div className="w-full h-full flex items-center justify-center">
-                            <textarea
-                                    id="threadTextArea"
-                                    maxLength={1000}
-                                    value={message}
-                                    onChange={handleMessageChange}
-                                    style={{
+                        <div 
+                            className={`flex items-center justify-center threadInputBlock `} 
+                            style={{height: `${divHeight}`}}
+                        >
+                            <div className="relative flex bottom-5 md:w-1/2 xs:w-3/4"
+                                style={{height: `${divHeight}`}}>
+                                <textarea
+                                        id="threadTextArea"
+                                        maxLength={500}
+                                        value={message}
+                                        onChange={handleMessageChange}
+                                        style={{
                                         resize: "none",
-                                        minHeight: "38px"
+                                        minHeight: "42px",
+                                        paddingRight: "44px",
+                                        paddingLeft: "8px",
+                                        paddingTop: "8px",
+                                        paddingBottom: "8px",
                                     }}
+                                    rows={1}
                                     onBlur={() => socket?.emit('setTyper', { room: currentThread?.roomId, typer: null })}
-                                    className="
-                                        bg-[#383a40] md:w-1/2 xs:w-full h-[38px] rounded-md outline-none focus:outline-none p-2 pr-[54px] threadInput text-sm 
-                                        absolute bottom-10 shadow-2xl shadow-accent text-[#dbdee1]"
+                                    className="bg-tertiary rounded-md outline-none focus:outline-none threadInput text-threadText shadow-2xl shadow-accent 
+                                                text-white w-full absolute bottom-10 pr-18 "
                                 />
-                            <div className="w-1/4 h-[44px] absolute right-[34px] bottom-[30px]">
-                                <button
-                                        className="w-[30px] h-[30px] rounded-md outline-none focus:outline-none threadInput text-sm text-white 
-                                            bg-accent text-center border border-accent shadow-2xl shadow-accent px-2 flex items-center justify-center"
-                                        onClick={() =>
-                                            currentUser &&
-                                            currentUser.userId &&
-                                            message &&
-                                            sendMessage({
-                                                message: {
-                                                    user: {
-                                                        userId: currentUser?.userId ?? "",
-                                                        userName: currentUser?.userName ?? "",
-                                                        pfp: currentUser?.pfp ?? "",
-                                                    },
-                                                    payload: message,
-                                                    roomId: currentThread?.roomId ?? "",
-                                                    timeStamp: handleMessageDate(new Date()),
-                                                }
-                                            })
-                                        }
-                                        >
-                                        <AiOutlineSend fill={"#FFFFFF"} className="w-[24px] h-[24px]"/>
+                                <button 
+                                    className={clsx(
+                                        "absolute right-4 bottom-[45px] h-[32px] w-[32px] rounded-md outline-none focus:outline-none p-2 threadInput",
+                                        message.length === 0 && "bg-primary cursor-default disabled",
+                                        message.length > 0 && "bg-accent"
+                                    )}
+                                    onClick={() =>
+                                        currentUser &&
+                                        currentUser.userId &&
+                                        message &&
+                                        sendMessage({
+                                            message: {
+                                                user: {
+                                                    userId: currentUser?.userId ?? "",
+                                                    userName: currentUser?.userName ?? "",
+                                                    pfp: currentUser?.pfp ?? null,
+                                                },
+                                                payload: message,
+                                                roomId: currentThread?.roomId ?? "",
+                                                timeStamp: handleMessageDate(new Date()),
+                                            }
+                                        })
+                                    }
+                                >
+                                    <AiOutlineSend className={clsx(
+                                        message.length === 0 && "fill-accent",
+                                        message.length > 0 && "fill-white"
+                                    )}/>
                                 </button>
                             </div>
                         </div>

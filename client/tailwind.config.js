@@ -26,10 +26,13 @@ module.exports = {
         base: ['16px', '24px'],
         lg: ['20px', '28px'],
         xl: ['24px', '32px'],
+        _2xl: ['28px', '36px'],
+        _3xl: ['32px', '40px'],
         messgeName: ['16px', '22px'],
         messageTime: ['12px', '22px'],
         profileName: ['14px', '18px'],
         profileId: ['12px', '13px'],
+        threadText: ['14px', '24px'],
       },
       screens: {
         'xs': '0px',

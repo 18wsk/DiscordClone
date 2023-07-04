@@ -27,7 +27,7 @@ const FormInput = ({
             >
             <input 
                 className="text-white w-full h-full xs:px-1 xs:py-1 sm:px-2 sm:py-2 bg-secondary rounded-md 
-                            outline-none focus:outline-none xs:h-[32px] sm:h-[38px]"
+                            outline-none focus:outline-none xs:h-[32px] sm:h-[38px] xs:text-md"
                 type={"email"}
                 value={value || ""}
                 onChange={(e) => onInputChange(e.target.value)}
