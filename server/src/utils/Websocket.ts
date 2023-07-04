@@ -13,8 +13,8 @@ const Websocket = (server: http.Server) => {
     io.on('connection', (socket) => {
         socket.on('joinRoom', (room) => {
             socket.join(room);
-            // console.log(`User joined room: ${room}`);
-            // io.to(room).emit('receiveMessage', `User joined room: ${room}`);
+            console.log(`User joined room: ${room}`);
+            
         });
 
         socket.on('leaveRoom', (room) => {

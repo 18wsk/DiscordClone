@@ -10,20 +10,19 @@ import { TailSpin } from 'react-loading-icons';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ChatStore from '../store';
+import { FaUserAstronaut } from 'react-icons/fa';
 
 
 
 const SignUpPage = () => {
     const [password, setPassword] = useState<string | null>(null);
     const [passwordValid, setPasswordValid] = useState<boolean>(true);
-
     const [email, setEmail] = useState<string | null>(null);
     const [emailValid, setEmailValid] = useState<boolean>(true);
-
     const [username, setUsername] = useState<string | null>(null);
     const [userNameValid, setUsernameValid] = useState<boolean>(true);
-
     const [dob, setDob] = useState<Birthday>({day: null, month: null, year: null});
+    const [userPfp, setUserPfp] = useState<string | null>(null);
     const setDateOfBirth = ({name, value}: {name: string, value: string | number | null}) => { 
         setDob({...dob, [name]: value});
     }
@@ -132,7 +131,7 @@ const SignUpPage = () => {
     const handleValidationErrors = (error: string | null) => {
         toast.error(error, {
             position: "bottom-right",
-            autoClose: 10000,
+            autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
@@ -156,7 +155,8 @@ const SignUpPage = () => {
                     email: email!, 
                     password: password!, 
                     userName: username!, 
-                    birthday: dob.day + "/" + dob.month + "/" + dob.year
+                    birthday: dob.day + "/" + dob.month + "/" + dob.year,
+                    pfp: userPfp
                 },
                 {
                     onSuccess: (data) => {
@@ -164,7 +164,7 @@ const SignUpPage = () => {
                         setActiveUser(data);
                         toast.success("You have successfully created an account!", {
                             position: "bottom-right",
-                            autoClose: 10000,
+                            autoClose: 5000,
                             hideProgressBar: false,
                             closeOnClick: true,
                             pauseOnHover: true,
@@ -180,7 +180,7 @@ const SignUpPage = () => {
                         setLoading(false);
                         toast.error(error.message, {
                             position: "bottom-right",
-                            autoClose: 10000,
+                            autoClose: 5000,
                             hideProgressBar: false,
                             closeOnClick: true,
                             pauseOnHover: true,
@@ -196,11 +196,35 @@ const SignUpPage = () => {
         }
     };
 
+    const handleFileInputChange = (event: any) => {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        if (file && file.type.startsWith("image/")) {
+            reader.readAsDataURL(file);
+            reader.onload = async () => {
+                if (reader.result) {
+                    setUserPfp(reader.result as string);
+                }
+            };
+        } else {
+            toast.error("Please select an image file.", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        }
+    };
+
     return (
         <div 
-            className="w-screen h-screen overflow-auto scrollbar-hide bg-primary "
+            className="w-screen h-screen overflow-auto scrollbar-hide bg-secondary"
         >
-            <div className="sticky top-0 flex w-full h-[60px] justify-between z-50 bg-primary shadow-lg shadow-accent/20 border border-accent/10">
+            <div className="sticky top-0 flex w-full h-[60px] justify-between z-50 bg-tertiary shadow-lg shadow-accent/20 border border-accent/10">
                 <div className='h-full w-full flex items-center justify-start pl-2'>
                     <Link to="/" className="h-full flex items-center justify-center ">
                             <img src={logo} alt="logo" className="h-2/3 w-[160px] aspect-video" />
@@ -217,30 +241,57 @@ const SignUpPage = () => {
                 </div>
             </div>
             <motion.div 
-                className="min-h-full w-full flex flex-col items-center justify-center fixed xs:pb-10"
+                className="min-h-full w-full flex flex-col items-center justify-center fixed xs:pb-10 "
                 initial={{ opacity: 0,  y: 200 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: .8 }}
             >
-                <div className="xs:w-4/5 sm:w-full sm:mx-auto sm:max-w-lg rounded-md border-2 shadow-2xl shadow-accent/60 sm:p-8 xs:px-4 bg-primary">
+                <div className="xs:w-4/5 sm:w-full sm:mx-auto sm:max-w-lg rounded-md shadow-2xl shadow-accent/60 sm:p-8 xs:px-4 bg-tertiary">
                     <div>
-                        <h1 className="sm:text-2xl xs:text-lg text-accent font-bold text-center pt-4">Create an account</h1>
-                        <h1 className="sm:text-sm xs:text-xs text-black text-center md:pb-4 xs:pb-2">Welcome to our community.</h1>
+                        <h1 className="md:text-_2xl xs:text-_2xl text-accent font-bold text-center pt-4">Create an account</h1>
+                        <h1 className="md:text-sm xs:text-xs text-white text-center md:pb-4 xs:pb-2">Welcome to our community.</h1>
                     </div>
-                    <h2 className="text-black sm:pt-4 sm:pb-2 xs:py-1 font-semibold sm:text-sm xs:text-xs">EMAIL:</h2>
+                    <div className="w-full h-fit flex items-center justify-center">
+                        {
+                            userPfp === null ? (
+                                <>
+                                    <input
+                                        id="file-input"
+                                        type="file"
+                                        accept="image/*"
+                                        className="pfp-input"
+                                        onChange={(e) => handleFileInputChange(e)}
+                                    />
+                                    <label htmlFor="file-input" className="pfp-input-label">
+                                        <FaUserAstronaut className="pfp-input-icon" fill={"#ffffff"} />
+                                    </label>
+                                </>
+                                ) : (
+                                    <img
+                                        src={userPfp ?? ""}
+                                        alt="GG"
+                                        className='xl:w-[128px] xl:h-[128px] rounded-full object-cover'
+                                        onClick={() => {setUserPfp('')}}
+                                    />
+                            )
+                        }
+                    </div>
+                    <h2 className="text-white xs:py-1 font-semibold sm:text-sm xs:text-xs">EMAIL:</h2>
                         <FormInput value={email} onInputChange={setEmail} valid={emailValid}/>
-                    <h2 className="text-black sm:pt-8 sm:pb-2 xs:py-1 font-semibold sm:text-sm xs:text-xs">USERNAME:</h2>
+                    <h2 className="text-white xs:py-1 font-semibold sm:text-sm xs:text-xs ">USERNAME:</h2>
                         <FormInput value={username} onInputChange={setUsername} valid={userNameValid}/>
-                    <h2 className="text-black sm:pt-8 sm:pb-2 xs:py-1 font-semibold sm:text-sm xs:text-xs flex items-center gap-x-2">PASSWORD:</h2>
+                    <h2 className="text-white xs:py-1 font-semibold sm:text-sm xs:text-xs flex items-center gap-x-2">PASSWORD:</h2>
                         <PasswordInput value={password} onInputChange={setPassword} passwordValid={passwordValid}/>
-                        <p className="text-black font-light sm:text-xs xs:text-_2xs py-1">Use 8 or more characters with a mix of letters, numbers & symbols</p>
-                    <h2 className="text-black sm:pt-8 sm:pb-2 xs:py-1 font-semibold sm:text-sm xs:text-xs">DATE OF BIRTH:</h2>
+                        <p className="text-white font-light sm:text-xs xs:text-_2xs py-1">Use 8 or more characters with a mix of letters, numbers & symbols</p>
+                    <h2 className="text-white xs:py-1 font-semibold sm:text-sm xs:text-xs">DATE OF BIRTH:</h2>
                     <div className='xs:py-1'>
                         <DateOfBirth dobValid={dobValid} setDateOfBirth={setDateOfBirth} dob={dob}/>
                     </div>
                     <div className="w-full h-fit flex justify-center md:pt-12 xs:py-4">
                         <button 
-                            className="xs:h-[32px] sm:text-md xs:text-sm w-max-[440px] bg-accent hover:bg-accent-hover rounded-md flex items-center justify-center text-white font-bold text-center w-full h-[36px] sm:p-1 xs:px-1x shadow-md shadow-accent/50 hover:shadow-accent-hover/50"
+                            className="xs:h-[32px] sm:text-md xs:text-sm w-max-[440px] bg-accent hover:bg-accent-hover rounded-md flex items-center 
+                            justify-center text-white font-bold text-center w-full h-[36px] sm:p-1 xs:px-1x shadow-md shadow-accent/50 
+                            hover:shadow-accent-hover/50"
                             onClick={handleSignUp}
                         >
                             {loading ? <TailSpin  stroke="#FFFFFF" speed={.75}  className="text-white flex items-center justify-center p-2"/> : "Sign Up"}
@@ -252,7 +303,7 @@ const SignUpPage = () => {
                 </div>
             </motion.div>
             <div>
-                <ToastContainer/>
+                <ToastContainer limit={1}/>
             </div>
         </div>
     )

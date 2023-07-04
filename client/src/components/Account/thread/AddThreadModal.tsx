@@ -11,10 +11,9 @@ import { ToastContainer, toast } from 'react-toastify';
 
 export const AddThreadModal = () => {
     let [isOpen, setIsOpen] = useState(false);
-
     const [threadName, setThreadName] = useState('');
     const [threadNameValid, setThreadNameValid] = useState(true);
-    // const [threadImage, setThreadImage] = useState('');
+    const [threadImage, setThreadImage] = useState<string>('');
 
     const useAddThread = trpc.thread.addThread.useMutation();
     const addThread = ChatStore(state => state.actions.addThread);
@@ -39,13 +38,14 @@ export const AddThreadModal = () => {
                     users: [],
                     messages: [],
                     creator: user.userId,
+                    img: threadImage,
                 },
                 {
                     onSuccess: (data: Thread ) => {
                         addThread( data );
-                        toast.success("You have successfully created a new Komos community!", {
+                        toast.success("You have successfully created a new SwiftChat community!", {
                             position: "top-right",
-                            autoClose: 10000,
+                            autoClose: 5000,
                             hideProgressBar: false,
                             closeOnClick: true,
                             pauseOnHover: true,
@@ -58,7 +58,7 @@ export const AddThreadModal = () => {
                     onError: (error) => {
                         toast.error(error.message, {
                             position: "top-right",
-                            autoClose: 10000,
+                            autoClose: 5000,
                             hideProgressBar: false,
                             closeOnClick: true,
                             pauseOnHover: true,
@@ -74,7 +74,7 @@ export const AddThreadModal = () => {
             setThreadNameValid(false);
             toast.error("Please provide a community name!", {
                 position: "top-right",
-                autoClose: 10000,
+                autoClose: 5000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -85,24 +85,28 @@ export const AddThreadModal = () => {
         }
 	};
 
-    const AddImgButton = () => {
-        const handleFileInputChange = (e: any) => {
-        };
-
-        return (
-            <div className="w-full h-full flex items-center justify-center">
-                <input
-                    id="file-input"
-                    type="file"
-                    className="discord-input"
-                    onChange={handleFileInputChange}
-                />
-                <label htmlFor="file-input" className="discord-input-label">
-                    <MdAddAPhoto className="discord-input-icon" />
-                    <span className="discord-input-text">Upload Photo</span>
-                </label>
-            </div>
-        );
+    const handleFileInputChange = (event: any) => {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        if (file && file.type.startsWith("image/")) {
+            reader.readAsDataURL(file);
+            reader.onload = async () => {
+                if (reader.result) {
+                    setThreadImage(reader.result as string);
+                }
+            };
+        } else {
+            toast.error("Please select an image file.", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        }
     };
 
 
@@ -120,7 +124,6 @@ export const AddThreadModal = () => {
                 Create Community
             </button>
         </div>
-
         <Transition appear show={isOpen} as={Fragment}>
             <Dialog as="div" className="relative z-10" onClose={closeModal}>
                 <Transition.Child
@@ -145,37 +148,55 @@ export const AddThreadModal = () => {
                         leaveFrom="opacity-100 scale-100"
                         leaveTo="opacity-0 scale-95"
                     >
-                        <Dialog.Panel className="w-full max-w-md transform overflow-hidden bg-primary p-6 text-left align-middle shadow-xl transition-all rounded-md border-1 border-accent">
+                        <Dialog.Panel 
+                            className="w-full max-w-md transform overflow-hidden bg-[#232428] p-6 text-left align-middle shadow-lg transition-all
+                                    rounded-md border-2 border-accent shadow-accent"
+                            >
                             <Dialog.Title
                                 as="h3"
-                                className="text-xl font-extrabold leading-6 text-gray-900 text-center mb-4"
+                                className="text-xl font-extrabold leading-6 text-white text-center mb-4"
                             >
                                 Create A New Community
                             </Dialog.Title>
                             <div className="w-full min-h-full p-4 flex flex-col items-center justify-center gap-y-4 h-[250px]">
-                                <AddImgButton/>
+                                <div className="w-full h-full flex items-center justify-center">
+                                {
+                                    threadImage === '' ? (
+                                        <>
+                                            <input
+                                                id="file-input"
+                                                type="file"
+                                                accept="image/*"
+                                                className="pfp-input"
+                                                onChange={(e) => handleFileInputChange(e)}
+                                            />
+                                            <label htmlFor="file-input" className="pfp-input-label">
+                                                <MdAddAPhoto className="pfp-input-icon" fill={"#ffffff"} />
+                                            </label>
+                                        </>
+                                        ) : (
+                                            <img
+                                                src={threadImage}
+                                                alt="GG"
+                                                className='w-[128px] h-[128px] rounded-full object-cover'
+                                                onClick={() => {setThreadImage('')}}
+                                            />
+                                    )
+                                }
+                                </div>
                                 <div className="w-full h-fit">
-                                    <h1 className="text-black font-bold">Community Name</h1>
+                                    <h1 className="text-white font-bold">Community Name</h1>
                                     <FormInput value={threadName} onInputChange={setThreadName} valid={threadNameValid} />
                                 </div>
                             </div>
                             <div className="pt-4 w-full flex flex-cols-2 items-center justify-center">
                                 <div className="w-full h-fit flex items-center justify-center">
                                     <button
-                                        type="button"
-                                        className="inline-flex justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium text-accent hover:bg-red-300/2 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                                        onClick={closeModal}
-                                    >
-                                        Cancel
-                                    </button>
-                                </div>
-                                <div className="w-full h-fit flex items-center justify-center">
-                                    <button
-                                        type="button"
-                                        className="inline-flex justify-center rounded-md border border-transparent bg-accent px-4 py-2 text-sm font-bold text-white hover:bg-accent-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                                        onClick={() => createNewThread()}
-                                    >
-                                        Create
+                                            type="button"
+                                            className="inline-flex justify-center rounded-md border border-transparent bg-accent px-4 py-2 text-sm font-bold text-white hover:bg-accent-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                                            onClick={() => createNewThread()}
+                                        >
+                                            Create
                                     </button>
                                 </div>
                             </div>
@@ -185,7 +206,7 @@ export const AddThreadModal = () => {
             </div>
             </Dialog>
         </Transition>
-        <ToastContainer/>
+        <ToastContainer limit={1}/>
     </>
     )
 }

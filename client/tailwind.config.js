@@ -9,9 +9,9 @@ module.exports = {
     },
     extend: {
       colors: {
-        "primary": "#FFFFFF",
-        "secondary": "#CCE0FF",
-        "tertiary": "#e0dede",
+        "primary": "#313338",
+        "secondary": "#2b2d31",
+        "tertiary": "#232428",
 				"accent": "#3e47c9",
         "accent-hover": "#7289DA",
 				"info": "#4E5D94",
@@ -26,35 +26,48 @@ module.exports = {
         base: ['16px', '24px'],
         lg: ['20px', '28px'],
         xl: ['24px', '32px'],
+        _2xl: ['28px', '36px'],
+        _3xl: ['32px', '40px'],
         messgeName: ['16px', '22px'],
         messageTime: ['12px', '22px'],
         profileName: ['14px', '18px'],
         profileId: ['12px', '13px'],
+        threadText: ['14px', '24px'],
       },
       screens: {
         'xs': '0px',
-        // => @media (min-width: 375px) { ... }
-  
         'sm': '640px',
-        // => @media (min-width: 640px) { ... }
-  
         'md': '768px',
-        // => @media (min-width: 768px) { ... }
-  
         'lg': '1024px',
-        // => @media (min-width: 1024px) { ... }
-  
         'xl': '1280px',
-        // => @media (min-width: 1280px) { ... }
-  
         '2xl': '1536px',
-        // => @media (min-width: 1536px) { ... }
-      }
+      },
+      keyframes: {
+        typing: {
+          "0%": {
+            width: "0%",
+            visibility: "hidden"
+          },
+          "100%": {
+            width: "100%"
+          }  
+        },
+        blink: {
+          "50%": {
+            borderColor: "transparent"
+          },
+          "100%": {
+            borderColor: "white"
+          }  
+        }
+      },
+      animation: {
+        typing: "typing 2s steps(20) 2000ms infinite alternate, blink .7s infinite"
+      },
     },
   },
   plugins: [
     require('tailwind-scrollbar-hide'),
-    // require('tailwindcss/plugins/bgOpacity'), 
   ],
 }
 

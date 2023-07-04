@@ -7,9 +7,9 @@ import { trpc } from "../../../utils/trpc";
 import { motion } from "framer-motion";
 import { useRef } from "react";
 import { ThreeDots } from "react-loading-icons";
-import { RiCalendarEventFill } from "react-icons/ri";
-import { BsFillChatSquareTextFill, BsInfoCircleFill } from "react-icons/bs";
-import { IoIosContact } from "react-icons/io";
+import { AiOutlineSend } from "react-icons/ai";
+import clsx from "clsx";
+
 
 const ThreadFeed = () => {
     const currentThread = ChatStore(state => state.currentThread);
@@ -29,7 +29,6 @@ const ThreadFeed = () => {
         refetchOnReconnect: true,
         retry: true,
         onSuccess: (data: Message[]) => {
-            console.log("MESSAGES SET")
             setMessages(data);
         },
         onError: (error) => {
@@ -66,7 +65,17 @@ const ThreadFeed = () => {
     }, [addMessage, currentThread?.roomId, setCurrentTyper, socket]);
 
 
-    const sendMessage = async (message: Message) => {
+    const sendMessage = async ({ 
+        message,
+    }: { 
+        message: Message
+    }) => {
+        const textarea = document.getElementById("threadTextArea") as HTMLTextAreaElement;
+        if (textarea) {
+            textarea.style.height = "42px"; // Reset the height to the initial value
+            textarea.value = ''; // Reset the value to an empty string
+            setDivHeight(`120px`);
+        }
         await useAddMessage.mutateAsync({ message }, {
             onSuccess: (data) => {
                 socket?.emit('sendMessage', { room: currentThread?.roomId, message });
@@ -84,18 +93,24 @@ const ThreadFeed = () => {
         return `${day}/${month}/${year}`;
     };
 
+    const [divHeight, setDivHeight] = useState("120px");
+
     const handleMessageChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         const { value } = event.target;
         setMessage(value);
         const textarea = event.target;
-        textarea.style.height = "38px"; // Set the minimum height
+        textarea.style.height = "42px"; // Set the minimum height
         // Calculate the required height based on the content
         const scrollHeight = textarea.scrollHeight;
         const clientHeight = textarea.clientHeight;
         const height = Math.max(scrollHeight, clientHeight);
-        textarea.style.height = (height > 38) ? height + "px" : "38px";
+        textarea.style.height = (height > 42) ? height + "px" : "42";
         textarea.scrollTop = scrollHeight - clientHeight;
+        setDivHeight((height > 120) ? `${scrollHeight + 60}px`: "120px" );
         socket?.emit('setTyper', { room: currentThread?.roomId, typer: currentUser?.userName });
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
+        }
     };
 
     useEffect(() => {
@@ -107,66 +122,89 @@ const ThreadFeed = () => {
 
     return (
         <motion.div 
-            className="h-full w-full bg-primary flex flex-cols-2" 
-            style={{ width: 'calc(100vw - 300px)' }}
-            initial={{ opacity: 0, x: -600  }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7 }}
+            className="h-full w-full flex flex-cols-2 xs:w-100vw md:w-[calc(100vw - 300px)]" 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1.0 }}
         >
-            <div className="w-fit h-full z-[30]">
+            <div className="w-fit h-full">
             </div>
-            <div className="w-screen h-screen overflow-hidden flex flex-col shadow-2xl shadow-accent">
+            <div className="w-screen h-screen overflow-hidden">
                 <div className="w-full h-full flex flex-col">
                     <div
                         ref={messagesEndRef}
-                        className="overflow-y-scroll scrollbar-hide scroll-smooth bg-primary"
-                        style={{ height: 'calc(100vh - 120px)', width: 'calc(100vw - 300px)' }}
+                        className="overflow-y-scroll scrollbar-hide scroll-smooth bg-primary w-[calc(100vw - 300px)]"
+                        style={{height: `calc(100vh - ${divHeight})`}}
                     >
                         {currentMessages.map((message: Message, index) => (
-                            <div className="w-full h-fit flex pb-2" key={index}>
-                                <ThreadMessage msg={message} key={index} currentUser={currentUser} />
+                            <div className="xs:w-full xs:px-2 h-fit flex pb-2 justify-center " key={index}>
+                                <ThreadMessage msg={message} key={index} />
                             </div>
                         ))}
                     </div>
-                    <div className="h-[120px] absolute bottom-0 bg-white shadow-2xl shadow-accent" style={{ width: 'calc(100vw - 300px)' }}>
+                    <div 
+                        className={`shadow-lg shadow-accent`} 
+                        style={{height: divHeight}}
+                    >
                         {currentTyper && 
-                            <div className="mt-2 w-fit h-fit flex items-center justify-center gap-x-4 rounded-r-md ml-2">
-                                <p className="w-full flex gap-x-4 pr-2 text-accent font-extrabold">{currentTyper} is typing <ThreeDots height={"24px"} width={"24px"} fill={"#3e47c9"} /></p>
+                            <div className="mt-2 w-1/3 h-fit flex items-center justify-center gap-x-4 rounded-r-md ml-2">
+                                <p className="w-full flex gap-x-4 pr-2 text-white font-bold text-sm">
+                                    {currentTyper} is typing <ThreeDots height={"24px"} width={"24px"} fill={"#3e47c9"} />
+                                </p>
                             </div>
                         }
-                        <div className="w-full h-full flex items-center justify-center absolute bottom-0">
-                            <textarea
-                                    id="threadTextArea"
-                                    maxLength={1000}
-                                    value={message}
-                                    onChange={handleMessageChange}
-                                    style={{
+                        <div 
+                            className={`flex items-center justify-center threadInputBlock `} 
+                            style={{height: `${divHeight}`}}
+                        >
+                            <div className="relative flex bottom-5 md:w-1/2 xs:w-3/4"
+                                style={{height: `${divHeight}`}}>
+                                <textarea
+                                        id="threadTextArea"
+                                        maxLength={500}
+                                        value={message}
+                                        onChange={handleMessageChange}
+                                        style={{
                                         resize: "none",
-                                        minHeight: "38px"
+                                        minHeight: "42px",
+                                        paddingRight: "44px",
+                                        paddingLeft: "8px",
+                                        paddingTop: "8px",
+                                        paddingBottom: "8px",
                                     }}
+                                    rows={1}
                                     onBlur={() => socket?.emit('setTyper', { room: currentThread?.roomId, typer: null })}
-                                    className="bg-slate-100 w-1/2 h-[38px] rounded-l-md outline-none focus:outline-none p-2 threadInput text-sm absolute bottom-10 border border-accent shadow-2xl shadow-accent"
+                                    className="bg-tertiary rounded-md outline-none focus:outline-none threadInput text-threadText shadow-2xl shadow-accent 
+                                                text-white w-full absolute bottom-10 pr-18 "
                                 />
-                            <div className="w-1/4 h-full absolute right-0 top-[42px]">
-                                <button
-                                        className="w-fit h-[38px] rounded-r-md outline-none focus:outline-none threadInput text-sm text-white bg-accent text-center border border-accent px-2 shadow-2xl shadow-accent"
-                                        onClick={() =>
-                                            currentUser &&
-                                            currentUser.userId &&
-                                            message &&
-                                            sendMessage({
+                                <button 
+                                    className={clsx(
+                                        "absolute right-4 bottom-[45px] h-[32px] w-[32px] rounded-md outline-none focus:outline-none p-2 threadInput",
+                                        message.length === 0 && "bg-primary cursor-default disabled",
+                                        message.length > 0 && "bg-accent"
+                                    )}
+                                    onClick={() =>
+                                        currentUser &&
+                                        currentUser.userId &&
+                                        message &&
+                                        sendMessage({
+                                            message: {
                                                 user: {
                                                     userId: currentUser?.userId ?? "",
                                                     userName: currentUser?.userName ?? "",
-                                                    // avatar: currentUser?.avatar ?? "",
+                                                    pfp: currentUser?.pfp ?? null,
                                                 },
                                                 payload: message,
                                                 roomId: currentThread?.roomId ?? "",
                                                 timeStamp: handleMessageDate(new Date()),
-                                            })
-                                        }
-                                        >
-                                        SEND
+                                            }
+                                        })
+                                    }
+                                >
+                                    <AiOutlineSend className={clsx(
+                                        message.length === 0 && "fill-accent",
+                                        message.length > 0 && "fill-white"
+                                    )}/>
                                 </button>
                             </div>
                         </div>
