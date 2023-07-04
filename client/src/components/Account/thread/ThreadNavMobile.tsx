@@ -64,7 +64,7 @@ const ThreadNavMobile = ({
                   <div className='w-full h-full flex flex-col items-center overflow-y-scroll scrollbar-hide'>
                     {threads.map((thread: Thread) => {
                       return (
-                            <Menu.Item >
+                            <Menu.Item key={thread.roomId}>
                               <div className="w-3/4 h-fit py-1 px-2" key={thread.roomId}>
                                 <ThreadListComponent currentThread={currentThread} setCurrentThread={setCurrentThread} thread={thread} key={thread.roomId}/>
                               </div>
