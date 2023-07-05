@@ -8,4 +8,5 @@ exports.ThreadSchema = zod_1.z.object({
     users: zod_1.z.array(zod_1.z.string()),
     messages: zod_1.z.array(zod_1.z.string()),
     creator: zod_1.z.string(),
+    img: zod_1.z.string().nullable(),
 });

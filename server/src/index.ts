@@ -8,7 +8,6 @@ import cookieParser  from 'cookie-parser';
 import { connect } from './utils/db';
 import mainRouter from './routes';
 
-import socketio, { Server } from "socket.io";
 import Websocket from './utils/Websocket';
 
 // configure environment file

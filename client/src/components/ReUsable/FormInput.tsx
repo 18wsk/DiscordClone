@@ -4,12 +4,14 @@ import { useState } from "react"
 const FormInput = ({
     value,
     onInputChange,
-    valid=true
+    valid=true,
+    maxChar=150
 }:
 {
     valid: boolean,
     value: string | null,
     onInputChange: (value: string) => void,
+    maxChar?: number
 }) => {
     const [inputFocused, setInputFocused] = useState(false);
 
@@ -31,6 +33,7 @@ const FormInput = ({
                 type={"email"}
                 value={value || ""}
                 onChange={(e) => onInputChange(e.target.value)}
+                maxLength={maxChar}
             />
         </div>
     )

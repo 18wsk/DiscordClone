@@ -11,7 +11,6 @@ const Websocket = (server) => {
         socket.on('joinRoom', (room) => {
             socket.join(room);
             console.log(`User joined room: ${room}`);
-            io.to(room).emit('receiveMessage', `User joined room: ${room}`);
         });
         socket.on('leaveRoom', (room) => {
             socket.leave(room);
@@ -19,7 +18,11 @@ const Websocket = (server) => {
         });
         socket.on('sendMessage', (data) => {
             const { room, message } = data;
-            socket.broadcast.to(room).emit('receiveMessage', message);
+            socket.to(room).emit('receiveMessage', message);
+        });
+        socket.on('setTyper', (data) => {
+            const { room, typer } = data;
+            socket.to(room).emit('typing', typer);
         });
     });
 };

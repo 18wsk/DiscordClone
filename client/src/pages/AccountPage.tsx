@@ -7,7 +7,6 @@ import { ToastContainer, toast } from "react-toastify";
 import ThreadFeed from "../components/Account/thread/ThreadFeed";
 import { trpc } from "../utils/trpc";
 import clsx from 'clsx';
-import { AddFriendToThreadModal } from "../components/Account/thread/AddFriendToThreadModal";
 import ThreadNavMobile from "../components/Account/thread/ThreadNavMobile";
 import { ThreadListComponent } from "../components/Account/thread/ThreadListItem";
 

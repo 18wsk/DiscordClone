@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserModel = exports.ThreadModel = exports.PasswordModel = void 0;
+exports.MessageModel = exports.UserModel = exports.ThreadModel = exports.PasswordModel = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const passwordSchema = new mongoose_1.default.Schema({
     password: {
@@ -16,6 +16,16 @@ const passwordSchema = new mongoose_1.default.Schema({
     },
 }, {
     collection: 'users'
+});
+const friendSchema = new mongoose_1.default.Schema({
+    id: {
+        type: String,
+        required: true,
+    },
+    userName: {
+        type: String,
+        required: true,
+    },
 });
 const userSchema = new mongoose_1.default.Schema({
     userId: {
@@ -37,6 +47,18 @@ const userSchema = new mongoose_1.default.Schema({
     birthday: {
         type: String,
         required: true,
+    },
+    threads: {
+        type: [String],
+        required: true,
+    },
+    friends: {
+        type: [friendSchema],
+        required: true,
+    },
+    pfp: {
+        type: String,
+        required: false,
     },
 }, {
     collection: 'users'
@@ -62,9 +84,44 @@ const threadSchema = new mongoose_1.default.Schema({
         type: String,
         required: true,
     },
+    img: {
+        type: String,
+        required: false,
+    },
 }, {
     collection: 'threads'
+});
+const messageSchema = new mongoose_1.default.Schema({
+    user: {
+        userName: {
+            type: String,
+            required: true,
+        },
+        userId: {
+            type: String,
+            required: true,
+        },
+        pfp: {
+            type: String,
+            required: false,
+        }
+    },
+    payload: {
+        type: String,
+        required: true,
+    },
+    roomId: {
+        type: String,
+        required: true,
+    },
+    timeStamp: {
+        type: String,
+        required: false,
+    },
+}, {
+    collection: 'messages',
 });
 exports.PasswordModel = mongoose_1.default.model("Password", passwordSchema);
 exports.ThreadModel = mongoose_1.default.model("Thread", threadSchema);
 exports.UserModel = mongoose_1.default.model("User", userSchema);
+exports.MessageModel = mongoose_1.default.model("Message", messageSchema);
