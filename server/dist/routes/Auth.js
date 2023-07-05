@@ -49,9 +49,10 @@ exports.Auth = (0, trpc_1.router)({
         email: zod_1.z.string(),
         userName: zod_1.z.string(),
         password: zod_1.z.string(),
-        birthday: zod_1.z.string()
+        birthday: zod_1.z.string(),
+        pfp: zod_1.z.string().nullable()
     }))
-        .mutation(async ({ input: { email, userName, password, birthday }, ctx }) => {
+        .mutation(async ({ input: { email, userName, password, birthday, pfp }, ctx }) => {
         // Verify this is a new user
         const doesEmailExist = await (0, db_1.countUserByEmail)({ email });
         if (doesEmailExist !== 0) {
@@ -78,7 +79,18 @@ exports.Auth = (0, trpc_1.router)({
         ctx.res.cookie('auth', token, { maxAge: 4 * 60 * 60 * 1000, httpOnly: true });
         // insert the user into the database
         const encryptedPassword = encryptPassword({ password });
-        const user = await (0, db_1.createUser)({ user: { userId, email, userName, password: encryptedPassword, birthday, threads: [] } });
+        const user = await (0, db_1.createUser)({
+            user: {
+                userId,
+                email,
+                userName,
+                password: encryptedPassword,
+                birthday,
+                threads: [],
+                friends: [],
+                pfp: pfp
+            }
+        });
         return user;
     }),
     login: trpc_1.publicProcedure

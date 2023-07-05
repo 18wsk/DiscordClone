@@ -8,16 +8,21 @@ import { Friend } from '../types/Friend';
 
 dotenv.config();
 
-const url = process.env.DB_URL || 'localhost';
-const name = process.env.DB_NAME || 'users';
+const url = process.env.DB_URL;
 
 export async function connect() {
-    try {
-        await mongoose.connect(url);
-        console.log('!!!!! Connected to DB !!!!!');
-    }  catch (error) {
-        console.log('????? Failed to connect to DB:', error + " ?????");
+    if (url !== undefined) {
+        try {
+            await mongoose.connect(url);
+            console.log('!!!!! Connected to DB !!!!!');
+        }  catch (error) {
+            console.log('????? Failed to connect to DB:', error + " ?????");
+        }
     }
+    else {
+        console.log('????? Failed to connect to DB: URL not found ?????');
+    }
+
 }
 
 // USER QUERIES

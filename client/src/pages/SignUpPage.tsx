@@ -279,7 +279,7 @@ const SignUpPage = () => {
                     <h2 className="text-white xs:py-1 font-semibold sm:text-sm xs:text-xs">EMAIL:</h2>
                         <FormInput value={email} onInputChange={setEmail} valid={emailValid}/>
                     <h2 className="text-white xs:py-1 font-semibold sm:text-sm xs:text-xs ">USERNAME:</h2>
-                        <FormInput value={username} onInputChange={setUsername} valid={userNameValid}/>
+                        <FormInput value={username} onInputChange={setUsername} valid={userNameValid} maxChar={15}/>
                     <h2 className="text-white xs:py-1 font-semibold sm:text-sm xs:text-xs flex items-center gap-x-2">PASSWORD:</h2>
                         <PasswordInput value={password} onInputChange={setPassword} passwordValid={passwordValid}/>
                         <p className="text-white font-light sm:text-xs xs:text-_2xs py-1">Use 8 or more characters with a mix of letters, numbers & symbols</p>
