@@ -38,11 +38,12 @@ const routes_1 = __importDefault(require("./routes"));
 const Websocket_1 = __importDefault(require("./utils/Websocket"));
 // configure environment file
 dotenv_1.default.config();
-const port = process.env.PORT || 8080;
+const port = process.env.PORT;
+console.log(process.env.REACT_APP_API_URL);
 const app = (0, express_1.default)();
 app.use((0, cookie_parser_1.default)());
 app.use((0, cors_1.default)({
-    origin: 'http://localhost:3000',
+    origin: process.env.REACT_APP_API_URL,
     credentials: true,
     exposedHeaders: ['set-cookie', 'upgrade'],
 }));

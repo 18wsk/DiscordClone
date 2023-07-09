@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ./dist/index.js",
-    "build": "tsc",
-    "dev": "nodemon src/index.ts"
+    "start": "env-cmd -f local.env nodemon src/index.ts",
+    "start:prod": "env-cmd -f prod.env nodemon src/index.ts",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",

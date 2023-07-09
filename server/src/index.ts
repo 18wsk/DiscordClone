@@ -13,14 +13,15 @@ import Websocket from './utils/Websocket';
 // configure environment file
 dotenv.config();
 
-const port = process.env.PORT || 8080;
+const port = process.env.PORT;
+console.log(process.env.REACT_APP_API_URL);
 
 const app = express();
 
 app.use(cookieParser());
 
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: process.env.REACT_APP_API_URL,
   credentials: true,
   exposedHeaders: ['set-cookie', 'upgrade'],
 }));
