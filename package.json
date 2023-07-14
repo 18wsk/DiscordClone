@@ -1,13 +1,15 @@
 {
-  "name": "discordclone",
+  "name": "swiftchat",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "client": "npm start --prefix client",
-    "server": "nodemon --exec ts-node server/src/index.ts",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "client:prod": "npm run start:prod --prefix client",
+    "server": "npm run start --prefix server",
+    "server:prod": "npm run start:prod --prefix server",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "dev:prod": "concurrently \"npm run server:prod\" \"npm run client:prod\""
   },
   "repository": {
     "type": "git",
@@ -22,6 +24,7 @@
   "homepage": "https://github.com/18wsk/DiscordClone#readme",
   "devDependencies": {
     "concurrently": "^8.1.0",
+    "env-cmd": "^10.1.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.3"
   },

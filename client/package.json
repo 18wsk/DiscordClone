@@ -42,10 +42,9 @@
     "zustand": "^4.3.8"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "env-cmd -f local.env react-scripts start ",
+    "start:prod": "env-cmd -f prod.env react-scripts start",
+    "build": "react-scripts build"
   },
   "eslintConfig": {
     "extends": [
@@ -68,6 +67,7 @@
   "devDependencies": {
     "@types/uuid": "^9.0.1",
     "autoprefixer": "^10.4.14",
+    "dotenv": "^16.3.1",
     "postcss": "^8.4.23",
     "tailwindcss": "^3.3.2"
   }

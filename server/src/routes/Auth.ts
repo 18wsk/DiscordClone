@@ -9,7 +9,6 @@ import { v4 as uuidv4 } from 'uuid';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 
-import cookie from 'cookie';
 
 const secretKey = process.env.SECRET_KEY || "KOMOS"; // for JWT
 const key = process.env.CIPHER_KEY || '0123456789abcdef'; // 16-byte key in hexadecimal format
@@ -73,13 +72,10 @@ export const Auth = router({
             cause: "username"
           });
         }
-        // assign the user a unique id
+
         const userId = uuidv4();
-        // create a JWT for the user
         const token = jwt.sign({ userId: userId }, secretKey, { expiresIn: '4h' });
-        // Set the JWT as a cookie using
         ctx.res.cookie('auth', token, { maxAge: 4 * 60 * 60 * 1000, httpOnly: true});
-        // insert the user into the database
         const encryptedPassword = encryptPassword({ password });
         const user = await createUser({ 
           user: { 

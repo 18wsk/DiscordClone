@@ -11,12 +11,12 @@ import { trpc } from './utils/trpc';
 
 export function App() {
   const [queryClient] = useState(() => new QueryClient());
-
+  const serverURL: string = process.env.REACT_APP_URL + ":" + process.env.REACT_APP_SERVER_PORT + "/trpc";
   const [trpcClient] = useState(() =>
     trpc.createClient({
       links: [
         httpBatchLink ({
-          url: 'http://localhost:8080/trpc',
+          url: serverURL,
           fetch(url, options) {
             return fetch(url, {
               ...options,

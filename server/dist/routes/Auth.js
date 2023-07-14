@@ -71,13 +71,9 @@ exports.Auth = (0, trpc_1.router)({
                 cause: "username"
             });
         }
-        // assign the user a unique id
         const userId = (0, uuid_1.v4)();
-        // create a JWT for the user
         const token = jsonwebtoken_1.default.sign({ userId: userId }, secretKey, { expiresIn: '4h' });
-        // Set the JWT as a cookie using
         ctx.res.cookie('auth', token, { maxAge: 4 * 60 * 60 * 1000, httpOnly: true });
-        // insert the user into the database
         const encryptedPassword = encryptPassword({ password });
         const user = await (0, db_1.createUser)({
             user: {
