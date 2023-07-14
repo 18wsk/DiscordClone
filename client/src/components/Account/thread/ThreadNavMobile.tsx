@@ -61,17 +61,17 @@ const ThreadNavMobile = ({
                   <div className="w-3/4 bg-primary py-2">
                     <h1 className="px-2 py-2 font-bold text-[#949ba4]">Your Communities:</h1>
                   </div>
-                  <div className='w-full h-full flex flex-col items-center overflow-y-scroll scrollbar-hide'>
-                    {threads.map((thread: Thread) => {
-                      return (
-                            <Menu.Item key={thread.roomId}>
-                              <div className="w-3/4 h-fit py-1 px-2" key={thread.roomId}>
-                                <ThreadListComponent currentThread={currentThread} setCurrentThread={setCurrentThread} thread={thread} key={thread.roomId}/>
-                              </div>
-                            </Menu.Item>
-                        )
-                    })}
-                  </div>
+                    <div className='w-full h-full flex flex-col items-center overflow-y-scroll scrollbar-hide'>
+                      {threads.map((thread: Thread) => {
+                        return (
+                              <Menu.Item key={thread.roomId}>
+                                <div className="w-3/4 h-fit py-1 px-2" key={thread.roomId}>
+                                  <ThreadListComponent currentThread={currentThread} setCurrentThread={setCurrentThread} thread={thread} key={thread.roomId}/>
+                                </div>
+                              </Menu.Item>
+                          )
+                      })}
+                    </div>
                   <div className="w-full h-[100px] pt-4">
                     <AddThreadModal/>
                   </div>

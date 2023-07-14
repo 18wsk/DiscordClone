@@ -6,6 +6,7 @@ import { BsPersonAdd } from "react-icons/bs";
 import { trpc } from "../../../utils/trpc";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
+import { FaUserAstronaut } from 'react-icons/fa';
 
 const ThreadMessage = ({ msg } : { msg: Message  }) => {
     const currentUser = ChatStore(state => state.currentUser);
@@ -86,7 +87,15 @@ const ThreadMessage = ({ msg } : { msg: Message  }) => {
                 "h-min-[48px] sm:w-5/6 xs:w-full flex flex-row justify-center py-[12px] rounded-md",
             )}>
                 <div className="w-[72px] flex justify-center">
-                    <img src={msg.user?.pfp ?? ""} className="object-cover aspect-auto rounded-full h-[42px] w-[42px] z-1 bg-accent" alt={"pfp"}/> 
+                    {msg.user?.pfp 
+                        ? 
+                            <img 
+                                src={msg.user?.pfp ?? ""} 
+                                className=" object-cover aspect-auto rounded-full h-[42px] w-[42px] z-1 bg-accent" 
+                                alt={"pfp"}
+                            /> 
+                        : 
+                            <FaUserAstronaut className="text-tertiary bject-cover aspect-auto rounded-full h-[42px] w-[42px] z-1 p-[8px] bg-secondary"/>}
                 </div>
                 <div className="w-full pr-[48px]">
                     <div className="flex flex-cols-3 gap-x-2 items-center">
@@ -99,7 +108,7 @@ const ThreadMessage = ({ msg } : { msg: Message  }) => {
                                 day: '2-digit', 
                                 year: 'numeric', 
                                 hour: 'numeric', 
-                                minute: 'numeric', 
+                                minute: 'numeric',
                                 hour12: true 
                             })}
                         </p>

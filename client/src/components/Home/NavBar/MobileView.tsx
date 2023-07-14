@@ -27,15 +27,15 @@ export const MobileView = ({
             <div className='h-full w-full flex items-center justify-end relative'>
                 <Menu>
                     <Menu.Button className="mr-8">
-                        <AiOutlineMenu fill={"#3e47c9"} className="p-1 rounded-lg w-full h-full hover:bg-accent/30 " />
+                        <AiOutlineMenu fill={"#3e47c9"} className="p-1 rounded-lg hover:bg-accent/30 h-[24px] w-[24px]" />
                     </Menu.Button>
                     <Transition
-                        enter="transition duration-100 ease-out"
-                        enterFrom="transform scale-90 opacity-0"
-                        enterTo="transform scale-100 opacity-100"
+                        enter="transition-all duration-500 ease-in"
+                        enterFrom="transform scale-100 translate-y-[-100%] opacity-0 "
+                        enterTo="transform scale-100 translate-y-0 opacity-100"
                         leave="transition duration-75 ease-out"
-                        leaveFrom="transform scale-100 opacity-100"
-                        leaveTo="transform scale-95 opacity-0"
+                        leaveFrom="transform scale-100 translate-y-0 opacity-100"
+                        leaveTo="transform scale-100 translate-y-[-100%] opacity-0"
                     >
                         <Menu.Items className="absolute top-[28px] right-0 bg-primary w-screen shadow-lg shadow-accent/20 border-b broder-l border-r border-accent/10 pb-4">
                             <Menu.Item>

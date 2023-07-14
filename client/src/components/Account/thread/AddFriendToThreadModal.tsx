@@ -7,7 +7,14 @@ import { Combobox } from '@headlessui/react'
 import { Friend } from '../../../../../server/src/types/Friend';
 import { trpc } from '../../../utils/trpc';
 
-export const AddFriendToThreadModal = () => {
+export const AddFriendToThreadModal = (
+    { 
+        buttonWidth, 
+        buttonHeight
+    }:{
+        buttonWidth: string, 
+        buttonHeight: string
+    }) => {
     let [isOpen, setIsOpen] = useState(false);
     const currentThread = ChatStore(state => state.currentThread);
     const currentUser = ChatStore(state => state.currentUser);
@@ -77,10 +84,10 @@ export const AddFriendToThreadModal = () => {
         <>
         <div className="flex items-center justify-center">
             <button 
-                className="rounded-full h-[28px] w-[28px] bg-accent hover:bg-white flex items-center justify-center" 
+                className="rounded-full bg-accent hover:bg-white flex items-center justify-center" 
                 onClick={() => openModal()}
             >
-                <BsPersonAdd fill={"#ffff"} className="w-[25px] h-[25px] p-[4px] hover:fill-accent" />
+                <BsPersonAdd fill={"#ffff"} className={`w-[${buttonWidth}px] h-[${buttonHeight}px] p-[4px] hover:fill-accent`} />
             </button>
         </div>
         <Transition appear show={isOpen} as={Fragment}>

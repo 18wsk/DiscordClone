@@ -2,8 +2,9 @@ import ChatStore from "../../store";
 
 const ProfileLink = () => {
     const user = ChatStore(state => state.currentUser);
+    const setActiveThread = ChatStore(state => state.actions.setCurrentThread);
     return (
-        <div className="w-full h-full flex flex-cols-2 items-center justify-center gap-x-4 px-2 bg-[#232428]">
+        <div className="w-full h-full flex flex-cols-2 items-center justify-center gap-x-4 px-2 bg-[#232428]" onClick={() => setActiveThread(null)}>
             <div className="w-1/3 h-full flex items-center justify-center">
                 <div className="relative rounded-full bg-black h-[64px] w-[64px] z-1">
                     <img src={user?.pfp ?? ""} className="object-cover aspect-auto rounded-full h-[64px] w-[64px] z-1" alt={"pfp"}/>

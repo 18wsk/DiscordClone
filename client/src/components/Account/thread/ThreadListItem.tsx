@@ -29,19 +29,13 @@ export const ThreadListComponent = (
                     <div className="w-full h-full flex items-center justify-start pl-2">
                         <h1 className="text-md font-bold text-white">{ thread.name }</h1>
                     </div>
-                    {/* <div className="w-full h-full flex items-top justify-start pl-2">
-                        <h2 className="text-xs text-white">4+ new messages</h2>
-                    </div> */}
                 </div>
                 {
                     currentThread?.roomId === thread?.roomId && 
                     <div className="w-[24px] h-full flex items-center justify-center mr-2 ">
-                        <AddFriendToThreadModal/>
+                        <AddFriendToThreadModal buttonHeight="25" buttonWidth="25"/>
                     </div>
                 }
-                {/* <div className="w-[12px] h-full flex items-center justify-center mr-2">
-                    {true && <div className="bg-success rounded-full h-[10px] w-[10px]"/>}
-                </div> */}
             </div>
         </div>
     )
