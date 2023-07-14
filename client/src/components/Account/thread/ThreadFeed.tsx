@@ -10,7 +10,6 @@ import { ThreeDots } from "react-loading-icons";
 import { AiOutlineSend } from "react-icons/ai";
 import clsx from "clsx";
 
-
 const ThreadFeed = () => {
     const currentThread = ChatStore(state => state.currentThread);
     const currentUser = ChatStore(state => state.currentUser);
@@ -38,9 +37,8 @@ const ThreadFeed = () => {
     });
 
     const useAddMessage = trpc.thread.addMessage.useMutation();
-
     useEffect(() => {
-        const newSocket = io("http://localhost:8080");
+        const newSocket = io((process.env.REACT_APP_APP_URL !== undefined && process.env.REACT_APP_SERVER_PORT !== undefined) ? (process.env.REACT_APP_APP_URL + process.env.REACT_APP_SERVER_PORT + "/trpc") : "http://localhost:5000/trpc");
         setSocket(newSocket);
 
         return () => {

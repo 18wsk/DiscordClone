@@ -14,14 +14,12 @@ import Websocket from './utils/Websocket';
 dotenv.config();
 
 const port = process.env.PORT;
-console.log(process.env.REACT_APP_API_URL);
 
 const app = express();
 
 app.use(cookieParser());
-
 app.use(cors({
-  origin: process.env.REACT_APP_API_URL,
+  origin: [process.env.REACT_APP_URL + ':' + process.env.REACT_APP_PORT, process.env.REACT_APP_URL + ':' + "3001"],
   credentials: true,
   exposedHeaders: ['set-cookie', 'upgrade'],
 }));
@@ -44,5 +42,5 @@ Websocket(server);
 
 server.listen(port, async () => {
   await connect();
-  console.log(`***** Server listening on port ${port} *****`);
+  console.log(`***** Server listening on port ${port}  &&& Client on ${process.env.REACT_APP_URL + ':' + process.env.REACT_APP_PORT} *****`);
 });

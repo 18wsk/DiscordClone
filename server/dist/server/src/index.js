@@ -42,13 +42,13 @@ const uuid_1 = require("uuid");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const crypto_1 = __importDefault(require("crypto"));
 dotenv_1.default.config();
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 5000;
 exports.secretKey = 'KOMOS';
 exports.key = '0123456789abcdef'; // 16-byte key in hexadecimal format
 const app = (0, express_1.default)();
 const server = http_1.default.createServer(app);
 app.use((0, cookie_parser_1.default)());
-app.use((0, cors_1.default)({ origin: 'http://localhost:3000', credentials: true }));
+app.use((0, cors_1.default)({ origin: process.env.REACT_APP_URL_URL, credentials: true }));
 app.use(express_1.default.json({ limit: '100mb' }));
 app.use(express_1.default.urlencoded({ limit: '100mb', extended: true }));
 function encryptPassword({ password }) {

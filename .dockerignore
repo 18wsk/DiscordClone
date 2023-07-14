@@ -1,0 +1,17 @@
+# Development-specific files
+.vscode/
+.idea/
+.git/
+node_modules/
+
+# Build artifacts
+build/
+dist/
+
+# Dependency files
+package-lock.json
+
+# Documentation and source control metadata
+docs/
+.gitignore
+.dockerignore
