@@ -31,6 +31,10 @@ const friendSchema = new mongoose.Schema<Friend>(
             type: String,
             required: true,
         },
+        pfp: {
+            type: String,
+            required: true,
+        },
     }
 );
 

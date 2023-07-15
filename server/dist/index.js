@@ -39,11 +39,15 @@ const Websocket_1 = __importDefault(require("./utils/Websocket"));
 // configure environment file
 dotenv_1.default.config();
 const port = process.env.PORT;
-console.log(process.env.REACT_APP_URL_URL);
 const app = (0, express_1.default)();
 app.use((0, cookie_parser_1.default)());
 app.use((0, cors_1.default)({
-    origin: process.env.REACT_APP_URL_URL,
+    origin: [
+        process.env.REACT_APP_URL + ':' + process.env.REACT_APP_PORT,
+        process.env.REACT_APP_URL + ':' + "3001",
+        process.env.REACT_APP_URL,
+        process.env.REACT_APP_URL + ':' + "80",
+    ],
     credentials: true,
     exposedHeaders: ['set-cookie', 'upgrade'],
 }));
@@ -57,5 +61,5 @@ const server = http_1.default.createServer(app);
 (0, Websocket_1.default)(server);
 server.listen(port, async () => {
     await (0, db_1.connect)();
-    console.log(`***** Server listening on port ${port} *****`);
+    console.log(`***** Server listening on port ${port}  &&& Client on ${process.env.REACT_APP_URL + ':' + process.env.REACT_APP_PORT} *****`);
 });

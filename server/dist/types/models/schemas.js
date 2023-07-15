@@ -26,6 +26,10 @@ const friendSchema = new mongoose_1.default.Schema({
         type: String,
         required: true,
     },
+    pfp: {
+        type: String,
+        required: true,
+    },
 });
 const userSchema = new mongoose_1.default.Schema({
     userId: {

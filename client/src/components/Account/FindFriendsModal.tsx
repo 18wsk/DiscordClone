@@ -1,53 +1,84 @@
 import { Dialog, Transition } from '@headlessui/react'
-import { Fragment, useState } from 'react'
-import { ToastContainer, toast } from 'react-toastify';
-import { BsPersonAdd } from 'react-icons/bs';
-import ChatStore from '../../../store';
+import { Fragment, JSXElementConstructor, ReactElement, ReactFragment, ReactNode, ReactPortal, useState } from 'react'
+import { ToastContainer, ToastContentProps, toast } from 'react-toastify';
+import { AiOutlineUserAdd } from 'react-icons/ai';
+import ChatStore from '../../store';
 import { Combobox } from '@headlessui/react'
-import { Friend } from '../../../../../server/src/types/Friend';
-import { trpc } from '../../../utils/trpc';
+import { Friend } from '../../../../server/src/types/Friend';
+import { trpc } from '../../utils/trpc';
 
-export const AddFriendToThreadModal = () => {
+export const FindFriendsModal = () => {
     let [isOpen, setIsOpen] = useState(false);
-    const currentThread = ChatStore(state => state.currentThread);
     const currentUser = ChatStore(state => state.currentUser);
+    const addFriend = ChatStore(state => state.actions.addFriend);
     const [selectedFriend, setSelectedFriend] = useState<Friend>({
         id: "",
         userName: "",
         pfp: "",
     });
     const [query, setQuery] = useState('');
-
+    const [users, setUsers] = useState<Friend[]>([]);
 
     function closeModal() {
-        setIsOpen(false)
+        setIsOpen(false);
     }
 
-    function openModal() {
-        setIsOpen(true)
+    async function openModal() {
+        setIsOpen(true);
+        await getUsersQuery.refetch();
     }
 
+    const getUsersQuery = trpc.thread.getUsersToMakeFriends.useQuery({}, {
+        enabled: false, 
+        refetchOnWindowFocus: false,
+        refetchOnMount: true,
+        refetchOnReconnect: false,
+        retry: false,
+        onSuccess: (data: any) => {
+            setUsers(data);
+        },
+        onError: (error: any) => {
+            toast.error(error.message, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        }
+    });
     const filteredFriends = 
-        (query === '') 
-            ? currentUser?.friends.filter((friend) => {
-                return !currentThread?.users.includes(friend?.id ?? "") && currentThread?.creator !== friend.id 
-            })
-            : currentUser?.friends.filter((friend) => {
-            return !currentThread?.users.includes(friend?.id ?? "") && currentThread?.creator !== friend.id && friend?.userName?.toLowerCase().includes(query.toLowerCase())
-        });
+        (query === '')  
+        ? users.filter((user) => { 
+            return !currentUser?.friends.map((friend: Friend) => friend.id).includes(user?.id ?? "") 
+                && currentUser?.userName !== user.userName })
+        : users.filter((user) => { 
+            return !currentUser?.friends.map((friend: Friend) => friend.id).includes(user?.id ?? "") 
+            && currentUser?.userName !== user.userName 
+            && user?.userName?.toLowerCase().includes(query.toLowerCase())})
 
-    const addFriendToCommunity = trpc.thread.addFriendToThread.useMutation();
-
-    const handleAddFriendToThread = async () => {
-        if (currentThread?.roomId && selectedFriend?.id) {
-            await addFriendToCommunity.mutateAsync(
+    const addFriendToCurrentUser = trpc.thread.addFriend.useMutation();
+    const handleAddFriend = async ({
+        selectedFriend
+    }:{
+        selectedFriend: Friend
+    }) => {
+        if (currentUser?.userId && selectedFriend) {
+            await addFriendToCurrentUser.mutateAsync(
                 {
-                    threadId: currentThread.roomId ,
-                    friendId: selectedFriend.id,
+                    currentId: currentUser.userId,
+                    friend: {
+                        id: selectedFriend.id,
+                        userName: selectedFriend.userName,
+                        pfp: selectedFriend.pfp,
+                    },
                 },
                 {
                     onSuccess: () => {
-                        toast.success(`You have successfully added ${selectedFriend.userName} to ${currentThread.name}`, {
+                        toast.success(`You have successfully added ${selectedFriend.userName}`, {
                             position: "top-right",
                             autoClose: 5000,
                             hideProgressBar: false,
@@ -57,9 +88,9 @@ export const AddFriendToThreadModal = () => {
                             progress: undefined,
                             theme: "light",
                         });
-                        closeModal();
+                        addFriend(selectedFriend);
                     }, 
-                    onError: (error) => {
+                    onError: (error: { message: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | ReactFragment | ReactPortal | ((props: ToastContentProps<unknown>) => ReactNode) | null | undefined; }) => {
                         toast.error(error.message, {
                             position: "top-right",
                             autoClose: 5000,
@@ -79,13 +110,15 @@ export const AddFriendToThreadModal = () => {
     return (
         <>
         <div className="flex items-center justify-center">
-            <button 
-                className="rounded-md bg-accent hover:bg-white flex items-center justify-center" 
-                onClick={() => openModal()}
+            <button
+                type="button"
+                onClick={openModal}
+                className="rounded-md bg-accent bg-opacity-100 px-4 py-2 text-sm 
+                        font-medium text-white hover:bg-accent-hover 
+                        focus:outline-none focus-visible:ring-2 
+                        focus-visible:ring-white focus-visible:ring-opacity-75"
             >
-                <BsPersonAdd 
-                    className={`fill-white w-[24px] h-[24px] p-[4px] hover:fill-accent`} 
-                />
+                <AiOutlineUserAdd className="fill-white h-[24px] w-[24px]" title="Add Friends"/>
             </button>
         </div>
         <Transition appear show={isOpen} as={Fragment}>
@@ -120,7 +153,7 @@ export const AddFriendToThreadModal = () => {
                                 as="h3"
                                 className="text-xl leading-6 text-white text-center mb-4"
                             >
-                                Invite Friend To <span className="font-extrabold text-accent rounded-md">{currentThread?.name}</span>
+                                Add Friends
                             </Dialog.Title>
                             <Combobox value={selectedFriend} onChange={setSelectedFriend}>
                                 <div className="w-full h-fit flex">
@@ -133,7 +166,7 @@ export const AddFriendToThreadModal = () => {
                                     <button 
                                         className='w-[40px] h-[34px] rounded-r-md outline-none focus:outline-none
                                                     text-sm text-white bg-accent text-center border border-accent shadow-2xl shadow-accent'
-                                        onClick={() => handleAddFriendToThread()}
+                                        onClick={() => handleAddFriend({selectedFriend})}
                                     >
                                         Add
                                     </button>

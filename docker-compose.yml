@@ -1,0 +1,11 @@
+version: '3'
+services:
+  your-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: public.ecr.aws/b0n2r4e9/swift:latest
+    ports:
+      - 80:3000
+
+

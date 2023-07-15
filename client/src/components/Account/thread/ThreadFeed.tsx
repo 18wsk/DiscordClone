@@ -38,11 +38,11 @@ const ThreadFeed = () => {
 
     const useAddMessage = trpc.thread.addMessage.useMutation();
     useEffect(() => {
-        const newSocket = io((process.env.REACT_APP_APP_URL !== undefined && process.env.REACT_APP_SERVER_PORT !== undefined) ? (process.env.REACT_APP_APP_URL + process.env.REACT_APP_SERVER_PORT + "/trpc") : "http://localhost:5000/trpc");
+        const newSocket = io(process.env.REACT_APP_URL + ":" + process.env.REACT_APP_SERVER_PORT); //process.env.REACT_APP_URL + ":" + process.env.REACT_APP_SERVER_PORT + "/trpc"
         setSocket(newSocket);
-
         return () => {
             // Clean up the socket connection when the component unmounts
+            newSocket?.emit("leave room");
             newSocket.disconnect();
         };
     }, []);
@@ -155,7 +155,7 @@ const ThreadFeed = () => {
                             className={`flex items-center justify-center threadInputBlock `} 
                             style={{height: `${divHeight}`}}
                         >
-                            <div className="relative flex bottom-5 md:w-1/2 xs:w-3/4"
+                            <div className="relative flex bottom-5 lg:w-1/2 xs:w-3/4"
                                 style={{height: `${divHeight}`}}>
                                 <textarea
                                         id="threadTextArea"

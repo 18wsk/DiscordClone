@@ -130,7 +130,7 @@ const SignUpPage = () => {
 
     const handleValidationErrors = (error: string | null) => {
         toast.error(error, {
-            position: "bottom-right",
+            position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
@@ -163,7 +163,7 @@ const SignUpPage = () => {
                         setLoading(false);
                         setActiveUser(data);
                         toast.success("You have successfully created an account!", {
-                            position: "bottom-right",
+                            position: "top-right",
                             autoClose: 5000,
                             hideProgressBar: false,
                             closeOnClick: true,
@@ -179,7 +179,7 @@ const SignUpPage = () => {
                     onError: (error) => {
                         setLoading(false);
                         toast.error(error.message, {
-                            position: "bottom-right",
+                            position: "top-right",
                             autoClose: 5000,
                             hideProgressBar: false,
                             closeOnClick: true,
@@ -259,10 +259,10 @@ const SignUpPage = () => {
                                         id="file-input"
                                         type="file"
                                         accept="image/*"
-                                        className="pfp-input"
+                                        className="pfp-input "
                                         onChange={(e) => handleFileInputChange(e)}
                                     />
-                                    <label htmlFor="file-input" className="pfp-input-label">
+                                    <label htmlFor="file-input" className="pfp-input-label ">
                                         <FaUserAstronaut className="pfp-input-icon" fill={"#ffffff"} />
                                     </label>
                                 </>
@@ -270,8 +270,8 @@ const SignUpPage = () => {
                                     <img
                                         src={userPfp ?? ""}
                                         alt="GG"
-                                        className='xl:w-[128px] xl:h-[128px] rounded-full object-cover'
-                                        onClick={() => {setUserPfp('')}}
+                                        className='h-[80px] w-[80px] rounded-full object-cover'
+                                        onClick={() => {setUserPfp(null)}}
                                     />
                             )
                         }

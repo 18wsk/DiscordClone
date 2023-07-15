@@ -36,7 +36,7 @@ const LoginPage = () => {
         onSuccess: (data) => {
             setActiveUser(data);
             toast.success("Login successful!", {
-                position: "bottom-right",
+                position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
                 closeOnClick: true,
@@ -51,7 +51,7 @@ const LoginPage = () => {
         },
         onError: (error) => {
             toast.error(error.message, {
-                position: "bottom-right",
+                position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
                 closeOnClick: true,
@@ -103,7 +103,7 @@ const LoginPage = () => {
 
     const handleValidationErrors = (error: string | null) => {
         toast.error(error, {
-            position: "bottom-right",
+            position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,

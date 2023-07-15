@@ -29,12 +29,13 @@ const ThreadMessage = ({ msg } : { msg: Message  }) => {
                     friend: {
                         id: msg.user.userId,
                         userName: msg.user.userName,
+                        pfp: msg.user.pfp,
                     },
                 },
                 {
                     onSuccess: () => {
                         toast.success(`You have successfully added ${msg.user.userName}`, {
-                            position: "bottom-right",
+                            position: "top-right",
                             autoClose: 5000,
                             hideProgressBar: false,
                             closeOnClick: true,
@@ -43,12 +44,12 @@ const ThreadMessage = ({ msg } : { msg: Message  }) => {
                             progress: undefined,
                             theme: "light",
                         });
-                        addFriend({userName: msg.user.userName, id: msg.user.userId});
+                        addFriend({userName: msg.user.userName, id: msg.user.userId, pfp: msg.user.pfp});
                         setIsFriend(true);
                     }, 
                     onError: (error) => {
                         toast.error(error.message, {
-                            position: "bottom-right",
+                            position: "top-right",
                             autoClose: 5000,
                             hideProgressBar: false,
                             closeOnClick: true,
@@ -87,7 +88,7 @@ const ThreadMessage = ({ msg } : { msg: Message  }) => {
                 "h-min-[48px] sm:w-5/6 xs:w-full flex flex-row justify-center py-[12px] rounded-md",
             )}>
                 <div className="w-[72px] flex justify-center">
-                    {msg.user?.pfp 
+                    { msg.user?.pfp 
                         ? 
                             <img 
                                 src={msg.user?.pfp ?? ""} 
@@ -95,7 +96,11 @@ const ThreadMessage = ({ msg } : { msg: Message  }) => {
                                 alt={"pfp"}
                             /> 
                         : 
-                            <FaUserAstronaut className="text-tertiary bject-cover aspect-auto rounded-full h-[42px] w-[42px] z-1 p-[8px] bg-secondary"/>}
+                            <FaUserAstronaut 
+                                className="text-tertiary bject-cover aspect-auto rounded-full h-[42px] w-[42px] z-1 p-[8px]
+                                            bg-secondary"
+                            />
+                    }
                 </div>
                 <div className="w-full pr-[48px]">
                     <div className="flex flex-cols-3 gap-x-2 items-center">
@@ -119,7 +124,9 @@ const ThreadMessage = ({ msg } : { msg: Message  }) => {
                         </div>
                     </div>
                     <div>
-                        <div className="text-[#dbdee1] font-Inter sm:text-sm xs:text-xs break-all xs:w-full lg:w-3/4 whitespace-pre-wrap px-4 ">
+                        <div className="text-[#dbdee1] font-Inter sm:text-sm xs:text-xs break-all xs:w-full lg:w-3/4 
+                                        whitespace-pre-wrap"
+                        >
                             {msg.payload}
                         </div>
                     </div>

@@ -54,13 +54,23 @@ export async function addFriend({ currentId, friend}: {currentId: string, friend
     
     updatedUser.friends = [...updatedUser.friends, friend];
     if (updatedUser.userName) {
-        updatedFriend.friends = [...updatedFriend.friends, { id: currentId, userName: updatedUser.userName }];
+        updatedFriend.friends = [...updatedFriend.friends, { id: currentId, userName: updatedUser.userName, pfp: updatedUser.pfp }];
     }
 
     await updatedUser.updateOne(updatedUser).exec();
     await updatedFriend.updateOne(updatedFriend).exec();
 
     return updatedUser;
+}
+
+export async function getUsers(): Promise<Friend[]> {
+    const users = await UserModel.find({}).exec() as User[];
+    const users_as_friends: Friend[] = users.map((user: User) => ({
+        id: user.userId,
+        userName: user.userName,
+        pfp: user.pfp,
+    }));
+    return users_as_friends;
 }
 
 // THREAD QUERIES
@@ -98,7 +108,6 @@ export async function addUserToThread({ userId, threadId } : { userId: string, t
     updatedThread.users = [...updatedThread.users, userId];
 
     await updatedThread.updateOne(updatedThread).exec();
-    console.log('updatedThread', updatedThread.users)
     return updatedThread;
 }
 

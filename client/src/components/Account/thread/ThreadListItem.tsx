@@ -16,8 +16,9 @@ export const ThreadListComponent = (
     return (
         <div className={
             clsx(
-                "w-full h-[60px] flex flex-cols-2 hover:bg-[#4e5058]/40 cursor-pointer rounded-md", 
-                currentThread?.roomId === thread?.roomId && "bg-[#4e5058]/40 shadow-sm shadow-accent"
+                "w-full h-[60px] flex flex-cols-2  hover:bg-[#4e5058]/40 cursor-pointer rounded-md", 
+                currentThread?.roomId === thread?.roomId && "bg-[#4e5058]/40 shadow-sm shadow-accent",
+                currentThread === null &&  "xs:bg-primary md:bg-transparent"
             )} 
             onClick={() => setCurrentThread(thread)}
         >
@@ -33,7 +34,7 @@ export const ThreadListComponent = (
                 {
                     currentThread?.roomId === thread?.roomId && 
                     <div className="w-[24px] h-full flex items-center justify-center mr-2 ">
-                        <AddFriendToThreadModal buttonHeight="25" buttonWidth="25"/>
+                        <AddFriendToThreadModal />
                     </div>
                 }
             </div>

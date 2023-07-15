@@ -18,8 +18,16 @@ const port = process.env.PORT;
 const app = express();
 
 app.use(cookieParser());
+
 app.use(cors({
-  origin: [process.env.REACT_APP_URL + ':' + process.env.REACT_APP_PORT, process.env.REACT_APP_URL + ':' + "3001"],
+  origin: [
+    process.env.REACT_APP_URL + ':' + process.env.REACT_APP_PORT, 
+    process.env.REACT_APP_URL + ':' + "3001", 
+    process.env.REACT_APP_URL,
+    process.env.REACT_APP_URL + ":80",
+    "http://swiftchat.ca" + ':' + process.env.REACT_APP_PORT,
+    "http://swiftchat.ca" + ':' + "80",
+  ],
   credentials: true,
   exposedHeaders: ['set-cookie', 'upgrade'],
 }));
