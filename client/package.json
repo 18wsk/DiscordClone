@@ -42,8 +42,8 @@
     "zustand": "^4.3.8"
   },
   "scripts": {
-    "start": "env-cmd -f local.env react-scripts start ",
-    "start:prod": "env-cmd -f prod.env react-scripts start",
+    "start": "set PORT=3000 && env-cmd -f local.env react-scripts start ",
+    "start:prod": "set PORT=3000 && env-cmd -f prod.env react-scripts start",
     "build": "react-scripts build"
   },
   "eslintConfig": {

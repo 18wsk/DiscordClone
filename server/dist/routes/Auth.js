@@ -73,7 +73,12 @@ exports.Auth = (0, trpc_1.router)({
         }
         const userId = (0, uuid_1.v4)();
         const token = jsonwebtoken_1.default.sign({ userId: userId }, secretKey, { expiresIn: '4h' });
-        ctx.res.cookie('auth', token, { maxAge: 4 * 60 * 60 * 1000, httpOnly: true });
+        ctx.res.cookie('auth', token, { maxAge: 4 * 60 * 60 * 1000,
+            domain: process.env.REACT_APP_URL,
+            secure: true,
+            sameSite: 'none',
+            httpOnly: true
+        });
         const encryptedPassword = encryptPassword({ password });
         const user = await (0, db_1.createUser)({
             user: {
@@ -119,7 +124,12 @@ exports.Auth = (0, trpc_1.router)({
                 // generate their new token from their userID
                 const token = jsonwebtoken_1.default.sign({ userId: user.userId }, secretKey, { expiresIn: '4h' });
                 // Set the JWT as a cookie
-                ctx.res.cookie('auth', token, { maxAge: 4 * 60 * 60 * 1000, httpOnly: true });
+                ctx.res.cookie('auth', token, { maxAge: 4 * 60 * 60 * 1000,
+                    domain: process.env.REACT_APP_URL,
+                    secure: true,
+                    sameSite: 'none',
+                    httpOnly: true
+                });
                 // return the user
                 return user;
             }

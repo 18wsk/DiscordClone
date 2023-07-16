@@ -1,12 +1,12 @@
 import { Socket, io } from "socket.io-client";
 import ChatStore from "../../../store";
 import { Message } from "../../../../../server/src/types/Message";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import ThreadMessage from "./ThreadMessage";
 import { trpc } from "../../../utils/trpc";
 import { motion } from "framer-motion";
 import { useRef } from "react";
-import { ThreeDots } from "react-loading-icons";
+import { TailSpin, ThreeDots } from "react-loading-icons";
 import { AiOutlineSend } from "react-icons/ai";
 import clsx from "clsx";
 
@@ -21,7 +21,7 @@ const ThreadFeed = () => {
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const [currentTyper, setCurrentTyper] = useState<string | null>(null);
 
-    trpc.thread.getThreadMessages.useQuery({ roomId: currentThread?.roomId ?? null}, { 
+    const getMessagesQuery = trpc.thread.getThreadMessages.useQuery({ roomId: currentThread?.roomId ?? null}, { 
         enabled: true, 
         refetchOnWindowFocus: true,
         refetchOnMount: true,
@@ -33,19 +33,20 @@ const ThreadFeed = () => {
         onError: (error) => {
             setMessages([]);
             console.log(error)
-        }
+        },
     });
 
     const useAddMessage = trpc.thread.addMessage.useMutation();
+
     useEffect(() => {
-        const newSocket = io(process.env.REACT_APP_URL + ":" + process.env.REACT_APP_SERVER_PORT); //process.env.REACT_APP_URL + ":" + process.env.REACT_APP_SERVER_PORT + "/trpc"
+        const newSocket = io(process.env.REACT_APP_URL + ":" + process.env.REACT_APP_SERVER_PORT);
         setSocket(newSocket);
         return () => {
             // Clean up the socket connection when the component unmounts
             newSocket?.emit("leave room");
             newSocket.disconnect();
         };
-    }, []);
+    }, [currentThread?.roomId]);
 
     useEffect(() => {
         if (socket) {
@@ -63,12 +64,13 @@ const ThreadFeed = () => {
     }, [addMessage, currentThread?.roomId, setCurrentTyper, socket]);
 
 
-    const sendMessage = async ({ 
+    const textarea = document.getElementById("threadTextArea") as HTMLTextAreaElement;
+    
+    const sendMessage = useCallback(async ({ 
         message,
     }: { 
         message: Message
     }) => {
-        const textarea = document.getElementById("threadTextArea") as HTMLTextAreaElement;
         if (textarea) {
             textarea.style.height = "42px"; // Reset the height to the initial value
             textarea.value = ''; // Reset the value to an empty string
@@ -82,7 +84,7 @@ const ThreadFeed = () => {
                 socket?.emit('setTyper', { room: currentThread?.roomId, typer: null });
             },
         });
-    };
+    }, [addMessage, currentThread?.roomId, socket, textarea, useAddMessage]);
 
     const handleMessageDate = (date: Date) => {
         const day = date.getDate().toString().padStart(2, '0');
@@ -117,6 +119,43 @@ const ThreadFeed = () => {
         }
     }, [currentMessages]);
 
+    const textAreaElement = document.getElementById("threadTextArea") as HTMLTextAreaElement;
+
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+            }
+        };
+    
+        const handleKeyUp = (event: KeyboardEvent) => {
+            if (event.key === 'Enter' && !event.shiftKey && getMessagesQuery.isLoading === false) {
+                sendMessage({
+                    message: {
+                        user: {
+                            userId: currentUser?.userId ?? "",
+                            userName: currentUser?.userName ?? "",
+                            pfp: currentUser?.pfp ?? null,
+                        },
+                        payload: message.trim(),
+                        roomId: currentThread?.roomId ?? "",
+                        timeStamp: handleMessageDate(new Date()),
+                    }
+                })
+            }
+        };
+
+        if (textAreaElement) {
+            textAreaElement.addEventListener('keydown', handleKeyDown);
+            textAreaElement.addEventListener('keyup', handleKeyUp);
+        }
+        
+        return () => {
+            textAreaElement?.removeEventListener('keydown', handleKeyDown);
+            textAreaElement?.removeEventListener('keyup', handleKeyUp);
+        }
+    }, [currentThread?.roomId, currentUser?.pfp, currentUser?.userId, currentUser?.userName, getMessagesQuery.isLoading, message, sendMessage, textAreaElement]);
+
 
     return (
         <motion.div 
@@ -134,10 +173,23 @@ const ThreadFeed = () => {
                         className="overflow-y-scroll scrollbar-hide scroll-smooth bg-primary w-[calc(100vw - 300px)]"
                         style={{height: `calc(100vh - ${divHeight})`}}
                     >
-                        {currentMessages.map((message: Message, index) => (
-                            <div className="xs:w-full xs:px-2 h-fit flex pb-2 justify-center " key={index}>
-                                <ThreadMessage msg={message} key={index} />
-                            </div>
+                        {getMessagesQuery.isLoading
+                            ?   <div 
+                                    className="flex items-center justify-center z-10 "
+                                    style={{height: `calc(100vh - ${divHeight})`, width: `calc(100vw - 300px)`}}
+                                >
+                                    <TailSpin 
+                                        stroke={"#3e47c9"}
+                                        speed={.75} 
+                                        height={100} 
+                                        width={100} 
+                                        className=" w-fit h-fit flex items-center justify-center p-2"
+                                    /> 
+                                </div>
+                            :   currentMessages.map((message: Message, index) => (
+                                <div className="xs:w-full xs:px-2 h-fit flex pb-2 justify-center " key={index}>
+                                    <ThreadMessage msg={message} key={index} />
+                                </div>
                         ))}
                     </div>
                     <div 
@@ -182,6 +234,7 @@ const ThreadFeed = () => {
                                         message.length > 0 && "bg-accent"
                                     )}
                                     onClick={() =>
+                                        !getMessagesQuery.isLoading &&
                                         currentUser &&
                                         currentUser.userId &&
                                         message &&
@@ -192,7 +245,7 @@ const ThreadFeed = () => {
                                                     userName: currentUser?.userName ?? "",
                                                     pfp: currentUser?.pfp ?? null,
                                                 },
-                                                payload: message,
+                                                payload:  message.trim(),
                                                 roomId: currentThread?.roomId ?? "",
                                                 timeStamp: handleMessageDate(new Date()),
                                             }

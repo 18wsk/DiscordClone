@@ -1,4 +1,5 @@
 import express from 'express';
+import https from 'https';
 import http from 'http';
 import cors from 'cors';
 import * as trpcExpress from '@trpc/server/adapters/express';
@@ -7,8 +8,8 @@ import { createContext } from './utils/trpc';
 import cookieParser  from 'cookie-parser';
 import { connect } from './utils/db';
 import mainRouter from './routes';
-
 import Websocket from './utils/Websocket';
+import fs from 'fs';
 
 // configure environment file
 dotenv.config();
@@ -22,11 +23,11 @@ app.use(cookieParser());
 app.use(cors({
   origin: [
     process.env.REACT_APP_URL + ':' + process.env.REACT_APP_PORT, 
-    process.env.REACT_APP_URL + ':' + "3001", 
     process.env.REACT_APP_URL,
     process.env.REACT_APP_URL + ":80",
     "http://swiftchat.ca" + ':' + process.env.REACT_APP_PORT,
-    "http://swiftchat.ca" + ':' + "80",
+    "http://swiftchat.ca" + ":80",
+    "http://swiftchat.ca"
   ],
   credentials: true,
   exposedHeaders: ['set-cookie', 'upgrade'],

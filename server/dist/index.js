@@ -44,9 +44,11 @@ app.use((0, cookie_parser_1.default)());
 app.use((0, cors_1.default)({
     origin: [
         process.env.REACT_APP_URL + ':' + process.env.REACT_APP_PORT,
-        process.env.REACT_APP_URL + ':' + "3001",
         process.env.REACT_APP_URL,
-        process.env.REACT_APP_URL + ':' + "80",
+        process.env.REACT_APP_URL + ":80",
+        "https://swiftchat.ca" + ':' + process.env.REACT_APP_PORT,
+        "https://swiftchat.ca" + ":80",
+        "https://swiftchat.ca"
     ],
     credentials: true,
     exposedHeaders: ['set-cookie', 'upgrade'],

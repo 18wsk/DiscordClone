@@ -60,19 +60,13 @@ async function addFriend({ currentId, friend }) {
 }
 exports.addFriend = addFriend;
 async function getUsers() {
-    try {
-        const users = await schemas_1.UserModel.find({}).exec();
-        const users_as_friends = users.map((user) => ({
-            id: user.userId,
-            userName: user.userName,
-            pfp: user.pfp,
-        }));
-        return users_as_friends;
-    }
-    catch (error) {
-        console.error('Error retrieving users:', error);
-        throw error; // Rethrow the error or handle it as needed
-    }
+    const users = await schemas_1.UserModel.find({}).exec();
+    const users_as_friends = users.map((user) => ({
+        id: user.userId,
+        userName: user.userName,
+        pfp: user.pfp,
+    }));
+    return users_as_friends;
 }
 exports.getUsers = getUsers;
 // THREAD QUERIES

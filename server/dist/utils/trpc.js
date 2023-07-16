@@ -22,6 +22,12 @@ const createContext = ({ req, res }) => {
             throw new server_1.TRPCError({ code: 'UNAUTHORIZED', message: 'verify' });
         }
     }
+    const cookieOptions = {
+        domain: 'swiftchat.ca',
+        secure: true,
+        sameSite: 'none',
+        httpOnly: true,
+    };
     return { req, res, userId };
 };
 exports.createContext = createContext;

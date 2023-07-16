@@ -47,20 +47,6 @@ const Account = () => {
         }
     });
 
-	// useEffect(() => {
-    //     if (socket) {
-    //         socket.on("connect", () => {
-    //             socket.emit('joinRoom', currentThread?.roomId);
-    //         });
-    //         socket.on('receiveMessage', (message: Message) => {
-    //             addMessage(message);
-    //             // Handle the received message as needed
-    //         });
-    //         socket.on('typing', (typer: string) => {
-    //             setCurrentTyper(typer);
-    //         });
-    //     }
-    // }, [addMessage, currentThread?.roomId, setCurrentTyper, socket]);
 
 	return (
 		<div className="w-screen h-screen relative overflow-hidden">
