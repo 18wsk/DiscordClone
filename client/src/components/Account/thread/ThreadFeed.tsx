@@ -159,7 +159,7 @@ const ThreadFeed = () => {
 
     return (
         <motion.div 
-            className="h-full w-full flex flex-cols-2 xs:w-100vw md:w-[calc(100vw - 300px)]" 
+            className="h-full w-full flex flex-cols-2 xs:w-100vw md:w-[calc(100vw-300px)]" 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1.0 }}
@@ -173,24 +173,18 @@ const ThreadFeed = () => {
                         className="overflow-y-scroll scrollbar-hide scroll-smooth bg-primary w-[calc(100vw - 300px)]"
                         style={{height: `calc(100vh - ${divHeight})`}}
                     >
-                        {getMessagesQuery.isLoading
-                            ?   <div 
-                                    className="flex items-center justify-center z-10 "
-                                    style={{height: `calc(100vh - ${divHeight})`, width: `calc(100vw - 300px)`}}
-                                >
-                                    <TailSpin 
-                                        stroke={"#3e47c9"}
-                                        speed={.75} 
-                                        height={100} 
-                                        width={100} 
-                                        className=" w-fit h-fit flex items-center justify-center p-2"
-                                    /> 
-                                </div>
-                            :   currentMessages.map((message: Message, index) => (
+                        {getMessagesQuery.isLoading || getMessagesQuery.isFetching
+                            ? <div 
+                                className="xs:w-full md:w-[calc(100vw-300px)] h-full flex flex-col items-center 
+                                        justify-center"
+                            > <TailSpin stroke={"#3e47c9"} className="w-1/6 h-1/6"/>
+                            </div>
+                            : currentMessages.map((message: Message, index) => (
                                 <div className="xs:w-full xs:px-2 h-fit flex pb-2 justify-center " key={index}>
                                     <ThreadMessage msg={message} key={index} />
                                 </div>
-                        ))}
+                            ))
+                        }
                     </div>
                     <div 
                         className={`shadow-lg shadow-accent`} 

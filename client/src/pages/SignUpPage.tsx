@@ -298,7 +298,7 @@ const SignUpPage = () => {
                         </button>
                     </div>
                     <div className="text-black text-center sm:py-4 xs:pb-4 flex-0 w-min-full text-bold">
-                        <Link to="/signup" className="text-accent hover:underline sm:text-sm xs:text-xs">Already have an account?</Link>
+                        <Link to="/login" className="text-accent hover:underline sm:text-sm xs:text-xs">Already have an account?</Link>
                     </div>
                 </div>
             </motion.div>
