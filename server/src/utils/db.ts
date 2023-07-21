@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import { Thread } from '../types/Thread';
 import { Message } from '../types/Message';
 import { Friend } from '../types/Friend';
+import { ThreadNotification } from '../types/ThreadNotification';
 
 dotenv.config();
 
@@ -54,13 +55,29 @@ export async function addFriend({ currentId, friend}: {currentId: string, friend
     
     updatedUser.friends = [...updatedUser.friends, friend];
     if (updatedUser.userName) {
-        updatedFriend.friends = [...updatedFriend.friends, { id: currentId, userName: updatedUser.userName }];
+        updatedFriend.friends = [...updatedFriend.friends, { 
+            id: currentId, 
+            userName: updatedUser.userName, 
+            pfp: updatedUser.pfp,
+            status: updatedUser.status,
+        }];
     }
 
     await updatedUser.updateOne(updatedUser).exec();
     await updatedFriend.updateOne(updatedFriend).exec();
 
     return updatedUser;
+}
+
+export async function getUsers(): Promise<Friend[]> {
+    const users = await UserModel.find({}).exec() as User[];
+    const users_as_friends: Friend[] = users.map((user: User) => ({
+        id: user.userId,
+        userName: user.userName,
+        pfp: user.pfp,
+        status: user.status,
+    }));
+    return users_as_friends;
 }
 
 // THREAD QUERIES
@@ -91,22 +108,26 @@ export async function countThreadByName({ threadName } : { threadName: string | 
     return ThreadModel.countDocuments({ threadName }).exec();
 }
 
-export async function addUserToThread({ userId, threadId } : { userId: string, threadId: string}) { 
+export async function addUserToThread({ userId, threadId } : { userId: string, threadId: string}): Promise<Thread | null> { 
     const updatedThread = await ThreadModel.findOne({ roomId: threadId }).exec();
     if (!updatedThread) return null;
-
     updatedThread.users = [...updatedThread.users, userId];
-
     await updatedThread.updateOne(updatedThread).exec();
-    console.log('updatedThread', updatedThread.users)
     return updatedThread;
 }
 
+
 // MESSAGE QUERIES
-export async function getThreadMessages({ threadId }: { threadId: string | null }): Promise<Message[]> {
+export async function getThreadMessages({ threadId }
+    : { threadId: string | null })
+    : Promise<Message[]> {
     return MessageModel.find({ roomId: threadId }).exec();
 }
 
 export async function addMessage({ message }: { message: Message }): Promise<Message | null> {
+    const thread = await ThreadModel.findOne({ roomId: message.roomId }).exec();
+    if (!thread) return null;
+    thread.messages = [...thread.messages, message.id];
+    await thread.updateOne(thread).exec();
     return MessageModel.create(message);
 }

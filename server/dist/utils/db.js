@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addMessage = exports.getThreadMessages = exports.addUserToThread = exports.countThreadByName = exports.addThread = exports.getUsersThreads = exports.getThreadByRoomId = exports.addFriend = exports.createUser = exports.countUserByUserName = exports.countUserByEmail = exports.getUserByEmail = exports.getUserById = exports.connect = void 0;
+exports.addMessage = exports.getThreadMessages = exports.addUserToThread = exports.countThreadByName = exports.addThread = exports.getUsersThreads = exports.getThreadByRoomId = exports.getUsers = exports.addFriend = exports.createUser = exports.countUserByUserName = exports.countUserByEmail = exports.getUserByEmail = exports.getUserById = exports.connect = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 const schemas_1 = require("../types/models/schemas");
 const mongoose_1 = __importDefault(require("mongoose"));
@@ -52,13 +52,29 @@ async function addFriend({ currentId, friend }) {
         return null;
     updatedUser.friends = [...updatedUser.friends, friend];
     if (updatedUser.userName) {
-        updatedFriend.friends = [...updatedFriend.friends, { id: currentId, userName: updatedUser.userName }];
+        updatedFriend.friends = [...updatedFriend.friends, {
+                id: currentId,
+                userName: updatedUser.userName,
+                pfp: updatedUser.pfp,
+                status: updatedUser.status,
+            }];
     }
     await updatedUser.updateOne(updatedUser).exec();
     await updatedFriend.updateOne(updatedFriend).exec();
     return updatedUser;
 }
 exports.addFriend = addFriend;
+async function getUsers() {
+    const users = await schemas_1.UserModel.find({}).exec();
+    const users_as_friends = users.map((user) => ({
+        id: user.userId,
+        userName: user.userName,
+        pfp: user.pfp,
+        status: user.status,
+    }));
+    return users_as_friends;
+}
+exports.getUsers = getUsers;
 // THREAD QUERIES
 async function getThreadByRoomId({ roomId }) {
     return schemas_1.ThreadModel.findOne({ roomId }).exec();
@@ -93,7 +109,6 @@ async function addUserToThread({ userId, threadId }) {
         return null;
     updatedThread.users = [...updatedThread.users, userId];
     await updatedThread.updateOne(updatedThread).exec();
-    console.log('updatedThread', updatedThread.users);
     return updatedThread;
 }
 exports.addUserToThread = addUserToThread;

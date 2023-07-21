@@ -14,7 +14,6 @@ const Websocket = (server: http.Server) => {
         socket.on('joinRoom', (room) => {
             socket.join(room);
             console.log(`User joined room: ${room}`);
-            
         });
 
         socket.on('leaveRoom', (room) => {
@@ -30,6 +29,19 @@ const Websocket = (server: http.Server) => {
         socket.on('setTyper', (data) => {
             const { room, typer } = data;
             socket.to(room).emit('typing', typer);
+        });
+
+        socket.on('updateFriends', (data) => {
+            const { userId } = data;
+            io.sockets.emit("friendOnline", { userId: userId });
+        });
+
+        socket.on("friendLoggedOff", (data) => {
+            io.sockets.emit("friendOffline", { userId: data.userId });
+        })
+
+        socket.on('disconnect', (data) => {
+            console.log('User disconnected');
         });
     });
     

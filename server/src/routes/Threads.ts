@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { protectedProcedure, router } from '../utils/trpc';
 import { TRPCError } from '@trpc/server';
 import { MessageSchema } from '../types/Message';
-import { addFriend, addMessage, addThread, addUserToThread, countThreadByName, getThreadByRoomId, getThreadMessages, getUsersThreads } from '../utils/db';
+import { addFriend, addMessage, addThread, addUserToThread, countThreadByName, getThreadByRoomId, getThreadMessages, getUsers, getUsersThreads } from '../utils/db';
 import { FriendSchema } from '../types/Friend';
 
 export const Thread = router({
@@ -100,5 +100,14 @@ export const Thread = router({
             }
             return updatedThread;
         }),
-
+    getUsersToMakeFriends: protectedProcedure
+        .input(z.object({}))
+        .query(async() => {
+            try {
+                const users = await getUsers();
+                return users;
+            } catch (err) {
+                throw new TRPCError({ code: 'CONFLICT', message: 'Could not load users.' });
+            }
+        }),
 });

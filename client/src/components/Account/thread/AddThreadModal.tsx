@@ -8,6 +8,7 @@ import FormInput from '../../ReUsable/FormInput';
 import { MdAddAPhoto } from 'react-icons/md';
 import { v4 as uuidv4 } from 'uuid';
 import { ToastContainer, toast } from 'react-toastify';
+import { BiCommentAdd } from "react-icons/bi"
 
 export const AddThreadModal = () => {
     let [isOpen, setIsOpen] = useState(false);
@@ -121,7 +122,7 @@ export const AddThreadModal = () => {
                         focus:outline-none focus-visible:ring-2 
                         focus-visible:ring-white focus-visible:ring-opacity-75"
             >
-                Create Community
+                <BiCommentAdd className="fill-white h-[24px] w-[24px]" title="Add New Community"/>
             </button>
         </div>
         <Transition appear show={isOpen} as={Fragment}>

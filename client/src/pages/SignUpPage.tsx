@@ -11,6 +11,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ChatStore from '../store';
 import { FaUserAstronaut } from 'react-icons/fa';
+import { BiEditAlt } from 'react-icons/bi';
 
 
 
@@ -90,7 +91,7 @@ const SignUpPage = () => {
         setEmailValid(true);
         setUsernameValid(true);
         setPasswordValid(true);
-        setDobValid(true)
+        setDobValid(true);
         if (email === null || email.length === 0) {
             setEmailValid(false);
             handleValidationErrors("Email is required.");
@@ -119,9 +120,13 @@ const SignUpPage = () => {
             handleValidationErrors("Valid Date of Birth is required.");
             return false;
         }
-        else if (!isValidBirthday({year: dob?.year, month: dob?.month as string, day: dob?.day})) {
-            setDobValid(false);
-            handleValidationErrors("Please enter a valid date of birth.");
+        // else if (!isValidBirthday({year: dob?.year, month: dob?.month as string, day: dob?.day})) {
+        //     setDobValid(false);
+        //     handleValidationErrors("Please enter a valid date of birth.");
+        // }
+        else if (userPfp === null) {
+            handleValidationErrors("Please enter a profile picture");
+            return false
         }
         else {
             return true;
@@ -130,7 +135,7 @@ const SignUpPage = () => {
 
     const handleValidationErrors = (error: string | null) => {
         toast.error(error, {
-            position: "bottom-right",
+            position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
@@ -156,14 +161,15 @@ const SignUpPage = () => {
                     password: password!, 
                     userName: username!, 
                     birthday: dob.day + "/" + dob.month + "/" + dob.year,
-                    pfp: userPfp
+                    pfp: userPfp,
+                    status: false
                 },
                 {
                     onSuccess: (data) => {
                         setLoading(false);
                         setActiveUser(data);
                         toast.success("You have successfully created an account!", {
-                            position: "bottom-right",
+                            position: "top-right",
                             autoClose: 5000,
                             hideProgressBar: false,
                             closeOnClick: true,
@@ -179,7 +185,7 @@ const SignUpPage = () => {
                     onError: (error) => {
                         setLoading(false);
                         toast.error(error.message, {
-                            position: "bottom-right",
+                            position: "top-right",
                             autoClose: 5000,
                             hideProgressBar: false,
                             closeOnClick: true,
@@ -259,10 +265,10 @@ const SignUpPage = () => {
                                         id="file-input"
                                         type="file"
                                         accept="image/*"
-                                        className="pfp-input"
+                                        className="pfp-input "
                                         onChange={(e) => handleFileInputChange(e)}
                                     />
-                                    <label htmlFor="file-input" className="pfp-input-label">
+                                    <label htmlFor="file-input" className="pfp-input-label ">
                                         <FaUserAstronaut className="pfp-input-icon" fill={"#ffffff"} />
                                     </label>
                                 </>
@@ -270,11 +276,19 @@ const SignUpPage = () => {
                                     <img
                                         src={userPfp ?? ""}
                                         alt="GG"
-                                        className='xl:w-[128px] xl:h-[128px] rounded-full object-cover'
-                                        onClick={() => {setUserPfp('')}}
+                                        className='h-[80px] w-[80px] rounded-full object-cover'
+                                        onClick={() => {setUserPfp(null)}}
                                     />
                             )
                         }
+                        <div className="h-[80px] w-fit relative bg-green-300">
+                            <div className="absolute right-2 bottom-0 bg-accent h-5 w-5 rounded-full text-white flex flex-col items-center justify-center border border-white">
+                                <BiEditAlt className="h-4 w-4"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="w-full flex items-center justify-center">
+                        <h2 className="text-white xs:py-1 font-semibold sm:text-sm xs:text-xs">Upload Profile Picture</h2>
                     </div>
                     <h2 className="text-white xs:py-1 font-semibold sm:text-sm xs:text-xs">EMAIL:</h2>
                         <FormInput value={email} onInputChange={setEmail} valid={emailValid}/>
@@ -298,7 +312,7 @@ const SignUpPage = () => {
                         </button>
                     </div>
                     <div className="text-black text-center sm:py-4 xs:pb-4 flex-0 w-min-full text-bold">
-                        <Link to="/signup" className="text-accent hover:underline sm:text-sm xs:text-xs">Already have an account?</Link>
+                        <Link to="/login" className="text-accent hover:underline sm:text-sm xs:text-xs">Already have an account?</Link>
                     </div>
                 </div>
             </motion.div>

@@ -44,6 +44,19 @@ function decryptPassword(encryptedData: Password) {
   return "";
 }
 
+const cookieSettings = process.env.REACT_APP_URL === 'http://localhost' 
+  ? 
+    { 
+      maxAge: 4 * 60 * 60 * 1000, 
+      httpOnly: true
+    }
+  : 
+    { 
+      maxAge: 4 * 60 * 60 * 1000, 
+      domain: process.env.REACT_APP_DOMAIN,
+      httpOnly: true
+    };
+
 export const Auth = router({
     signup: publicProcedure
       .input(z.object({ 
@@ -51,9 +64,10 @@ export const Auth = router({
         userName: z.string(), 
         password:z.string(), 
         birthday: z.string(),
-        pfp: z.string().nullable()
+        pfp: z.string().nullable(),
+        status: z.boolean().nullable(),
       }))
-      .mutation(async ({ input:  { email, userName, password, birthday, pfp}, ctx }) => {
+      .mutation(async ({ input:  { email, userName, password, birthday, pfp, status}, ctx }) => {
         // Verify this is a new user
         const doesEmailExist = await countUserByEmail({ email });
         if (doesEmailExist !== 0) {
@@ -75,7 +89,7 @@ export const Auth = router({
 
         const userId = uuidv4();
         const token = jwt.sign({ userId: userId }, secretKey, { expiresIn: '4h' });
-        ctx.res.cookie('auth', token, { maxAge: 4 * 60 * 60 * 1000, httpOnly: true});
+        ctx.res.cookie('auth', token, cookieSettings);
         const encryptedPassword = encryptPassword({ password });
         const user = await createUser({ 
           user: { 
@@ -86,7 +100,9 @@ export const Auth = router({
             birthday, 
             threads: [], 
             friends: [], 
-            pfp: pfp 
+            pfp: pfp,
+            status: status,
+            threadViews: []
           }
         });
         return user;
@@ -121,7 +137,8 @@ export const Auth = router({
             // generate their new token from their userID
             const token = jwt.sign({ userId: user.userId }, secretKey, { expiresIn: '4h' });
             // Set the JWT as a cookie
-            ctx.res.cookie('auth', token, { maxAge: 4 * 60 * 60 * 1000, httpOnly: true});
+            
+            ctx.res.cookie('auth', token, cookieSettings);
             // return the user
             return user;
           }

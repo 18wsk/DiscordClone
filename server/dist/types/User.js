@@ -13,4 +13,5 @@ exports.UserSchema = zod_1.z.object({
     threads: zod_1.z.array(zod_1.z.string()),
     friends: zod_1.z.array(Friend_1.FriendSchema),
     pfp: zod_1.z.string().nullable(),
+    status: zod_1.z.boolean().nullable(),
 });

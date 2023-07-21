@@ -1,14 +1,15 @@
 import { Socket, io } from "socket.io-client";
 import ChatStore from "../../../store";
 import { Message } from "../../../../../server/src/types/Message";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import ThreadMessage from "./ThreadMessage";
 import { trpc } from "../../../utils/trpc";
 import { motion } from "framer-motion";
 import { useRef } from "react";
-import { ThreeDots } from "react-loading-icons";
+import { TailSpin, ThreeDots } from "react-loading-icons";
 import { AiOutlineSend } from "react-icons/ai";
 import clsx from "clsx";
+import { v4 as uuidv4 } from "uuid";
 
 const ThreadFeed = () => {
     const currentThread = ChatStore(state => state.currentThread);
@@ -21,7 +22,7 @@ const ThreadFeed = () => {
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const [currentTyper, setCurrentTyper] = useState<string | null>(null);
 
-    trpc.thread.getThreadMessages.useQuery({ roomId: currentThread?.roomId ?? null}, { 
+    const getMessagesQuery = trpc.thread.getThreadMessages.useQuery({ roomId: currentThread?.roomId ?? null}, { 
         enabled: true, 
         refetchOnWindowFocus: true,
         refetchOnMount: true,
@@ -30,22 +31,22 @@ const ThreadFeed = () => {
         onSuccess: (data: Message[]) => {
             setMessages(data);
         },
-        onError: (error) => {
+        onError: () => {
             setMessages([]);
-            console.log(error)
-        }
+        },
     });
 
     const useAddMessage = trpc.thread.addMessage.useMutation();
-    useEffect(() => {
-        const newSocket = io((process.env.REACT_APP_APP_URL !== undefined && process.env.REACT_APP_SERVER_PORT !== undefined) ? (process.env.REACT_APP_APP_URL + process.env.REACT_APP_SERVER_PORT + "/trpc") : "http://localhost:5000/trpc");
-        setSocket(newSocket);
 
+    useEffect(() => {
+        const newSocket = io(process.env.REACT_APP_URL + ":" + process.env.REACT_APP_SERVER_PORT);
+        setSocket(newSocket);
         return () => {
             // Clean up the socket connection when the component unmounts
+            newSocket?.emit("leave room");
             newSocket.disconnect();
         };
-    }, []);
+    }, [currentThread?.roomId]);
 
     useEffect(() => {
         if (socket) {
@@ -54,7 +55,6 @@ const ThreadFeed = () => {
             });
             socket.on('receiveMessage', (message: Message) => {
                 addMessage(message);
-                // Handle the received message as needed
             });
             socket.on('typing', (typer: string) => {
                 setCurrentTyper(typer);
@@ -63,12 +63,13 @@ const ThreadFeed = () => {
     }, [addMessage, currentThread?.roomId, setCurrentTyper, socket]);
 
 
-    const sendMessage = async ({ 
+    const textarea = document.getElementById("threadTextArea") as HTMLTextAreaElement;
+    
+    const sendMessage = useCallback(async ({ 
         message,
     }: { 
         message: Message
     }) => {
-        const textarea = document.getElementById("threadTextArea") as HTMLTextAreaElement;
         if (textarea) {
             textarea.style.height = "42px"; // Reset the height to the initial value
             textarea.value = ''; // Reset the value to an empty string
@@ -82,7 +83,7 @@ const ThreadFeed = () => {
                 socket?.emit('setTyper', { room: currentThread?.roomId, typer: null });
             },
         });
-    };
+    }, [addMessage, currentThread?.roomId, socket, textarea, useAddMessage]);
 
     const handleMessageDate = (date: Date) => {
         const day = date.getDate().toString().padStart(2, '0');
@@ -117,10 +118,61 @@ const ThreadFeed = () => {
         }
     }, [currentMessages]);
 
+    const textAreaElement = document.getElementById("threadTextArea") as HTMLTextAreaElement;
+
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+            }
+        };
+    
+        const handleKeyUp = (event: KeyboardEvent) => {
+            if (event.key === 'Enter' && !event.shiftKey && getMessagesQuery.isLoading === false) {
+                sendMessage({
+                    message: {
+                        id: uuidv4(),
+                        user: {
+                            userId: currentUser?.userId ?? "",
+                            userName: currentUser?.userName ?? "",
+                            pfp: currentUser?.pfp ?? null,
+                            status: currentUser?.status ?? false,
+                        },
+                        payload: message.trim(),
+                        roomId: currentThread?.roomId ?? "",
+                        timeStamp: handleMessageDate(new Date()),
+                    }
+                })
+            }
+        };
+
+        if (textAreaElement) {
+            textAreaElement.addEventListener('keydown', handleKeyDown);
+            textAreaElement.addEventListener('keyup', handleKeyUp);
+        }
+        
+        return () => {
+            textAreaElement?.removeEventListener('keydown', handleKeyDown);
+            textAreaElement?.removeEventListener('keyup', handleKeyUp);
+        }
+    }, 
+        [
+            currentThread?.roomId, 
+            currentUser?.pfp, 
+            currentUser?.status, 
+            currentUser?.userId, 
+            currentUser?.userName,
+            getMessagesQuery.isLoading, 
+            message, 
+            sendMessage, 
+            textAreaElement
+        ]
+    );
+
 
     return (
         <motion.div 
-            className="h-full w-full flex flex-cols-2 xs:w-100vw md:w-[calc(100vw - 300px)]" 
+            className="h-full w-full flex flex-cols-2 xs:w-100vw md:w-[calc(100vw-300px)]" 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1.0 }}
@@ -134,11 +186,18 @@ const ThreadFeed = () => {
                         className="overflow-y-scroll scrollbar-hide scroll-smooth bg-primary w-[calc(100vw - 300px)]"
                         style={{height: `calc(100vh - ${divHeight})`}}
                     >
-                        {currentMessages.map((message: Message, index) => (
-                            <div className="xs:w-full xs:px-2 h-fit flex pb-2 justify-center " key={index}>
-                                <ThreadMessage msg={message} key={index} />
+                        {getMessagesQuery.isLoading || getMessagesQuery.isFetching
+                            ? <div 
+                                className="xs:w-full md:w-[calc(100vw-300px)] h-full flex flex-col items-center 
+                                        justify-center"
+                            > <TailSpin stroke={"#3e47c9"} className="w-1/6 h-1/6"/>
                             </div>
-                        ))}
+                            : currentMessages.map((message: Message, index) => (
+                                <div className="xs:w-full xs:px-2 h-fit flex pb-2 justify-center " key={index}>
+                                    <ThreadMessage msg={message} key={index} />
+                                </div>
+                            ))
+                        }
                     </div>
                     <div 
                         className={`shadow-lg shadow-accent`} 
@@ -155,7 +214,7 @@ const ThreadFeed = () => {
                             className={`flex items-center justify-center threadInputBlock `} 
                             style={{height: `${divHeight}`}}
                         >
-                            <div className="relative flex bottom-5 md:w-1/2 xs:w-3/4"
+                            <div className="relative flex bottom-5 lg:w-1/2 xs:w-3/4"
                                 style={{height: `${divHeight}`}}>
                                 <textarea
                                         id="threadTextArea"
@@ -182,17 +241,20 @@ const ThreadFeed = () => {
                                         message.length > 0 && "bg-accent"
                                     )}
                                     onClick={() =>
+                                        !getMessagesQuery.isLoading &&
                                         currentUser &&
                                         currentUser.userId &&
                                         message &&
                                         sendMessage({
                                             message: {
+                                                id: uuidv4(),
                                                 user: {
                                                     userId: currentUser?.userId ?? "",
                                                     userName: currentUser?.userName ?? "",
                                                     pfp: currentUser?.pfp ?? null,
+                                                    status: currentUser?.status ?? false
                                                 },
-                                                payload: message,
+                                                payload:  message.trim(),
                                                 roomId: currentThread?.roomId ?? "",
                                                 timeStamp: handleMessageDate(new Date()),
                                             }

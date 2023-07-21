@@ -4,6 +4,8 @@ import { User } from "../User";
 import { Thread } from "../Thread";
 import { Message } from "../Message";
 import { Friend } from "../Friend";
+import { ThreadNotification } from "../ThreadNotification";
+
 
 const passwordSchema: Schema<Password> = new mongoose.Schema<Password>(
     {
@@ -31,8 +33,29 @@ const friendSchema = new mongoose.Schema<Friend>(
             type: String,
             required: true,
         },
+        pfp: {
+            type: String,
+            required: true,
+        },
+        status: {
+            type: Boolean,
+            required: true,
+        },
     }
 );
+
+const notificationSchema = new mongoose.Schema<ThreadNotification>(
+    {
+        threadId: {
+            type: String,
+            required: true,
+        },
+        messagesSeen: {
+            type: Number,
+            required: true,
+        },
+    }
+)
 
 
 const userSchema = new mongoose.Schema<User>(
@@ -69,6 +92,14 @@ const userSchema = new mongoose.Schema<User>(
             type: String,
             required: false,
         },
+        status: {
+            type: Boolean,
+            required: true,
+        },
+        threadViews: {
+            type: [notificationSchema],
+            required: true,
+        }
     },
     {
         collection: 'users' 
@@ -109,6 +140,10 @@ const threadSchema = new mongoose.Schema<Thread>(
 
 const messageSchema = new mongoose.Schema<Message>(
     {
+        id: {
+            type: String,
+            required: true,
+        },
         user: {
             userName: {
                 type: String,

@@ -43,6 +43,18 @@ function decryptPassword(encryptedData) {
     ;
     return "";
 }
+const cookieSettings = process.env.REACT_APP_URL === 'http://localhost'
+    ?
+        {
+            maxAge: 4 * 60 * 60 * 1000,
+            httpOnly: true
+        }
+    :
+        {
+            maxAge: 4 * 60 * 60 * 1000,
+            domain: process.env.REACT_APP_DOMAIN,
+            httpOnly: true
+        };
 exports.Auth = (0, trpc_1.router)({
     signup: trpc_1.publicProcedure
         .input(zod_1.z.object({
@@ -50,9 +62,10 @@ exports.Auth = (0, trpc_1.router)({
         userName: zod_1.z.string(),
         password: zod_1.z.string(),
         birthday: zod_1.z.string(),
-        pfp: zod_1.z.string().nullable()
+        pfp: zod_1.z.string().nullable(),
+        status: zod_1.z.boolean().nullable(),
     }))
-        .mutation(async ({ input: { email, userName, password, birthday, pfp }, ctx }) => {
+        .mutation(async ({ input: { email, userName, password, birthday, pfp, status }, ctx }) => {
         // Verify this is a new user
         const doesEmailExist = await (0, db_1.countUserByEmail)({ email });
         if (doesEmailExist !== 0) {
@@ -73,7 +86,7 @@ exports.Auth = (0, trpc_1.router)({
         }
         const userId = (0, uuid_1.v4)();
         const token = jsonwebtoken_1.default.sign({ userId: userId }, secretKey, { expiresIn: '4h' });
-        ctx.res.cookie('auth', token, { maxAge: 4 * 60 * 60 * 1000, httpOnly: true });
+        ctx.res.cookie('auth', token, cookieSettings);
         const encryptedPassword = encryptPassword({ password });
         const user = await (0, db_1.createUser)({
             user: {
@@ -84,7 +97,8 @@ exports.Auth = (0, trpc_1.router)({
                 birthday,
                 threads: [],
                 friends: [],
-                pfp: pfp
+                pfp: pfp,
+                status: status
             }
         });
         return user;
@@ -119,7 +133,7 @@ exports.Auth = (0, trpc_1.router)({
                 // generate their new token from their userID
                 const token = jsonwebtoken_1.default.sign({ userId: user.userId }, secretKey, { expiresIn: '4h' });
                 // Set the JWT as a cookie
-                ctx.res.cookie('auth', token, { maxAge: 4 * 60 * 60 * 1000, httpOnly: true });
+                ctx.res.cookie('auth', token, cookieSettings);
                 // return the user
                 return user;
             }

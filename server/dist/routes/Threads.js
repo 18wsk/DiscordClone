@@ -97,4 +97,15 @@ exports.Thread = (0, trpc_1.router)({
         }
         return updatedThread;
     }),
+    getUsersToMakeFriends: trpc_1.protectedProcedure
+        .input(zod_1.z.object({}))
+        .query(async () => {
+        try {
+            const users = await (0, db_1.getUsers)();
+            return users;
+        }
+        catch (err) {
+            throw new server_1.TRPCError({ code: 'CONFLICT', message: 'Could not load users.' });
+        }
+    }),
 });
