@@ -4,6 +4,7 @@ exports.UserSchema = void 0;
 const zod_1 = require("zod");
 const Password_1 = require("./Password");
 const Friend_1 = require("./Friend");
+const ThreadNotification_1 = require("./ThreadNotification");
 exports.UserSchema = zod_1.z.object({
     userId: zod_1.z.string().nullable(),
     userName: zod_1.z.string().nullable(),
@@ -14,4 +15,5 @@ exports.UserSchema = zod_1.z.object({
     friends: zod_1.z.array(Friend_1.FriendSchema),
     pfp: zod_1.z.string().nullable(),
     status: zod_1.z.boolean().nullable(),
+    threadViews: ThreadNotification_1.NotificationSchema.array(),
 });

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { protectedProcedure, publicProcedure, router } from '../utils/trpc';
 import { TRPCError } from '@trpc/server';
-import { countUserByEmail, countUserByUserName, createUser } from '../utils/db';
+import { countUserByEmail, countUserByUserName, createUser, updatePfp } from '../utils/db';
 import { Password, PasswordSchema } from '../types/Password';
 import { User } from '../types/User';
 import { UserModel } from '../types/models/schemas';
@@ -173,5 +173,21 @@ export const Auth = router({
             return user;
           }
       }),
-    
+      
+    updateProfile: protectedProcedure
+      .input(z.object({
+        userId: z.string(),
+        pfp: z.string(),
+      }))
+      .mutation(async ({ input: {userId, pfp} }) => {
+        const user = await updatePfp({userId, pfp: pfp});
+        if (!user) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "ERROR: Could not update user, Please try again.",
+          });
+        } else {
+          return user;
+        }
+      })
   });

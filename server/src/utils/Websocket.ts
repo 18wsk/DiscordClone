@@ -43,6 +43,11 @@ const Websocket = (server: http.Server) => {
         socket.on('disconnect', (data) => {
             console.log('User disconnected');
         });
+
+        socket.on("getFriends", (data) => {
+            const { userId, pfp } = data;
+            io.sockets.emit("updateFriendList", { userId: userId, pfp: pfp });
+        })
     });
     
 };

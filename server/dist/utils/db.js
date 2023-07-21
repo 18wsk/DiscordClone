@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addMessage = exports.getThreadMessages = exports.addUserToThread = exports.countThreadByName = exports.addThread = exports.getUsersThreads = exports.getThreadByRoomId = exports.getUsers = exports.addFriend = exports.createUser = exports.countUserByUserName = exports.countUserByEmail = exports.getUserByEmail = exports.getUserById = exports.connect = void 0;
+exports.addMessage = exports.getThreadMessages = exports.addUserToThread = exports.countThreadByName = exports.addThread = exports.getUsersThreads = exports.getThreadByRoomId = exports.updatePfp = exports.getUsers = exports.addFriend = exports.createUser = exports.countUserByUserName = exports.countUserByEmail = exports.getUserByEmail = exports.getUserById = exports.connect = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 const schemas_1 = require("../types/models/schemas");
 const mongoose_1 = __importDefault(require("mongoose"));
@@ -75,6 +75,15 @@ async function getUsers() {
     return users_as_friends;
 }
 exports.getUsers = getUsers;
+async function updatePfp({ userId, pfp }) {
+    const user = await schemas_1.UserModel.findOne({ userId: userId }).exec();
+    if (!user)
+        return null;
+    user.pfp = pfp;
+    await user.updateOne(user).exec();
+    return user;
+}
+exports.updatePfp = updatePfp;
 // THREAD QUERIES
 async function getThreadByRoomId({ roomId }) {
     return schemas_1.ThreadModel.findOne({ roomId }).exec();
@@ -118,6 +127,11 @@ async function getThreadMessages({ threadId }) {
 }
 exports.getThreadMessages = getThreadMessages;
 async function addMessage({ message }) {
+    const thread = await schemas_1.ThreadModel.findOne({ roomId: message.roomId }).exec();
+    if (!thread)
+        return null;
+    thread.messages = [...thread.messages, message.id];
+    await thread.updateOne(thread).exec();
     return schemas_1.MessageModel.create(message);
 }
 exports.addMessage = addMessage;

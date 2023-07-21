@@ -26,7 +26,6 @@ const Websocket = (server) => {
         });
         socket.on('updateFriends', (data) => {
             const { userId } = data;
-            console.log(data.userId);
             io.sockets.emit("friendOnline", { userId: userId });
         });
         socket.on("friendLoggedOff", (data) => {
@@ -34,6 +33,10 @@ const Websocket = (server) => {
         });
         socket.on('disconnect', (data) => {
             console.log('User disconnected');
+        });
+        socket.on("getFriends", (data) => {
+            const { userId, pfp } = data;
+            io.sockets.emit("updateFriendList", { userId: userId, pfp: pfp });
         });
     });
 };

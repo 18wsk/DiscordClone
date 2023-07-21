@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MessageSchema = void 0;
 const zod_1 = require("zod");
 exports.MessageSchema = zod_1.z.object({
+    id: zod_1.z.string(),
     user: zod_1.z.object({
         userId: zod_1.z.string(),
         userName: zod_1.z.string(),

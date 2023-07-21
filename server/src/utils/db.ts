@@ -80,6 +80,14 @@ export async function getUsers(): Promise<Friend[]> {
     return users_as_friends;
 }
 
+export async function updatePfp ({ userId, pfp }: { userId: string, pfp: string }) : Promise<User | null> {
+    const user = await UserModel.findOne({ userId: userId }).exec();
+    if (!user) return null;
+    user.pfp = pfp;
+    const returnedUser = await user.updateOne(user).exec() as User;
+    return returnedUser;
+}
+
 // THREAD QUERIES
 
 export async function getThreadByRoomId({ roomId } : { roomId: string | null }): Promise<Thread | null> {

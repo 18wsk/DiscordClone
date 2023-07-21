@@ -11,6 +11,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ChatStore from '../store';
 import { FaUserAstronaut } from 'react-icons/fa';
+import { BiEditAlt } from 'react-icons/bi';
 
 
 
@@ -276,6 +277,14 @@ const SignUpPage = () => {
                                     />
                             )
                         }
+                        <div className="h-[80px] w-fit relative bg-green-300">
+                            <div className="absolute right-2 bottom-0 bg-accent h-5 w-5 rounded-full text-white flex flex-col items-center justify-center border border-white">
+                                <BiEditAlt className="h-4 w-4"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="w-full flex items-center justify-center">
+                        <h2 className="text-white xs:py-1 font-semibold sm:text-sm xs:text-xs">Upload Profile Picture</h2>
                     </div>
                     <h2 className="text-white xs:py-1 font-semibold sm:text-sm xs:text-xs">EMAIL:</h2>
                         <FormInput value={email} onInputChange={setEmail} valid={emailValid}/>

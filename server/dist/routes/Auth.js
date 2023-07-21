@@ -98,7 +98,8 @@ exports.Auth = (0, trpc_1.router)({
                 threads: [],
                 friends: [],
                 pfp: pfp,
-                status: status
+                status: status,
+                threadViews: []
             }
         });
         return user;
@@ -167,4 +168,21 @@ exports.Auth = (0, trpc_1.router)({
             return user;
         }
     }),
+    updateProfile: trpc_1.protectedProcedure
+        .input(zod_1.z.object({
+        userId: zod_1.z.string(),
+        pfp: zod_1.z.string(),
+    }))
+        .mutation(async ({ input: { userId, pfp } }) => {
+        const user = await (0, db_1.updatePfp)({ userId, pfp: pfp });
+        if (!user) {
+            throw new server_1.TRPCError({
+                code: "BAD_REQUEST",
+                message: "ERROR: Could not update user, Please try again.",
+            });
+        }
+        else {
+            return user;
+        }
+    })
 });

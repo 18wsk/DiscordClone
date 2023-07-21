@@ -29,6 +29,8 @@ const Account = () => {
 	const updateMyStatus = ChatStore(state => state.actions.setStatus);
     const updateFriends = ChatStore(state => state.actions.updateFriends);
 	const [socket, setSocket] = useState<Socket | null>(null);
+	const updatePfp = ChatStore(state => state.actions.updateProfilePicture);
+    const [currentPfp, setCurrentPfp] = useState(currentUser?.pfp ?? "");
 
 
 	trpc.thread.getThreads.useQuery({}, { 
@@ -64,6 +66,7 @@ const Account = () => {
         };            
     }, [currentUser?.userId, updateMyStatus]);
 
+
     useEffect(() => {
         if (socket) {
 			updateMyStatus(true);
@@ -88,20 +91,29 @@ const Account = () => {
                         : friend
                     );
                     updateFriends(updatedList);
-                    
                 }
             });
+			socket.on("updateFriendList", (data: { userId: string, pfp: string }) => {
+				if (currentUser?.userId === data.userId) return;
+                if (currentUser?.friends.map((friend: Friend) => friend.id).includes(data.userId)) {
+					const updatedList = currentUser?.friends.map((friend: Friend) => friend.id === data.userId 
+						? { ...friend, pfp: data.pfp } 
+						: friend
+					);
+					updateFriends(updatedList);
+				}
+			});
         }
     }, 
-		[
+	[
 		currentThread?.roomId, 
 		currentUser?.friends, 
 		currentUser?.threads, 
 		currentUser?.userId, 
 		socket, 
 		updateFriends, 
-		updateMyStatus]);
-
+		updateMyStatus
+	]);
 
 	return (
 		<div className="w-screen h-screen relative overflow-hidden">
@@ -121,7 +133,9 @@ const Account = () => {
 								currentThread !== null && "xs:hidden md:block w-[300px]",
 							)}
 						onClick={() => setCurrentThread(null)}>
-							<ProfileLink/>
+							<ProfileLink
+								socket={socket}
+							/>
 						</div>
 						<div 
 							className="w-full flex flex-col xs:items-center xs:justify-center bg-secondary" 

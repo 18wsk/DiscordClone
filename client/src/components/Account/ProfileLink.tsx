@@ -1,7 +1,13 @@
 import clsx from "clsx";
 import ChatStore from "../../store";
+import { EditProfile } from "./thread/editProfile";
+import { Socket } from "socket.io-client";
 
-const ProfileLink = () => {
+const ProfileLink = ({
+    socket
+    }:{
+        socket: Socket | null;
+    }) => {
     const user = ChatStore(state => state.currentUser);
     const setActiveThread = ChatStore(state => state.actions.setCurrentThread);
     return (
@@ -28,6 +34,13 @@ const ProfileLink = () => {
             </div>
             <div className="w-full h-full flex flex-col items-top justify-center">
                 <h1 className="md:text-start xs:text-center text-lg font-extrabold text-white">{user?.userName}</h1>
+            </div>
+            <div className="h-full w-fit relative flex flex-col items-center justify-center">
+                <div className="bg-accent h-5 w-5 rounded-md text-white flex flex-col items-center justify-center">
+                    <EditProfile
+                        socket={socket}
+                    />
+                </div>
             </div>
         </div>
     );

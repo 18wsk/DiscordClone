@@ -35,6 +35,16 @@ const friendSchema = new mongoose_1.default.Schema({
         required: true,
     },
 });
+const notificationSchema = new mongoose_1.default.Schema({
+    threadId: {
+        type: String,
+        required: true,
+    },
+    messagesSeen: {
+        type: Number,
+        required: true,
+    },
+});
 const userSchema = new mongoose_1.default.Schema({
     userId: {
         type: String,
@@ -72,6 +82,10 @@ const userSchema = new mongoose_1.default.Schema({
         type: Boolean,
         required: true,
     },
+    threadViews: {
+        type: [notificationSchema],
+        required: true,
+    }
 }, {
     collection: 'users'
 });
@@ -104,6 +118,10 @@ const threadSchema = new mongoose_1.default.Schema({
     collection: 'threads'
 });
 const messageSchema = new mongoose_1.default.Schema({
+    id: {
+        type: String,
+        required: true,
+    },
     user: {
         userName: {
             type: String,
