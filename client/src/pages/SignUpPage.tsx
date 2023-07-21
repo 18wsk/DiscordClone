@@ -90,7 +90,7 @@ const SignUpPage = () => {
         setEmailValid(true);
         setUsernameValid(true);
         setPasswordValid(true);
-        setDobValid(true)
+        setDobValid(true);
         if (email === null || email.length === 0) {
             setEmailValid(false);
             handleValidationErrors("Email is required.");
@@ -123,6 +123,10 @@ const SignUpPage = () => {
         //     setDobValid(false);
         //     handleValidationErrors("Please enter a valid date of birth.");
         // }
+        else if (userPfp === null) {
+            handleValidationErrors("Please enter a profile picture");
+            return false
+        }
         else {
             return true;
         }

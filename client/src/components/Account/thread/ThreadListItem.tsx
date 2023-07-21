@@ -13,6 +13,7 @@ export const ThreadListComponent = (
         setCurrentThread: (thread: Thread | null) => void,
         thread: Thread
     }) => {
+        const small_logo = require('../../../assets/logo_small.png');
     return (
         <div className={
             clsx(
@@ -24,11 +25,26 @@ export const ThreadListComponent = (
             onClick={() => setCurrentThread(thread)}
         >
             <div className="h-full w-[64px] flex items-center justify-center " >
-                <img 
-                    src={thread.img ?? ""} 
+                {/* <img 
+                    src={img} 
                     className="object-cover aspect-auto rounded-full h-[48px] w-[48px] z-1 bg-black" 
                     alt={"pfp"}
-                />
+                /> */}
+                {thread?.img 
+                    ? <img 
+                        src={thread?.img} 
+                        className="object-cover aspect-auto rounded-full h-[48px] w-[48px] z-1 bg-black" 
+                        alt={"pfp"}
+                    />
+                    : 
+                    <div className="border border-accent rounded-full">
+                        <img 
+                            src={small_logo} 
+                            className="object-cover aspect-auto h-[48px] w-[48px] z-1 p-2 " 
+                            alt={"pfp"}
+                        />
+                    </div>
+                }
             </div>
             <div className="w-full h-full flex flex-cols items-center justify-center">
                 <div className="w-full h-full flex flex-col justify-start ">

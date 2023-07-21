@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import { Friend } from "../../../../server/src/types/Friend";
+import { FaUserAstronaut } from "react-icons/fa";
 
 
 
@@ -9,11 +10,14 @@ export const FriendListComponent = ({friend} : {friend: Friend}) => {
         >
             <div className="h-full w-[64px] flex items-center justify-center " >
             <div className="relative rounded-full bg-black h-[48px] w-[48px] z-1">
-                    <img 
-                        src={friend?.pfp ?? ""} 
-                        className="object-cover aspect-auto rounded-full h-[48px] w-[48px] z-1" 
-                        alt={"pfp"}
-                    />
+                    { friend?.pfp 
+                        ? <img 
+                            src={friend?.pfp ?? ""} 
+                            className="object-cover aspect-auto rounded-full h-[48px] w-[48px] z-1" 
+                            alt={"pfp"}
+                        />
+                        : <FaUserAstronaut className="bg-accent object-cover aspect-auto rounded-full h-[48px] w-[48px] p-1" fill={"#ffffff"} />
+                    }
                     <div className={
                         clsx(
                             "rounded-full h-[12px] w-[12px] absolute bottom-0 right-2 z-4",
