@@ -52,7 +52,12 @@ async function addFriend({ currentId, friend }) {
         return null;
     updatedUser.friends = [...updatedUser.friends, friend];
     if (updatedUser.userName) {
-        updatedFriend.friends = [...updatedFriend.friends, { id: currentId, userName: updatedUser.userName, pfp: updatedUser.pfp }];
+        updatedFriend.friends = [...updatedFriend.friends, {
+                id: currentId,
+                userName: updatedUser.userName,
+                pfp: updatedUser.pfp,
+                status: updatedUser.status,
+            }];
     }
     await updatedUser.updateOne(updatedUser).exec();
     await updatedFriend.updateOne(updatedFriend).exec();
@@ -65,6 +70,7 @@ async function getUsers() {
         id: user.userId,
         userName: user.userName,
         pfp: user.pfp,
+        status: user.status,
     }));
     return users_as_friends;
 }

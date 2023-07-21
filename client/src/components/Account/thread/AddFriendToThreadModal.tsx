@@ -15,6 +15,7 @@ export const AddFriendToThreadModal = () => {
         id: "",
         userName: "",
         pfp: "",
+        status: false
     });
     const [query, setQuery] = useState('');
 

@@ -35,6 +35,10 @@ const friendSchema = new mongoose.Schema<Friend>(
             type: String,
             required: true,
         },
+        status: {
+            type: Boolean,
+            required: true,
+        },
     }
 );
 
@@ -72,6 +76,10 @@ const userSchema = new mongoose.Schema<User>(
         pfp: {
             type: String,
             required: false,
+        },
+        status: {
+            type: Boolean,
+            required: true,
         },
     },
     {

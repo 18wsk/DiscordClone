@@ -28,6 +28,8 @@ export interface TChatStore {
         removeUser: (user: User) => void;
         updateUser: (user: User | null) => void;
         addFriend: (friend: Friend) => void;
+        setStatus: (status: boolean) => void;
+        updateFriends: (friends: Friend[]) => void;
     }
 };
 
@@ -61,8 +63,15 @@ const ChatStore = create(immer<TChatStore>((set) => ({
         addFriend: (friend) => set((state: TChatStore) => ({ 
             currentUser: {...state.currentUser, friends: state.currentUser 
                 ? [...state.currentUser?.friends, friend] 
-                : []}
+                : []
+            }
         })),
+        setStatus: (status) => set((state: TChatStore) => ({ 
+            currentUser: state.currentUser 
+            ? { ...state.currentUser, status: status } 
+            : null
+        })),
+        updateFriends: (friends) => set((state: TChatStore) => ({ currentUser: {...state.currentUser, friends: friends} })),
     }}),
     
 ));

@@ -30,6 +30,7 @@ const ThreadMessage = ({ msg } : { msg: Message  }) => {
                         id: msg.user.userId,
                         userName: msg.user.userName,
                         pfp: msg.user.pfp,
+                        status: msg.user.status,
                     },
                 },
                 {
@@ -44,7 +45,7 @@ const ThreadMessage = ({ msg } : { msg: Message  }) => {
                             progress: undefined,
                             theme: "light",
                         });
-                        addFriend({userName: msg.user.userName, id: msg.user.userId, pfp: msg.user.pfp});
+                        addFriend({userName: msg.user.userName, id: msg.user.userId, pfp: msg.user.pfp, status: msg.user.status});
                         setIsFriend(true);
                     }, 
                     onError: (error) => {

@@ -11,6 +11,7 @@ export const UserSchema = z.object({
     threads: z.array(z.string()),
     friends: z.array(FriendSchema),
     pfp: z.string().nullable(),
+    status: z.boolean().nullable(),
 });
 
 export type User = z.infer<typeof UserSchema>;

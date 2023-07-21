@@ -156,7 +156,8 @@ const SignUpPage = () => {
                     password: password!, 
                     userName: username!, 
                     birthday: dob.day + "/" + dob.month + "/" + dob.year,
-                    pfp: userPfp
+                    pfp: userPfp,
+                    status: false
                 },
                 {
                     onSuccess: (data) => {

@@ -6,4 +6,5 @@ exports.FriendSchema = zod_1.z.object({
     id: zod_1.z.string().nullable(),
     userName: zod_1.z.string().nullable(),
     pfp: zod_1.z.string().nullable(),
+    status: zod_1.z.boolean().nullable(),
 });

@@ -136,6 +136,7 @@ const ThreadFeed = () => {
                             userId: currentUser?.userId ?? "",
                             userName: currentUser?.userName ?? "",
                             pfp: currentUser?.pfp ?? null,
+                            status: currentUser?.status ?? false,
                         },
                         payload: message.trim(),
                         roomId: currentThread?.roomId ?? "",
@@ -154,7 +155,19 @@ const ThreadFeed = () => {
             textAreaElement?.removeEventListener('keydown', handleKeyDown);
             textAreaElement?.removeEventListener('keyup', handleKeyUp);
         }
-    }, [currentThread?.roomId, currentUser?.pfp, currentUser?.userId, currentUser?.userName, getMessagesQuery.isLoading, message, sendMessage, textAreaElement]);
+    }, 
+        [
+            currentThread?.roomId, 
+            currentUser?.pfp, 
+            currentUser?.status, 
+            currentUser?.userId, 
+            currentUser?.userName,
+            getMessagesQuery.isLoading, 
+            message, 
+            sendMessage, 
+            textAreaElement
+        ]
+    );
 
 
     return (
@@ -238,6 +251,7 @@ const ThreadFeed = () => {
                                                     userId: currentUser?.userId ?? "",
                                                     userName: currentUser?.userName ?? "",
                                                     pfp: currentUser?.pfp ?? null,
+                                                    status: currentUser?.status ?? false
                                                 },
                                                 payload:  message.trim(),
                                                 roomId: currentThread?.roomId ?? "",

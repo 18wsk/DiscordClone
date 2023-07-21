@@ -54,7 +54,12 @@ export async function addFriend({ currentId, friend}: {currentId: string, friend
     
     updatedUser.friends = [...updatedUser.friends, friend];
     if (updatedUser.userName) {
-        updatedFriend.friends = [...updatedFriend.friends, { id: currentId, userName: updatedUser.userName, pfp: updatedUser.pfp }];
+        updatedFriend.friends = [...updatedFriend.friends, { 
+            id: currentId, 
+            userName: updatedUser.userName, 
+            pfp: updatedUser.pfp,
+            status: updatedUser.status,
+        }];
     }
 
     await updatedUser.updateOne(updatedUser).exec();
@@ -69,6 +74,7 @@ export async function getUsers(): Promise<Friend[]> {
         id: user.userId,
         userName: user.userName,
         pfp: user.pfp,
+        status: user.status,
     }));
     return users_as_friends;
 }

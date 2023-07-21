@@ -64,9 +64,10 @@ export const Auth = router({
         userName: z.string(), 
         password:z.string(), 
         birthday: z.string(),
-        pfp: z.string().nullable()
+        pfp: z.string().nullable(),
+        status: z.boolean().nullable(),
       }))
-      .mutation(async ({ input:  { email, userName, password, birthday, pfp}, ctx }) => {
+      .mutation(async ({ input:  { email, userName, password, birthday, pfp, status}, ctx }) => {
         // Verify this is a new user
         const doesEmailExist = await countUserByEmail({ email });
         if (doesEmailExist !== 0) {
@@ -99,7 +100,8 @@ export const Auth = router({
             birthday, 
             threads: [], 
             friends: [], 
-            pfp: pfp 
+            pfp: pfp,
+            status: status
           }
         });
         return user;
@@ -135,8 +137,7 @@ export const Auth = router({
             const token = jwt.sign({ userId: user.userId }, secretKey, { expiresIn: '4h' });
             // Set the JWT as a cookie
             
-            ctx.res.cookie('auth', token, cookieSettings
-            );
+            ctx.res.cookie('auth', token, cookieSettings);
             // return the user
             return user;
           }

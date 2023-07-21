@@ -15,6 +15,7 @@ export const FindFriendsModal = () => {
         id: "",
         userName: "",
         pfp: "",
+        status: false
     });
     const [query, setQuery] = useState('');
     const [users, setUsers] = useState<Friend[]>([]);
@@ -74,6 +75,7 @@ export const FindFriendsModal = () => {
                         id: selectedFriend.id,
                         userName: selectedFriend.userName,
                         pfp: selectedFriend.pfp,
+                        status: selectedFriend.status
                     },
                 },
                 {

@@ -12,6 +12,9 @@ import ThreadNavMobile from "../components/Account/thread/ThreadNavMobile";
 import { Friend } from "../../../server/src/types/Friend";
 import { FriendListComponent } from "../components/Account/FriendListComponent";
 import { FindFriendsModal } from "../components/Account/FindFriendsModal";
+import { useEffect, useState } from "react";
+import { Socket, io } from "socket.io-client";
+import { User } from "../../../server/src/types/User";
 
 
 const Account = () => {
@@ -24,6 +27,10 @@ const Account = () => {
 	const logoSmall = require('../assets/logo_small.png');
 	const setActiveThread = ChatStore(state => state.actions.setCurrentThread);
 	const currentUser = ChatStore(state => state.currentUser);
+	const updateMyStatus = ChatStore(state => state.actions.setStatus);
+    const updateFriends = ChatStore(state => state.actions.updateFriends);
+	const [socket, setSocket] = useState<Socket | null>(null);
+
 
 	trpc.thread.getThreads.useQuery({}, { 
         enabled: true, 
@@ -47,6 +54,46 @@ const Account = () => {
         }
     });
 
+	useEffect(() => {
+		// updateMyStatus(true);
+        const newSocket = io(process.env.REACT_APP_URL + ":" + process.env.REACT_APP_SERVER_PORT);
+		setSocket(newSocket);
+        return () => {
+            newSocket.emit("friendLoggedOff", { userId: currentUser?.userId });
+			newSocket.disconnect();
+        };            
+    }, [currentUser?.userId, updateMyStatus]);
+
+    useEffect(() => {
+        if (socket) {
+			updateMyStatus(true);
+			socket.emit("updateFriends", { userId: currentUser?.userId });
+            socket.on("connect", () => {
+                socket.on("friendOnline", (data: { userId: string }) => {
+					if (currentUser?.userId === data.userId) return;
+					if (currentUser?.friends.map((friend: Friend) => friend.id).includes(data.userId)) {
+						const updatedList = currentUser?.friends.map((friend: Friend) => friend.id === data.userId 
+							? { ...friend, status: true } 
+							: friend
+						);
+						console.log(updatedList);
+						updateFriends(updatedList);
+					}
+				});
+            });
+			socket.on("friendOffline", (data: { userId: string }) => {
+                if (currentUser?.userId === data.userId) return;
+                if (currentUser?.friends.map((friend: Friend) => friend.id).includes(data.userId)) {
+                    const updatedList = currentUser?.friends.map((friend: Friend) => friend.id === data.userId 
+                        ? { ...friend, status: false } 
+                        : friend
+                    );
+                    updateFriends(updatedList);
+                    
+                }
+            });
+        }
+    }, [currentThread?.roomId, currentUser?.friends, currentUser?.userId, socket, updateFriends, updateMyStatus]);
 
 	return (
 		<div className="w-screen h-screen relative overflow-hidden">

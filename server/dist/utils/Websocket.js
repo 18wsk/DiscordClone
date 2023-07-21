@@ -24,6 +24,17 @@ const Websocket = (server) => {
             const { room, typer } = data;
             socket.to(room).emit('typing', typer);
         });
+        socket.on('updateFriends', (data) => {
+            const { userId } = data;
+            console.log(data.userId);
+            io.sockets.emit("friendOnline", { userId: userId });
+        });
+        socket.on("friendLoggedOff", (data) => {
+            io.sockets.emit("friendOffline", { userId: data.userId });
+        });
+        socket.on('disconnect', (data) => {
+            console.log('User disconnected');
+        });
     });
 };
 exports.default = Websocket;
