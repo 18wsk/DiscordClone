@@ -116,10 +116,6 @@ export async function addUserToThread({ userId, threadId } : { userId: string, t
     return updatedThread;
 }
 
-export async function handleThreadViews({ thread }: { thread: Thread}): Promise<Thread | null> {
-    
-    return null;
-}
 
 // MESSAGE QUERIES
 export async function getThreadMessages({ threadId }
