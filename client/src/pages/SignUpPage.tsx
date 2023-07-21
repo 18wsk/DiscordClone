@@ -119,10 +119,10 @@ const SignUpPage = () => {
             handleValidationErrors("Valid Date of Birth is required.");
             return false;
         }
-        else if (!isValidBirthday({year: dob?.year, month: dob?.month as string, day: dob?.day})) {
-            setDobValid(false);
-            handleValidationErrors("Please enter a valid date of birth.");
-        }
+        // else if (!isValidBirthday({year: dob?.year, month: dob?.month as string, day: dob?.day})) {
+        //     setDobValid(false);
+        //     handleValidationErrors("Please enter a valid date of birth.");
+        // }
         else {
             return true;
         }

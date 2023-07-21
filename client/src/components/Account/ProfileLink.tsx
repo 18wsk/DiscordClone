@@ -4,7 +4,6 @@ import ChatStore from "../../store";
 const ProfileLink = () => {
     const user = ChatStore(state => state.currentUser);
     const setActiveThread = ChatStore(state => state.actions.setCurrentThread);
-
     return (
         <div 
             className="w-[300px] h-full flex xs:flex-rows-2 xs:flex-col md:flex-row md:flex-cols-2 items-center 
@@ -20,7 +19,7 @@ const ProfileLink = () => {
                     />
                     <div className={
                         clsx(
-                            "rounded-full h-[15px] w-[15px] absolute bottom-0 right-2 z-4 ",
+                            "rounded-full h-[12px] w-[12px] absolute bottom-0 right-2 z-4 ",
                             user?.status && "bg-green-500",
                             !user?.status && "bg-gray-500"
                         )}

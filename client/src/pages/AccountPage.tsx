@@ -14,7 +14,6 @@ import { FriendListComponent } from "../components/Account/FriendListComponent";
 import { FindFriendsModal } from "../components/Account/FindFriendsModal";
 import { useEffect, useState } from "react";
 import { Socket, io } from "socket.io-client";
-import { User } from "../../../server/src/types/User";
 
 
 const Account = () => {
@@ -35,7 +34,8 @@ const Account = () => {
 	trpc.thread.getThreads.useQuery({}, { 
         enabled: true, 
         refetchOnMount: true,
-
+		refetchOnReconnect: true,
+		refetchOnWindowFocus: true,
         onSuccess: (data: Thread[]) => {
             setThreads([...data]);
         },
@@ -55,7 +55,7 @@ const Account = () => {
     });
 
 	useEffect(() => {
-		// updateMyStatus(true);
+		updateMyStatus(true);
         const newSocket = io(process.env.REACT_APP_URL + ":" + process.env.REACT_APP_SERVER_PORT);
 		setSocket(newSocket);
         return () => {
@@ -76,7 +76,6 @@ const Account = () => {
 							? { ...friend, status: true } 
 							: friend
 						);
-						console.log(updatedList);
 						updateFriends(updatedList);
 					}
 				});
@@ -93,7 +92,16 @@ const Account = () => {
                 }
             });
         }
-    }, [currentThread?.roomId, currentUser?.friends, currentUser?.userId, socket, updateFriends, updateMyStatus]);
+    }, 
+		[
+		currentThread?.roomId, 
+		currentUser?.friends, 
+		currentUser?.threads, 
+		currentUser?.userId, 
+		socket, 
+		updateFriends, 
+		updateMyStatus]);
+
 
 	return (
 		<div className="w-screen h-screen relative overflow-hidden">

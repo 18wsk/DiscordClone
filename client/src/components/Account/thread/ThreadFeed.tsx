@@ -9,6 +9,7 @@ import { useRef } from "react";
 import { TailSpin, ThreeDots } from "react-loading-icons";
 import { AiOutlineSend } from "react-icons/ai";
 import clsx from "clsx";
+import { v4 as uuidv4 } from "uuid";
 
 const ThreadFeed = () => {
     const currentThread = ChatStore(state => state.currentThread);
@@ -30,9 +31,8 @@ const ThreadFeed = () => {
         onSuccess: (data: Message[]) => {
             setMessages(data);
         },
-        onError: (error) => {
+        onError: () => {
             setMessages([]);
-            console.log(error)
         },
     });
 
@@ -55,7 +55,6 @@ const ThreadFeed = () => {
             });
             socket.on('receiveMessage', (message: Message) => {
                 addMessage(message);
-                // Handle the received message as needed
             });
             socket.on('typing', (typer: string) => {
                 setCurrentTyper(typer);
@@ -132,6 +131,7 @@ const ThreadFeed = () => {
             if (event.key === 'Enter' && !event.shiftKey && getMessagesQuery.isLoading === false) {
                 sendMessage({
                     message: {
+                        id: uuidv4(),
                         user: {
                             userId: currentUser?.userId ?? "",
                             userName: currentUser?.userName ?? "",
@@ -247,6 +247,7 @@ const ThreadFeed = () => {
                                         message &&
                                         sendMessage({
                                             message: {
+                                                id: uuidv4(),
                                                 user: {
                                                     userId: currentUser?.userId ?? "",
                                                     userName: currentUser?.userName ?? "",

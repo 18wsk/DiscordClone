@@ -101,7 +101,8 @@ export const Auth = router({
             threads: [], 
             friends: [], 
             pfp: pfp,
-            status: status
+            status: status,
+            threadViews: []
           }
         });
         return user;

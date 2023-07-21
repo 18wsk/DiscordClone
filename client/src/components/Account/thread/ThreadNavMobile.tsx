@@ -17,15 +17,15 @@ const ThreadNavMobile = ({
 							shadow-md shadow-accent"
 			>
 				<div className="w-fit h-[36px] p-1 absolute left-4 top-[0px] flex items-center justify-center">
-					<div className="w-full h-[36px] flex flex-cols-2 items-center justify-center">
-						<div className="w-full h-full flex flex-col items-center justify-center">
+					<div className="h-[24px] w-full flex flex-cols-2 items-center justify-center gap-x-4">
+						<div className="h-[24px] w-[24px] flex flex-col items-center justify-center">
 							<img 
 								src={logoSmall} 
-								className=" object-cover aspect-auto h-[24px] w-[24px] z-1 p-1" 
+								className=" object-cover aspect-auto h-[24px] w-[24px]" 
 								alt={"pfp"}
 							/> 
 						</div>
-						<div className="w-full h-full flex flex-col items-center justify-center">
+						<div className="w-fit h-full flex flex-col items-center justify-center">
 							<h1 className="text-white/80 decoration-accent font-extrabold">
 								{activeThread?.name}
 							</h1>

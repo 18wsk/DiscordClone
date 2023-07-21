@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import { Thread } from '../types/Thread';
 import { Message } from '../types/Message';
 import { Friend } from '../types/Friend';
+import { ThreadNotification } from '../types/ThreadNotification';
 
 dotenv.config();
 
@@ -107,21 +108,30 @@ export async function countThreadByName({ threadName } : { threadName: string | 
     return ThreadModel.countDocuments({ threadName }).exec();
 }
 
-export async function addUserToThread({ userId, threadId } : { userId: string, threadId: string}) { 
+export async function addUserToThread({ userId, threadId } : { userId: string, threadId: string}): Promise<Thread | null> { 
     const updatedThread = await ThreadModel.findOne({ roomId: threadId }).exec();
     if (!updatedThread) return null;
-
     updatedThread.users = [...updatedThread.users, userId];
-
     await updatedThread.updateOne(updatedThread).exec();
     return updatedThread;
 }
 
+export async function handleThreadViews({ thread }: { thread: Thread}): Promise<Thread | null> {
+    
+    return null;
+}
+
 // MESSAGE QUERIES
-export async function getThreadMessages({ threadId }: { threadId: string | null }): Promise<Message[]> {
+export async function getThreadMessages({ threadId }
+    : { threadId: string | null })
+    : Promise<Message[]> {
     return MessageModel.find({ roomId: threadId }).exec();
 }
 
 export async function addMessage({ message }: { message: Message }): Promise<Message | null> {
+    const thread = await ThreadModel.findOne({ roomId: message.roomId }).exec();
+    if (!thread) return null;
+    thread.messages = [...thread.messages, message.id];
+    await thread.updateOne(thread).exec();
     return MessageModel.create(message);
 }
